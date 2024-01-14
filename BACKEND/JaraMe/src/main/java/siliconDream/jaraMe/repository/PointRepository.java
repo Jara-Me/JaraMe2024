@@ -10,12 +10,12 @@ import org.springframework.stereotype.Repository;
 import siliconDream.jaraMe.domain.User;
 
 import java.util.Optional;
-
+@Repository
 public interface PointRepository extends JpaRepository<User, Long> {
 
 
     //TODO: 레코드 조회
-    Optional<User> findByUserId(Long userId) ;
+    Optional<User> findByUserId(Long id) ;
 
 
     //TODO: 패스권 구매

@@ -1,11 +1,13 @@
 package siliconDream.jaraMe.service;
 
+import org.springframework.stereotype.Service;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.repository.PointRepository;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Service
 public class PointServiceImpl implements PointService {
     private final PointRepository pointRepository;
 
@@ -43,6 +45,18 @@ public class PointServiceImpl implements PointService {
         } else {
             return passTicketResult;
         }
+    }
+    public boolean missionFinish(Long userId, Long groupId){
+
+
+
+
+        return true;
+    }
+
+
+    public boolean dailyMissionFinish(Long userId, Long groupId){
+        return true ;
     }
 
 }

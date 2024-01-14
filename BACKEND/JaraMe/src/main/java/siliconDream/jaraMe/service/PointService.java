@@ -6,10 +6,11 @@ import siliconDream.jaraMe.domain.User;
 
 import java.time.LocalDateTime;
 
-@Service
+
 public interface PointService {
    boolean checkIn(Long userId, LocalDateTime dateTime);
    boolean passTicket(Long userId);
-
+   boolean missionFinish(Long userId, Long groupId);
+   boolean dailyMissionFinish(Long userId, Long groupId);
 
 }

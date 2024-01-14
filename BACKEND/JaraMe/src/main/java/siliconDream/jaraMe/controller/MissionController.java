@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import siliconDream.jaraMe.dto.GetMissionPostDTO;
 import siliconDream.jaraMe.dto.MissionPostDTO;
 import siliconDream.jaraMe.service.MissionService;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/mission")
@@ -22,11 +25,13 @@ public class MissionController {
 
     //TODO: 미션 인증글 작성
     @PostMapping("/post")
-    public ResponseEntity missionPost(@RequestBody MissionPostDTO missionPostDTO){
-        boolean result=missionService.missionPost(missionPostDTO );
+    public Optional<GetMissionPostDTO> missionPost(@RequestBody MissionPostDTO missionPostDTO){
+        Optional<GetMissionPostDTO> getMissionPostDTO=missionService.missionPost(missionPostDTO );
 
 
 
-    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    return getMissionPostDTO;
     }
+
+
 }

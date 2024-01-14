@@ -3,12 +3,22 @@ package siliconDream.jaraMe.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import siliconDream.jaraMe.dao.UserDao;
+import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.UserDto;
+import siliconDream.jaraMe.repository.UserRepository;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     UserDao userDao;
+
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository){
+        this.userRepository=userRepository;
+    }
 
     @Override
     public boolean create(UserDto userDto) {
@@ -36,5 +46,16 @@ public class UserServiceImpl implements UserService {
     public boolean isPasswordConfirmed(UserDto userDto) {
         // 비밀번호 확인 로직을 수행하여 결과 반환
         return userDto.getPassword().equals(userDto.getConfirmPassword());
+
+    }
+
+    @Override
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void saveUser(User user){
+        userRepository.save(user);
     }
 }

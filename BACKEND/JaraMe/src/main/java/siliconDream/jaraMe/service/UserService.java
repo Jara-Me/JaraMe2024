@@ -1,6 +1,9 @@
 package siliconDream.jaraMe.service;
 
+import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.UserDto;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -9,4 +12,8 @@ public interface UserService {
     String emailCheck(String email);
 
     boolean isPasswordConfirmed(UserDto userDto);
+
+    List<User> getAllUsers();
+
+    void saveUser(User user);
 }
