@@ -18,8 +18,6 @@ public class PointServiceImpl implements PointService {
     public boolean checkIn(Long userId, LocalDateTime dateTime) {
         boolean checkInResult = false;
         Optional<User> user = pointRepository.findById(userId);
-        //TODO: checkInHistory 테이블/도메인 추가하기
-        //TODO: user 테이블에 하루에 한번 초기화되는 checkIn컬럼 추가하기
         if (user.isPresent()) {
             boolean updateResult = pointRepository.updateCheckIn(userId);
             checkInResult = updateResult;
@@ -45,18 +43,6 @@ public class PointServiceImpl implements PointService {
         } else {
             return passTicketResult;
         }
-    }
-    public boolean missionFinish(Long userId, Long groupId){
-
-
-
-
-        return true;
-    }
-
-
-    public boolean dailyMissionFinish(Long userId, Long groupId){
-        return true ;
     }
 
 }

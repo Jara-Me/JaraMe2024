@@ -49,11 +49,13 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    //출석체크 컬럼 초기화 설정에 사용되는 메서드
     @Override
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
 
+    //출석체크 컬럼 초기화 설정에 사용되는 메서드
     @Override
     public void saveUser(User user){
         userRepository.save(user);

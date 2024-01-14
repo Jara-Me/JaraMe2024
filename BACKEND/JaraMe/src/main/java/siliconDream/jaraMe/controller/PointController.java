@@ -49,32 +49,5 @@ public class PointController {
         }
     }
 
-    //TODO: 미션 완주
-    @PostMapping("/missionFinish")
-    @ResponseBody
-    public ResponseEntity missionFinish(@RequestParam Long userId, @RequestParam Long groupId) {
-        boolean httpResponse = pointService.missionFinish(userId, groupId);
-        if (httpResponse) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            //throw new CustomException(POINT_NOT_FOUND);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-
-    @PostMapping("/dailyMissionFinish")
-    @ResponseBody
-    public ResponseEntity dailyMissionFinish(@RequestParam Long userId, @RequestParam Long groupId) {
-
-        boolean httpResponse = pointService.dailyMissionFinish(userId, groupId);
-        if (httpResponse) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            //throw new CustomException(POINT_NOT_FOUND);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
 //store => 아이템 정해져야 할 수 있음
-    }
 }
