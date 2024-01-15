@@ -65,4 +65,26 @@ public interface PointRepository extends JpaRepository<User, Long> {
         }
 
     }
+
+    //TODO: 오늘의 미션 완료
+    default boolean updateDailyMission(Long userId, Long earnedPoint){
+        try{
+        Optional<User> userOptional = findByUserId(userId);
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            user.setPoint(user.getPoint()+earnedPoint);
+            //오늘의 미션 기록 / 미션 히스토리에 업데이트?
+            save(user);
+            return true;
+        }else{return false;}
+    } catch (EntityNotFoundException e){
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
 }

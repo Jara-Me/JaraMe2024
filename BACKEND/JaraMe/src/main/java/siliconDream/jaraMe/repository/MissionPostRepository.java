@@ -44,7 +44,7 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
     }
 
 
-    //인증글 조회
+    //미션 인증글 조회
     @Query("SELECT new siliconDream.jaraMe.dto.GetMissionPostDTO(" +
             "mp.missionPostId, mp.textTitle, mp.textContent, mp.imageContent, mp.postDateTime," +
             "u.nickname, u.profileImage, " +
@@ -62,5 +62,7 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
             "LEFT JOIN mp.user u " +
             "WHERE mp.missionPostId = :missionPostId OR c.missionPost.missionPostId = :missionPostId OR r.missionPost.missionPostId = :missionPostId")
     GetMissionPostDTO findByMissionPostIdWithCommentsAndReactions(@Param("missionPostId") Long missionPostId);
+
+
 
 }

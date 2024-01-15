@@ -49,5 +49,7 @@ public class PointController {
         }
     }
 
-//store => 아이템 정해져야 할 수 있음
+    //store => 아이템 정해져야 할 수 있음
+
+    //패스권 사용 로직
 }
