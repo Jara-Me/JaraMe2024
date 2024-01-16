@@ -22,15 +22,12 @@ public class Comment {
 
     // FK
     @ManyToOne
-    @JoinColumn(name = "mission_post_id")
-    private MissionPost missionPost;
-
+    @JoinColumn(name = "mission_postId")
+    private MissionPost missionPostId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-
+    @JoinColumn(name = "userId")
+    private User userId;
 
 
     //TODO: getter and setter
@@ -59,20 +56,21 @@ public class Comment {
         this.commentDate = commentDate;
     }
 
-    public MissionPost getMissionPost() {
-        return missionPost;
+    public MissionPost getMissionPostId() {
+        return missionPostId;
     }
 
-    public void setMissionPost(MissionPost missionPost) {
-        this.missionPost = missionPost;
+    public void setMissionPostId(MissionPost missionPostId) {
+        this.missionPostId = missionPostId;
     }
 
-    public User getUser() {
-        return user;
+    public User getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
+
+
 }
-

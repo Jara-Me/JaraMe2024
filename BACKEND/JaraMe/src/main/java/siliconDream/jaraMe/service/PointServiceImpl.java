@@ -15,6 +15,7 @@ public class PointServiceImpl implements PointService {
         this.pointRepository = pointRepository;
     }
 
+    //출석체크
     public boolean checkIn(Long userId, LocalDateTime dateTime) {
         boolean checkInResult = false;
         Optional<User> user = pointRepository.findById(userId);

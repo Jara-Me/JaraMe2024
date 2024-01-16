@@ -19,6 +19,7 @@ public class CheckInResetScheduler {
         this.userService=userService;
     }
 
+    //출석체크 컬럼 자정 초기화
     @Scheduled(cron ="0 0 0 * * *")
     public void resetCheckInStatus() {
         //userRepository.resetCheckInStatus();

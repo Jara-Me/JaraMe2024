@@ -15,7 +15,7 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
 
     MissionPost findByMissionPostId(Long missionPostId);
 
-    //TODO: 미션인증글 작성
+    //TODO : 미션인증글 작성
     default Optional<MissionPost> saveMissionPost(MissionPostDTO missionPostDTO) {
         //객체 형성
         MissionPost missionPost = new MissionPost();
@@ -42,6 +42,18 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
         savedMissionPost = findByMissionPostId(savedMissionPostId);
         return Optional.ofNullable(savedMissionPost);
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     //미션 인증글 조회

@@ -12,7 +12,7 @@ public class MissionPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column( nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     Long missionPostId;
 
     boolean anonymous;
@@ -27,14 +27,15 @@ public class MissionPost {
 
     LocalDateTime postDateTime;
 
+
     //FK
     @ManyToOne
     @JoinColumn(name = "userId")
-    User user;
+    User userId;
 
     @ManyToOne
     @JoinColumn(name = "groupId")
-    Group group;
+    Group groupId;
 
     @OneToMany(mappedBy = "missionPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
@@ -45,41 +46,12 @@ public class MissionPost {
     private List<Reaction> reaction;
 
 
-
-
-
     //TODO: getter and setter
-    public User getUser() {
-        return user;
-    }
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-    public void setGroup(Group group) {
-        this.group = group;
-    }
-
-    public boolean getAnonymous() {
-        return anonymous;
-    }
-    public void setAnonymous(boolean anonymous) {
-        this.anonymous = anonymous;
-    }
-
-    public boolean getDisplay() {
-        return display;
-    }
-    public void setDisplay(boolean display) {
-        this.display = display;
-    }
 
     public String getTextTitle() {
         return textTitle;
     }
+
     public void setTextTitle(String textTitle) {
         this.textTitle = textTitle;
     }
@@ -87,6 +59,7 @@ public class MissionPost {
     public String getTextContent() {
         return textContent;
     }
+
     public void setTextContent(String textContent) {
         this.textContent = textContent;
     }
@@ -94,6 +67,7 @@ public class MissionPost {
     public String getImageContent() {
         return imageContent;
     }
+
     public void setImageContent(String imageContent) {
         this.imageContent = imageContent;
     }
@@ -101,6 +75,7 @@ public class MissionPost {
     public LocalDateTime getPostDateTime() {
         return postDateTime;
     }
+
     public void setPostDateTime(LocalDateTime postDateTime) {
         this.postDateTime = postDateTime;
     }
@@ -108,6 +83,7 @@ public class MissionPost {
     public List<Comment> getComment() {
         return comment;
     }
+
     public void setComment(List<Comment> comment) {
         this.comment = comment;
     }
@@ -115,6 +91,7 @@ public class MissionPost {
     public List<Reaction> getReaction() {
         return reaction;
     }
+
     public void setReaction(List<Reaction> reaction) {
         this.reaction = reaction;
     }
@@ -122,8 +99,41 @@ public class MissionPost {
     public Long getMissionPostId() {
         return missionPostId;
     }
+
     public void setMissionPostId(Long missionPostId) {
         this.missionPostId = missionPostId;
+    }
+
+    public boolean isAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(boolean anonymous) {
+        this.anonymous = anonymous;
+    }
+
+    public boolean isDisplay() {
+        return display;
+    }
+
+    public void setDisplay(boolean display) {
+        this.display = display;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
+    }
+
+    public Group getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Group groupId) {
+        this.groupId = groupId;
     }
 
 }

@@ -49,7 +49,7 @@ public class PointController {
         }
     }
 
-    //store => 아이템 정해져야 할 수 있음
+    //스토어 구매 api => 아이템 정해져야 할 수 있음
 
-    //패스권 사용 로직
+    //패스권 사용 api => Point관련된 로직은 아니라서 다른 Controller가 적합할 것같음.
 }

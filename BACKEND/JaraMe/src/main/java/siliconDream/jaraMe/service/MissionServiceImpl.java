@@ -109,18 +109,6 @@ public class MissionServiceImpl implements MissionService {
         return dailyMissionDTO;
     }
 
-/*
-    //TODO: 미션 완주
-    public boolean missionFinish(Long userId, Long groupId) {
-        //TODO : MissionFinishScheduler에서 가능한 경우 여기서 구현 x
-        //포인트 지급
-
-        return true;
-    }
-*/
-
-
-    //public void setDailyMission(){ //전체 유저 모두, 일괄 처리 => service없이 scheduler에 구현 ?
 
 
 }

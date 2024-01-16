@@ -90,7 +90,7 @@ public class User {
         return nickname;
     }
 
-    public boolean getCheckIn() {
+    public boolean isCheckIn() {
         return checkIn;
     }
     public void setCheckIn(boolean checkIn) {
