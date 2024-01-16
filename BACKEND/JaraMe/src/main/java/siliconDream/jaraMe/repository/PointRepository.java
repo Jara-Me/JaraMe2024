@@ -19,15 +19,7 @@ public interface PointRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserId(Long id);
 
 
-
-
-
-
-
-
-
-
-    //TODO: 패스권 구매
+    //TODO: 패스권 구매 (포인트 차감)
     default boolean updatePassTicket(Long userId) {
         try {
             Optional<User> userOptional = findByUserId(userId);
@@ -43,24 +35,12 @@ public interface PointRepository extends JpaRepository<User, Long> {
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
             return false;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
 
     }
 
 
-
-
-
-
-
-
-
-
-
-    //TODO: 출석체크
+    //TODO: 출석체크 (포인트 적립)
     default boolean updateCheckIn(Long userId) {
         try {
             Optional<User> userOptional = findByUserId(userId);
@@ -78,27 +58,13 @@ public interface PointRepository extends JpaRepository<User, Long> {
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
             return false;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
 
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-    //TODO: 오늘의 미션 완료
-    default boolean updateDailyMission(Long userId, Long earnedPoint) {
+    //TODO: 오늘의 미션 완료 (포인트 적립)
+    default boolean updateDailyMission(Long userId, int earnedPoint) {
         try {
             Optional<User> userOptional = findByUserId(userId);
             if (userOptional.isPresent()) {
@@ -118,5 +84,24 @@ public interface PointRepository extends JpaRepository<User, Long> {
             return false;
         }
 
+    }
+
+
+    //TODO: 미션 완주
+    default int plusPoint(Long userId, int changeAmount) {
+        try {
+            Optional<User> userOptional = findByUserId(userId);
+            User user = userOptional.get();
+            if (user != null) {
+                user.setPoint(user.getPoint() + changeAmount);
+                save(user);
+                return user.getPoint();
+            }
+        } catch (
+                EntityNotFoundException e) {
+            e.printStackTrace();
+
+        }
+        return 0; //수정하기(제대로 로직 수행 못했을 경우 반환값)
     }
 }

@@ -21,11 +21,11 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
         MissionPost missionPost = new MissionPost();
 
         //컬럼값 설정
-        missionPost.setUser(missionPost.getUser());
-        missionPost.setGroup(missionPost.getGroup());
+        missionPost.setUserId(missionPost.getUserId());
+        missionPost.setGroupId(missionPost.getGroupId());
 
-        missionPost.setDisplay(missionPost.getDisplay());
-        missionPost.setAnonymous(missionPost.getAnonymous());
+        missionPost.setDisplay(missionPost.isDisplay());
+        missionPost.setAnonymous(missionPost.isAnonymous());
         missionPost.setPostDateTime(missionPost.getPostDateTime());
 
         missionPost.setTextTitle(missionPost.getTextTitle());

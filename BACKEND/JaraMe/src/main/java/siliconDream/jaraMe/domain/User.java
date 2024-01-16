@@ -33,9 +33,9 @@ public class User {
     @Column(columnDefinition = "DEFAULT FALSE")
     private boolean checkIn;
 
-    private Long point=0L;
+    private int point=0;
 
-    private Long passTicket=0L;
+    private int passTicket=0;
 
 
     //FK
@@ -97,17 +97,17 @@ public class User {
         this.checkIn = checkIn;
     }
 
-    public Long getPoint() {
+    public int getPoint() {
         return point;
     }
-    public void setPoint(Long point) {
+    public void setPoint(int point) {
         this.point = point;
     }
 
-    public Long getPassTicket() {
+    public int getPassTicket() {
         return passTicket;
     }
-    public void setPassTicket(Long passTicket) {
+    public void setPassTicket(int passTicket) {
         this.passTicket = passTicket;
     }
 }

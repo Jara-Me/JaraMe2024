@@ -1,13 +1,10 @@
 
 package siliconDream.jaraMe.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -15,10 +12,14 @@ import java.util.HashSet;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+
+@Table
 public class Group {
+
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false,unique = true)
+    private Long groupId;
 
     private String groupName;
     private String missionName;
@@ -32,6 +33,12 @@ public class Group {
     private String recurrence;
 
     private LocalDateTime certificationDay; // Mission-related property
+
+    //TODO: getter and setter
+    public Long getGroupId() {
+        return groupId;
+    }
+
 
     @ManyToMany
     private Set<Account> managers = new HashSet<>();
@@ -64,4 +71,5 @@ public class Group {
 
         return group;
     }
+
 }

@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import siliconDream.jaraMe.domain.Group;
 import siliconDream.jaraMe.repository.GroupRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
 public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
-
+/*
     @Override
     public Group createNewGroup(String groupName, String missionName, String explanation, String rule,
                                 String groupProfileImage, int maxMember, boolean display, LocalDateTime startDate,
@@ -27,4 +29,12 @@ public class GroupServiceImpl implements GroupService {
         // Save the group
         return groupRepository.save(group);
     }
+*/
+
+    public List<Group> findEndDateToday(){
+        return groupRepository.findEndDateToday(LocalDate.now());
+    }
+
+
+
 }
