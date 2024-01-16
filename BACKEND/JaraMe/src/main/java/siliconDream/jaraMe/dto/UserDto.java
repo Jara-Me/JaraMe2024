@@ -3,12 +3,13 @@ package siliconDream.jaraMe.dto;
 import java.util.List;
 
 public class UserDto {
-    private Long id;
+    private Long userid;
     private String nickname;
     private String password;
     private String confirmPassword;
     private String email;
-    private String dateOfBirth; // You can use a more appropriate type for date of birth
+    private String birthDate;
+    private String profileImage;
     private List<String> interests;
 
     // Constructors, getters, and setters
@@ -16,24 +17,24 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(Long id, String nickname, String password, String confirmPassword, String email, String dateOfBirth, List<String> interests) {
-        this.id = id;
+    public UserDto(Long userid, String nickname, String password, String confirmPassword, String email, String dateOfBirth, List<String> interests) {
+        this.userid = userid;
         this.nickname = nickname;
         this.password = password;
         this.confirmPassword = confirmPassword;
         this.email = email;
-        this.dateOfBirth = dateOfBirth;
+        this.birthDate = birthDate;
         this.interests = interests;
     }
 
     // Getters and setters
 
-    public Long getId() {
-        return id;
+    public Long getUserid() {
+        return userid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserid(Long userid) {
+        this.userid = userid;
     }
 
     public String getNickname() {
@@ -68,12 +69,20 @@ public class UserDto {
         this.email = email;
     }
 
-    public String getDateOfBirth() {
-        return dateOfBirth;
+    public String getBirthDate() {
+        return birthDate;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public List<String> getInterests() {
@@ -84,19 +93,15 @@ public class UserDto {
         this.interests = interests;
     }
 
-    // You can add more getters and setters for additional fields
-
-    // toString method for debugging and logging
-
     @Override
     public String toString() {
         return "UserDto{" +
-                "id=" + id +
+                "userid=" + userid +
                 ", nickname='" + nickname + '\'' +
                 ", password='" + password + '\'' +
                 ", confirmPassword='" + confirmPassword + '\'' +
                 ", email='" + email + '\'' +
-                ", dateOfBirth='" + dateOfBirth + '\'' +
+                ", dateOfBirth='" + birthDate + '\'' +
                 ", interests=" + interests +
                 '}';
     }

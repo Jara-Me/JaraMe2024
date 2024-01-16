@@ -2,39 +2,54 @@ package siliconDream.jaraMe.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import siliconDream.jaraMe.domain.Group;
+import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.dto.GroupDTO;
 import siliconDream.jaraMe.service.GroupService;
+import siliconDream.jaraMe.service.UserService;
 
 @Controller
 @RequiredArgsConstructor
 public class GroupController {
 
     private final GroupService groupService;
-    private final GroupFormValidator groupFormValidator;
+    private final UserService userService;
 
-    @InitBinder("groupForm")
-    public void groupFormInitBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(groupFormValidator);
+    @InitBinder("groupDTO")
+    public void groupDTOInitBinder(WebDataBinder webDataBinder) {
     }
 
     @GetMapping("/new-group")
-    public String newGroupForm(@CurrentParticipant Participant participant, Model model) {
-        model.addAttribute(participant);
-        model.addAttribute(new GroupForm());
+    public String newGroupForm(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User participant = userService.findUserByUsername(username);
+
+        model.addAttribute("participant", participant);
+        model.addAttribute("groupDTO", new GroupDTO());
         return "group/form";
     }
 
     @PostMapping("/new-group")
-    public String newGroupSubmit(@CurrentParticipant Participant participant, @Valid GroupForm groupForm, Errors errors) {
+    public String newGroupSubmit(@Valid GroupDTO groupDTO, Errors errors) {
         if (errors.hasErrors()) {
             return "group/form";
         }
-        Group newGroup = groupService.createNewGroup(groupForm, participant);
-        return "redirect:/group/" + URLEncoder.encode(newGroup.getPath(), StandardCharsets.UTF_8);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User participant = userService.findUserByUsername(username);
+
+        Group newGroup = groupService.createNewGroup(groupDTO, String.valueOf(participant));
+        return "redirect:/group/" + newGroup.getId();
     }
 }

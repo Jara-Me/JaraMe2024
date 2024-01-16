@@ -2,6 +2,8 @@ package siliconDream.jaraMe.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import siliconDream.jaraMe.domain.Recurrence;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -17,6 +19,6 @@ public class GroupDTO {
     private boolean display;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String recurrence;
+    private Recurrence recurrence;
     private LocalDateTime certificationDay;
 }

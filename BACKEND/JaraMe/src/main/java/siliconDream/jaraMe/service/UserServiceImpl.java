@@ -2,7 +2,6 @@ package siliconDream.jaraMe.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import siliconDream.jaraMe.dao.UserDao;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.UserDto;
 import siliconDream.jaraMe.repository.UserRepository;
@@ -11,53 +10,66 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
-    UserDao userDao;
-
-    private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository){
-        this.userRepository=userRepository;
-    }
+    private UserRepository userRepository;
 
     @Override
     public boolean create(UserDto userDto) {
-        // 비밀번호 확인 로직 추가
         if (!isPasswordConfirmed(userDto)) {
-            return false; // 비밀번호 확인이 일치하지 않으면 가입 실패
+            return false; // Password confirmation failed
         }
 
-        // 중복 체크
-        String checkTF = userDao.signUpCheck(userDto);
-        if (checkTF == null) {
-            userDao.insert(userDto);
-            return true; // 중복값이 없으면 가입 성공
-        } else {
-            return false; // 중복값이 있으면 가입 실패
+        // Check for email duplication using JpaRepository
+        if (userRepository.findEmailByEmail(userDto.getEmail()) != null) {
+            return false; // Duplicate email
         }
+
+        // Check for nickname duplication using JpaRepository
+        if (userRepository.findNicknameByNickname(userDto.getNickname()) != null) {
+            return false; // Duplicate nickname
+        }
+
+        // Create and save the user entity
+        User user = new User();
+        user.setProfileImage(userDto.getProfileImage());
+        user.setNickname(userDto.getNickname());
+        user.setPassword(userDto.getPassword());
+        user.setEmail(userDto.getEmail());
+        user.setBirthDate(userDto.getBirthDate());
+
+        // Set other fields as needed
+        user.setCheckIn(false); // Assuming a new user is not checked in by default
+        user.setPoint(0L);
+        user.setPassTicket(0L);
+
+        userRepository.save(user);
+        return true; // Successful registration
     }
 
     @Override
     public String emailCheck(String email) {
-        return userDao.emailCheck(email);
+        return userRepository.findEmailByEmail(email);
     }
 
     @Override
     public boolean isPasswordConfirmed(UserDto userDto) {
-        // 비밀번호 확인 로직을 수행하여 결과 반환
         return userDto.getPassword().equals(userDto.getConfirmPassword());
-
     }
 
-    //출석체크 컬럼 초기화 설정에 사용되는 메서드
     @Override
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    //출석체크 컬럼 초기화 설정에 사용되는 메서드
     @Override
-    public void saveUser(User user){
+    public void saveUser(User user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public User findUserByUsername(String username) {
+        // Implement the logic to find a user by username
+        return userRepository.findByUsername(username);
     }
 }

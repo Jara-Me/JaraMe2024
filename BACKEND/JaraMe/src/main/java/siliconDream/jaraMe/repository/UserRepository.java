@@ -1,15 +1,14 @@
 package siliconDream.jaraMe.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import siliconDream.jaraMe.domain.User;
 
-import java.util.List;
+public interface UserRepository extends JpaRepository<User, Long> {
 
-@Repository
-public interface UserRepository extends JpaRepository<User,Long> {
+    String findEmailByEmail(String email);
 
-    List<User> findAll();
+    String findNicknameByNickname(String nickname);
 
-    User save(User user);
+    User findByUsername(String username);
+
 }
