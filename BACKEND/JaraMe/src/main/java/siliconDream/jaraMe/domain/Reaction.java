@@ -13,14 +13,15 @@ public class Reaction {
     private Long reactionId;
     private String reactionType;
 
+
     //FK
     @ManyToOne
     @JoinColumn(name="missionPostId")
-    private MissionPost missionPost;
+    private MissionPost missionPostId;
 
     @ManyToOne
     @JoinColumn(name="userId")
-    private User user;
+    private User userId;
 
 
     //TODO: getter and setter
@@ -38,18 +39,20 @@ public class Reaction {
         this.reactionType = reactionType;
     }
 
-    public MissionPost getMissionPost() {
-        return missionPost;
-    }
-    public void setMissionPost(MissionPost missionPost) {
-        this.missionPost = missionPost;
+    public MissionPost getMissionPostId() {
+        return missionPostId;
     }
 
-    public User getUser() {
-        return user;
+    public void setMissionPostId(MissionPost missionPostId) {
+        this.missionPostId = missionPostId;
     }
-    public void setUser(User user) {
-        this.user = user;
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
 }

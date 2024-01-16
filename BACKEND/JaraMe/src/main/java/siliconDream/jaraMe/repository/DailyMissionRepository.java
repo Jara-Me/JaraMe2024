@@ -11,7 +11,14 @@ import java.util.List;
 @Repository
 public interface DailyMissionRepository extends JpaRepository<DailyMission, Long> {
 
+    //오늘의 미션(하나) 진행상황 업데이트
     List<DailyMission> findByUserId(Long userId);
+
+
+
+
+
+
 
     @Modifying
     @Query(

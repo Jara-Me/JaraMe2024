@@ -1,9 +1,9 @@
 package siliconDream.jaraMe.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 public class DailyMission {
@@ -12,6 +12,18 @@ public class DailyMission {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long dailyMissionId;
 
+    private LocalDateTime dailyMissionDate;
+
+    private boolean dailyMissionResult;
+
+    //FK
+    @JoinColumn(name="userId")
+    private User userId;
+
+    @JoinColumn(name="groupId")
+    private Group groupId;
+
+    //TODO: getter and setter
     public Long getDailyMissionId() {
         return dailyMissionId;
     }
@@ -20,15 +32,14 @@ public class DailyMission {
         this.dailyMissionId = dailyMissionId;
     }
 
-    public boolean isDailyMissionStatus() {
-        return DailyMissionStatus;
+    public boolean isDailyMissionResult() {
+        return dailyMissionResult;
     }
 
-    public void setDailyMissionStatus(boolean dailyMissionStatus) {
-        DailyMissionStatus = dailyMissionStatus;
+    public void setDailyMissionResult(boolean dailyMissionResult) {
+        this.dailyMissionResult = dailyMissionResult;
     }
 
-    private boolean DailyMissionStatus;
 
     //마저 작성 필요
 }

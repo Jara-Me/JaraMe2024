@@ -11,4 +11,6 @@ public interface PointService {
    boolean checkIn(Long userId, LocalDateTime dateTime);
    boolean passTicket(Long userId);
 
+   int pointPlus(Long userId, int changeAmount);
+
 }

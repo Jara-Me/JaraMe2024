@@ -8,7 +8,9 @@ import siliconDream.jaraMe.domain.Recurrence;
 import siliconDream.jaraMe.dto.GroupDTO;
 import siliconDream.jaraMe.repository.GroupRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
-
+/*
     @Override
     public GroupDTO createNewGroup(GroupDTO groupDTO, String username) {
         // Extract relevant information from groupDTO
@@ -62,4 +64,12 @@ public class GroupServiceImpl implements GroupService {
         );
     }
     }
+*/
+
+    public List<Group> findEndDateToday(){
+        return groupRepository.findEndDateToday(LocalDate.now());
+    }
+
+
+
 }

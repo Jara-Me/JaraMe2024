@@ -24,6 +24,11 @@ public class MissionPostDTO {
     String textContent;
     String imageContent;
 
+
+
+
+
+
     //TODO:Getter and Setter
     public Long getUserId() {
         return userId;
@@ -35,10 +40,6 @@ public class MissionPostDTO {
 
     public LocalDateTime getDateTime() {
         return dateTime;
-    }
-
-    public boolean getDisplay() {
-        return display;
     }
 
     public String getTitle() {
@@ -53,11 +54,17 @@ public class MissionPostDTO {
         return imageContent;
     }
 
-    public boolean getAnonymous() {
-        return anonymous;
+    public boolean isDisplay() {
+        return display;
     }
 
+    public void setDisplay(boolean display) {
+        this.display = display;
+    }
 
+    public boolean isAnonymous() {
+        return anonymous;
+    }
 
     public void setAnonymous(boolean anonymous) {
         this.anonymous = anonymous;

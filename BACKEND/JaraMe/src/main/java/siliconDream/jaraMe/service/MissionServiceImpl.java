@@ -43,8 +43,8 @@ public class MissionServiceImpl implements MissionService {
         Long missionPostId = savedMissionPost.getMissionPostId();
 
 
-        Long groupId = savedMissionPost.getGroup().getGroupId();
-        Long userId = savedMissionPost.getUser().getUserId();
+        Long groupId = savedMissionPost.getGroupId().getGroupId();
+        Long userId = savedMissionPost.getUserId().getUserId();
         //TODO: 오늘의 미션 중 얼마나 완료했는지 반영
         dailyMissionFinish(userId, groupId); //어떤 유저인지, 오늘의 미션 중 어떤 미션(그룹)을 완료했는지 전달
 
@@ -82,12 +82,12 @@ public class MissionServiceImpl implements MissionService {
         //       그리고 레코드의 개수*3만큼의 포인트 지급
         //전달받은 dailyMissionList의 dailyMissionStatus 컬럼이 모두 true
         boolean allTrue = dailyMissionList.stream()
-                .allMatch(dailyMission -> dailyMission.isDailyMissionStatus());
+                .allMatch(dailyMission -> dailyMission.isDailyMissionResult());
 
         //모든 레코드의 컬럼 값이 true라면 포인트 지급
         if (allTrue) {
-            Long taskNumber = (long) dailyMissionList.size();
-            Long earnedPoint = taskNumber * 3;
+            int taskNumber =  dailyMissionList.size();
+            int earnedPoint = taskNumber * 3;
             result = pointRepository.updateDailyMission(userId, earnedPoint);
         }
 
@@ -109,18 +109,16 @@ public class MissionServiceImpl implements MissionService {
         return dailyMissionDTO;
     }
 
-/*
-    //TODO: 미션 완주
-    public boolean missionFinish(Long userId, Long groupId) {
-        //TODO : MissionFinishScheduler에서 가능한 경우 여기서 구현 x
-        //포인트 지급
-
-        return true;
+    //미션에 참여한 유저들의 참여율 알아내기 => 스케줄링 구현 후에 할 수 있을 듯.
+    public int missionParticipationRate(Long userId){
+        int codeNum=0;
+        // 1/3 미만 : 미적립
+        // 1/3 이상~ 2/3 미만 : 10
+        // 2/3 이상~ 전체 미만 : 20
+        // 전체 : 50
+        return codeNum;
     }
-*/
 
-
-    //public void setDailyMission(){ //전체 유저 모두, 일괄 처리 => service없이 scheduler에 구현 ?
 
 
 }

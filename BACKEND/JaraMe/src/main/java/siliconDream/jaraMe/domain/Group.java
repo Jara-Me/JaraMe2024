@@ -1,13 +1,17 @@
+
 package siliconDream.jaraMe.domain;
 
+<<<<<<< HEAD
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.ManyToMany;
+=======
+import jakarta.persistence.*;
+>>>>>>> bb0111f706d92548b8747c92fe2a8abcd4a4ba85
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -15,10 +19,14 @@ import java.util.HashSet;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+
+@Table
 public class Group {
+
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false,unique = true)
+    private Long groupId;
 
     private String groupName;
     private String missionName;
@@ -35,6 +43,23 @@ public class Group {
 
     private LocalDateTime certificationDay; // Mission-related property
 
+<<<<<<< HEAD
+=======
+    //TODO: getter and setter
+    public Long getGroupId() {
+        return groupId;
+    }
+
+
+    @ManyToMany
+    private Set<Account> managers = new HashSet<>();
+
+    public void addManager(Account account) {
+        managers.add(account);
+    }
+
+    // ... other methods
+>>>>>>> bb0111f706d92548b8747c92fe2a8abcd4a4ba85
 
     public static Group createNewGroup(String groupName, String missionName, String explanation, String rule,
                                        String groupProfileImage, int maxMember, boolean display, LocalDateTime startDate,
@@ -55,4 +80,5 @@ public class Group {
 
         return group;
     }
+
 }

@@ -15,6 +15,7 @@ public interface MissionService {
     boolean dailyMissionFinish(Long userId, Long groupId);
     DailyMissionDTO getDailyMission(Long userId, LocalDateTime todayDate);
     //boolean missionFinish(Long userId, Long groupId);
+    int missionParticipationRate(Long userId);
 
 
 }
