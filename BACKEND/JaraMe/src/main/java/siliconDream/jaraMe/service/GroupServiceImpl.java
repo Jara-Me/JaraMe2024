@@ -18,7 +18,7 @@ import java.util.List;
 public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
-/*
+
     @Override
     public GroupDTO createNewGroup(GroupDTO groupDTO, String username) {
         // Extract relevant information from groupDTO
@@ -49,7 +49,7 @@ public class GroupServiceImpl implements GroupService {
     // Your logic to convert Group to GroupDTO
     private GroupDTO convertToDTO(Group group) {
         return new GroupDTO(
-                group.getId(),
+                group.getGroupId(),
                 group.getGroupName(),
                 group.getMissionName(),
                 group.getExplanation(),
@@ -64,7 +64,7 @@ public class GroupServiceImpl implements GroupService {
         );
     }
     }
-*/
+
 
     public List<Group> findEndDateToday(){
         return groupRepository.findEndDateToday(LocalDate.now());

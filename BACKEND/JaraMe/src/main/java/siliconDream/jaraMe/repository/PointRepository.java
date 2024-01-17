@@ -15,32 +15,10 @@ import java.util.Optional;
 public interface PointRepository extends JpaRepository<User, Long> {
 
 
-    //TODO: 레코드 조회
-    Optional<User> findByUserId(Long id);
+    // userId로 조회
+    Optional<User> findByUserId(Long userId);
 
-
-    //TODO: 패스권 구매 (포인트 차감)
-    default boolean updatePassTicket(Long userId) {
-        try {
-            Optional<User> userOptional = findByUserId(userId);
-            User user = userOptional.get();
-            if (user != null) {
-                user.setPoint(user.getPoint() - 60);
-                user.setPassTicket((user.getPassTicket() + 1));
-                save(user);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (EntityNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-    }
-
-
-    //TODO: 출석체크 (포인트 적립)
+    //출석체크 (포인트 적립)
     default boolean updateCheckIn(Long userId) {
         try {
             Optional<User> userOptional = findByUserId(userId);
@@ -61,6 +39,31 @@ public interface PointRepository extends JpaRepository<User, Long> {
         }
 
     }
+
+
+
+
+    // 패스권 구매 (포인트 차감)
+    default boolean updatePassTicket(Long userId) {
+        try {
+            Optional<User> userOptional = findByUserId(userId);
+            User user = userOptional.get();
+            if (user != null) {
+                user.setPoint(user.getPoint() - 60);
+                user.setPassTicket((user.getPassTicket() + 1));
+                save(user);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+
 
 
     //TODO: 오늘의 미션 완료 (포인트 적립)

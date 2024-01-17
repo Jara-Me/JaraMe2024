@@ -21,20 +21,20 @@ public class PointController {
     }
 
 
-    //TODO: 출석체크
+    //출석체크
     @PostMapping("/checkIn") //@ResponseBody
     public String checkIn(@RequestParam Long userId, @RequestParam @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss") LocalDateTime dateTime) {
         //return pointService.checkIn(userId, dateTime);
         boolean httpResponse = pointService.checkIn(userId, dateTime);
         if (httpResponse) {
-            return "출석체크 포인트가 지급되었습니다!";
+            return "출석체크 포인트가 지급되었습니다! (+2p)";
         } else {
             //throw new CustomException(POINT_NOT_FOUND);
             return "출석체크에 실패하였습니다!";
         }
     }
 
-    //TODO: 패스권 구매
+    //패스권 구매
     @PostMapping("/passTicket")
     @ResponseBody
     public ResponseEntity passTicket(@RequestParam Long userId) throws Exception {

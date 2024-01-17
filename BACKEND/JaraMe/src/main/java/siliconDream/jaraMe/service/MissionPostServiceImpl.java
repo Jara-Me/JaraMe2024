@@ -32,7 +32,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         this.pointRepository = pointRepository;
     }
 
-    //TODO: 미션 인증글 작성
+    //미션 인증글 작성
     public Optional<GetMissionPostDTO> missionPost(MissionPostDTO missionPost) {
 
         //미션 인증글 저장하고 저장된 내용 받아오기
@@ -52,7 +52,7 @@ public class MissionPostServiceImpl implements MissionPostService {
     }
 
 
-    //TODO : 미션 인증글 조회
+    //미션 인증글 조회
     public Optional<GetMissionPostDTO> getMissionPostDetails(Long missionPostId) {
         //레코드 찾기
         //missionPostRepository.findByMissionPostId(missionPostId); //인증글 레코드만 전달받을 수 있음.
@@ -63,12 +63,12 @@ public class MissionPostServiceImpl implements MissionPostService {
     }
 
 
-    //TODO : 오늘의 미션 완료
+    //오늘의 미션 완료
     //미션 인증글 등록 시 호출됨. => 미션 인증 여부를 업데이트한 후,
-    // '오늘의 미션' 전체를 인증했는지 여부를 확인해서 모두 True인 경우 포인트 부여.
+    //'오늘의 미션' 전체를 인증했는지 여부를 확인해서 모두 True인 경우 포인트 부여.
     public boolean dailyMissionFinish(Long userId, Long groupId) {
         boolean result = false;
-        //TODO : dailyMission 테이블에서 매개변수로 전달받은 userId로 필터링한 뒤,
+        // dailyMission 테이블에서 매개변수로 전달받은 userId로 필터링한 뒤,
         //       매개변수로 전달받은 groupId로 필터링한 레코드의 dailyMissionResult F->T로 업데이트
         dailyMissionRepository.updateDailyMissionStatus(userId, groupId);
 
@@ -77,7 +77,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         List<DailyMission> dailyMissionList = dailyMissionRepository.findByUserId(userId);
 
 
-        //TODO : dailyMission 테이블에서 userId로 필터링했을 때 dailyMissionResult 컬럼이 모두 T인 경우,
+        // dailyMission 테이블에서 userId로 필터링했을 때 dailyMissionResult 컬럼이 모두 T인 경우,
         //       레코드가 몇개인지 개수 세기
         //       그리고 레코드의 개수*3만큼의 포인트 지급
         //전달받은 dailyMissionList의 dailyMissionStatus 컬럼이 모두 true

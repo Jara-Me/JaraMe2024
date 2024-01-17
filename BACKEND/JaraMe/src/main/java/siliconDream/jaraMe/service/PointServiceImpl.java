@@ -18,7 +18,7 @@ public class PointServiceImpl implements PointService {
     //출석체크
     public boolean checkIn(Long userId, LocalDateTime dateTime) {
         boolean checkInResult = false;
-        Optional<User> user = pointRepository.findById(userId);
+        Optional<User> user = pointRepository.findByUserId(userId);
         if (user.isPresent()) {
             boolean updateResult = pointRepository.updateCheckIn(userId);
             checkInResult = updateResult;
@@ -30,6 +30,7 @@ public class PointServiceImpl implements PointService {
 
     }
 
+    //패스권 구매
     public boolean passTicket(Long userId) {
         //dao를 통해 userId로 해당 레코드 가져온 후, point컬럼 값 추출하기
         boolean passTicketResult = false;
