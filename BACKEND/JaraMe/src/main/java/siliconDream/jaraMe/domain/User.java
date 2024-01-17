@@ -59,7 +59,7 @@ public class User {
     //FK
     @OneToMany(mappedBy="user")
     @JsonIgnore
-    private List<JoinUserList> joinUserList;
+    private List<JoinUsers> joinUsers;
 
     @OneToMany(mappedBy="user")
     @JsonIgnore
@@ -78,25 +78,21 @@ public class User {
         this.userId = userId;
     }
 
-    public Long getUserId() {
-        return userId;
+
+    public String getProfileImage() {
+        return profileImage;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public String getNickname() {
         return nickname;
     }
 
-<<<<<<< HEAD
     public void setNickname(String nickname) {
         this.nickname = nickname;
-=======
-    public boolean isCheckIn() {
-        return checkIn;
->>>>>>> bb0111f706d92548b8747c92fe2a8abcd4a4ba85
     }
 
     public String getPassword() {
@@ -115,20 +111,18 @@ public class User {
         this.email = email;
     }
 
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
-    public String getProfileImage() { return profileImage; }
 
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
+    public boolean isCheckIn() {
+        return checkIn;
     }
 
-    public boolean getCheckIn() { return checkIn; }
     public void setCheckIn(boolean checkIn) {
         this.checkIn = checkIn;
     }
@@ -136,6 +130,7 @@ public class User {
     public int getPoint() {
         return point;
     }
+
     public void setPoint(int point) {
         this.point = point;
     }
@@ -143,8 +138,58 @@ public class User {
     public int getPassTicket() {
         return passTicket;
     }
+
     public void setPassTicket(int passTicket) {
         this.passTicket = passTicket;
     }
+
+    public List<MissionPost> getMissionPost() {
+        return missionPost;
+    }
+
+    public void setMissionPost(List<MissionPost> missionPost) {
+        this.missionPost = missionPost;
+    }
+
+    public List<Comment> getComment() {
+        return comment;
+    }
+
+    public void setComment(List<Comment> comment) {
+        this.comment = comment;
+    }
+
+    public List<Reaction> getReaction() {
+        return reaction;
+    }
+
+    public void setReaction(List<Reaction> reaction) {
+        this.reaction = reaction;
+    }
+
+    public List<JoinUsers> getJoinUsers() {
+        return joinUsers;
+    }
+
+    public void setJoinUsers(List<JoinUsers> joinUsers) {
+        this.joinUsers = joinUsers;
+    }
+
+    public List<MissionHistory> getMissionHistory() {
+        return missionHistory;
+    }
+
+    public void setMissionHistory(List<MissionHistory> missionHistory) {
+        this.missionHistory = missionHistory;
+    }
+
+    public List<ToDoList> getToDoList() {
+        return toDoList;
+    }
+
+    public void setToDoList(List<ToDoList> toDoList) {
+        this.toDoList = toDoList;
+    }
+
 
 }

@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import siliconDream.jaraMe.domain.Group;
-import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.service.GroupService;
 import siliconDream.jaraMe.service.JoinUsersService;
-import siliconDream.jaraMe.service.MissionService;
+import siliconDream.jaraMe.service.MissionPostService;
 import siliconDream.jaraMe.service.PointService;
 
 import java.util.List;
@@ -16,14 +15,14 @@ import java.util.List;
 public class MissionFinishScheduler {
 
     private final GroupService groupService;
-    private final MissionService missionService;
+    private final MissionPostService missionService;
     private final PointService pointService;
     private final JoinUsersService joinUsersService;
 
 
     @Autowired
     public MissionFinishScheduler(GroupService groupService,
-                                  MissionService missionService,
+                                  MissionPostService missionService,
                                   PointService pointService,
                                   JoinUsersService joinUsersService) {
         this.groupService = groupService;

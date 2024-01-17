@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import siliconDream.jaraMe.domain.DailyMission;
 import siliconDream.jaraMe.domain.MissionPost;
+import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.MissionPostDTO;
 import siliconDream.jaraMe.dto.GetMissionPostDTO;
 import siliconDream.jaraMe.dto.DailyMissionDTO;
@@ -12,20 +13,19 @@ import siliconDream.jaraMe.repository.MissionPostRepository;
 import siliconDream.jaraMe.repository.PointRepository;
 import siliconDream.jaraMe.repository.ScheduleRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class MissionServiceImpl implements MissionService {
+public class MissionPostServiceImpl implements MissionPostService {
     private final MissionPostRepository missionPostRepository;
     private final ScheduleRepository scheduleRepository;
     private final DailyMissionRepository dailyMissionRepository;
     private final PointRepository pointRepository;
 
     @Autowired
-    public MissionServiceImpl(MissionPostRepository missionPostRepository, ScheduleRepository scheduleRepository, DailyMissionRepository dailyMissionRepository, PointRepository pointRepository) {
+    public MissionPostServiceImpl(MissionPostRepository missionPostRepository, ScheduleRepository scheduleRepository, DailyMissionRepository dailyMissionRepository, PointRepository pointRepository) {
         this.missionPostRepository = missionPostRepository;
         this.scheduleRepository = scheduleRepository;
         this.dailyMissionRepository = dailyMissionRepository;
@@ -42,7 +42,6 @@ public class MissionServiceImpl implements MissionService {
         //저장된 미션 인증글의 식별자(missionPostId) 얻기
         Long missionPostId = savedMissionPost.getMissionPostId();
 
-
         Long groupId = savedMissionPost.getGroupId().getGroupId();
         Long userId = savedMissionPost.getUserId().getUserId();
         //TODO: 오늘의 미션 중 얼마나 완료했는지 반영
@@ -52,6 +51,7 @@ public class MissionServiceImpl implements MissionService {
         return getMissionPostDetails(missionPostId);
     }
 
+
     //TODO : 미션 인증글 조회
     public Optional<GetMissionPostDTO> getMissionPostDetails(Long missionPostId) {
         //레코드 찾기
@@ -59,15 +59,15 @@ public class MissionServiceImpl implements MissionService {
         GetMissionPostDTO getMissionPostDTO = new GetMissionPostDTO();
         getMissionPostDTO = missionPostRepository.findByMissionPostIdWithCommentsAndReactions(missionPostId); //댓글,리액션까지 전달.
 
-
         return Optional.ofNullable(getMissionPostDTO);
     }
+
 
     //TODO : 오늘의 미션 완료
     //미션 인증글 등록 시 호출됨. => 미션 인증 여부를 업데이트한 후,
     // '오늘의 미션' 전체를 인증했는지 여부를 확인해서 모두 True인 경우 포인트 부여.
     public boolean dailyMissionFinish(Long userId, Long groupId) {
-        boolean result=false;
+        boolean result = false;
         //TODO : dailyMission 테이블에서 매개변수로 전달받은 userId로 필터링한 뒤,
         //       매개변수로 전달받은 groupId로 필터링한 레코드의 dailyMissionResult F->T로 업데이트
         dailyMissionRepository.updateDailyMissionStatus(userId, groupId);
@@ -86,15 +86,14 @@ public class MissionServiceImpl implements MissionService {
 
         //모든 레코드의 컬럼 값이 true라면 포인트 지급
         if (allTrue) {
-            int taskNumber =  dailyMissionList.size();
+            int taskNumber = dailyMissionList.size();
             int earnedPoint = taskNumber * 3;
             result = pointRepository.updateDailyMission(userId, earnedPoint);
         }
 
 
-
         return result;//예외처리 하기
-}
+    }
 
     //TODO : 오늘의 미션 조회
     public DailyMissionDTO getDailyMission(Long userId, LocalDateTime todayDate) {
@@ -110,15 +109,16 @@ public class MissionServiceImpl implements MissionService {
     }
 
     //미션에 참여한 유저들의 참여율 알아내기 => 스케줄링 구현 후에 할 수 있을 듯.
-    public int missionParticipationRate(Long userId){
-        int codeNum=0;
+    public int missionParticipationRate(Long userId) {
+        int codeNum = 0;
         // 1/3 미만 : 미적립
         // 1/3 이상~ 2/3 미만 : 10
         // 2/3 이상~ 전체 미만 : 20
         // 전체 : 50
+
+
         return codeNum;
     }
-
 
 
 }
