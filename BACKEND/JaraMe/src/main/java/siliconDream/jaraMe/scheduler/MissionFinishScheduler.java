@@ -41,6 +41,7 @@ public class MissionFinishScheduler {
 
         //'오늘' 미션이 종료되는 그룹들을 리스트로 얻은 다음,
         List<Group> groups = groupService.findEndDateToday();
+
         for (Group group : groups) {
 
             Long groupId = group.getGroupId();
@@ -49,14 +50,14 @@ public class MissionFinishScheduler {
             for (Long userId : userIds) {
                 //미션에 참여한 유저들의 참여율 알아내기
 
-                int codeNum = missionService.missionParticipationRate(userId);
+                int plusPoint = missionService.missionParticipationRate(userId);
                 // 1/3 미만 : 미적립
                 // 1/3 이상~ 2/3 미만 : 10
                 // 2/3 이상~ 전체 미만 : 20
                 // 전체 : 50
 
                 //포인트 지급 로직 이용
-                int updatedPoint = pointService.pointPlus(userId, codeNum);
+                int updatedPoint = pointService.pointPlus(userId, plusPoint);
             }
 
         //return 메시지 작성 => mission연장 여부에 따라 결정

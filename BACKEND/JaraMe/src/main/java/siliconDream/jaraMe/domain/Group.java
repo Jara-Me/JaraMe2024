@@ -1,20 +1,18 @@
-
 package siliconDream.jaraMe.domain;
 
-<<<<<<< HEAD
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.ManyToMany;
-=======
 import jakarta.persistence.*;
->>>>>>> bb0111f706d92548b8747c92fe2a8abcd4a4ba85
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,7 +25,6 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false,unique = true)
     private Long groupId;
-
     private String groupName;
     private String missionName;
     private String explanation;
@@ -35,20 +32,15 @@ public class Group {
     private String groupProfileImage;
     private int maxMember;
     private boolean display;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
-    @Enumerated
-    private Recurrence recurrence;
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(targetClass = Recurrence.class, fetch = FetchType.EAGER)
+    @CollectionTable(name="GroupAndRecurrence",joinColumns = @JoinColumn(name="groupId"))
+    @Column(name="recurrence")
+    private Set<Recurrence> recurrence;
 
-    private LocalDateTime certificationDay; // Mission-related property
-
-<<<<<<< HEAD
-=======
-    //TODO: getter and setter
-    public Long getGroupId() {
-        return groupId;
-    }
 
 
     @ManyToMany
@@ -58,12 +50,9 @@ public class Group {
         managers.add(account);
     }
 
-    // ... other methods
->>>>>>> bb0111f706d92548b8747c92fe2a8abcd4a4ba85
-
     public static Group createNewGroup(String groupName, String missionName, String explanation, String rule,
-                                       String groupProfileImage, int maxMember, boolean display, LocalDateTime startDate,
-                                       LocalDateTime endDate, Recurrence recurrence, LocalDateTime certificationDay) {
+                                       String groupProfileImage, int maxMember, boolean display, LocalDate startDate,
+                                       LocalDate endDate, Set<Recurrence> recurrence) {
         Group group = new Group();
         group.groupName = groupName;
         group.missionName = missionName;
@@ -75,10 +64,95 @@ public class Group {
         group.startDate = startDate;
         group.endDate = endDate;
         group.recurrence = recurrence;
-        group.certificationDay = certificationDay;
-
 
         return group;
     }
+    //TODO: getter and setter
+    public Long getGroupId() {
+        return groupId;
+    }
 
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getMissionName() {
+        return missionName;
+    }
+
+    public void setMissionName(String missionName) {
+        this.missionName = missionName;
+    }
+
+    public String getExplanation() {
+        return explanation;
+    }
+
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
+    }
+
+    public String getRule() {
+        return rule;
+    }
+
+    public void setRule(String rule) {
+        this.rule = rule;
+    }
+
+    public String getGroupProfileImage() {
+        return groupProfileImage;
+    }
+
+    public void setGroupProfileImage(String groupProfileImage) {
+        this.groupProfileImage = groupProfileImage;
+    }
+
+    public int getMaxMember() {
+        return maxMember;
+    }
+
+    public void setMaxMember(int maxMember) {
+        this.maxMember = maxMember;
+    }
+
+    public boolean isDisplay() {
+        return display;
+    }
+
+    public void setDisplay(boolean display) {
+        this.display = display;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public Set<Recurrence> getRecurrence() {
+        return recurrence;
+    }
+
+    public void setRecurrence(Set<Recurrence> recurrence) {
+        this.recurrence = recurrence;
+    }
 }

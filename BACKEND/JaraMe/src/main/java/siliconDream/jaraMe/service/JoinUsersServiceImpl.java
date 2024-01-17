@@ -14,8 +14,6 @@ public class JoinUsersServiceImpl {
     }
 
     public List<Long> findUserIdsByGroupId(Long groupId){
-
-
         return joinUsersRepository.findUserIdsByGroupId(groupId);
     }
 }

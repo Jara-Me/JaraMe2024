@@ -2,9 +2,12 @@ package siliconDream.jaraMe.service;
 
 import siliconDream.jaraMe.domain.Group;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
+import siliconDream.jaraMe.domain.Recurrence;
 import siliconDream.jaraMe.dto.GroupDTO;
 
 public interface GroupService {
@@ -12,8 +15,8 @@ public interface GroupService {
 
 
     Group createNewGroup(String groupName, String missionName, String explanation, String rule,
-                         String groupProfileImage, int maxMember, boolean display, LocalDateTime startDate,
-                         LocalDateTime endDate, String recurrence, LocalDateTime certificationDay,
+                         String groupProfileImage, int maxMember, boolean display, LocalDate startDate,
+                         LocalDate endDate, Set<Recurrence> recurrence,
                          Set<Account> managers);
 
 

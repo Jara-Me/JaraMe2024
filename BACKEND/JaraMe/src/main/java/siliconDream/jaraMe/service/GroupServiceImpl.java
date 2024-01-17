@@ -11,6 +11,7 @@ import siliconDream.jaraMe.repository.GroupRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -29,15 +30,15 @@ public class GroupServiceImpl implements GroupService {
         String groupProfileImage = groupDTO.getGroupProfileImage();
         int maxMember = groupDTO.getMaxMember();
         boolean display = groupDTO.isDisplay();
-        LocalDateTime startDate = groupDTO.getStartDate();
-        LocalDateTime endDate = groupDTO.getEndDate();
-        Recurrence recurrence = groupDTO.getRecurrence();
-        LocalDateTime certificationDay = groupDTO.getCertificationDay();
+        LocalDate startDate = groupDTO.getStartDate();
+        LocalDate endDate = groupDTO.getEndDate();
+        Set<Recurrence> recurrence = groupDTO.getRecurrence();
+
 
 
         // Create a new group
         Group group = Group.createNewGroup(groupName, missionName, explanation, rule, groupProfileImage,
-                maxMember, display, startDate, endDate, recurrence, certificationDay);
+                maxMember, display, startDate, endDate, recurrence);
 
         // Save the group
         Group savedGroup = groupRepository.save(group);
@@ -59,10 +60,9 @@ public class GroupServiceImpl implements GroupService {
                 group.isDisplay(),
                 group.getStartDate(),
                 group.getEndDate(),
-                Recurrence.valueOf(group.getRecurrence()), // Convert String to Recurrence enum
-                group.getCertificationDay()
+                group.getRecurrence()
         );
-    }
+
     }
 
 

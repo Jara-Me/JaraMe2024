@@ -6,6 +6,7 @@ import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.UserDto;
 import siliconDream.jaraMe.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -36,12 +37,14 @@ public class UserServiceImpl implements UserService {
         user.setNickname(userDto.getNickname());
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
-        user.setBirthDate(userDto.getBirthDate());
+        String birthDateString = userDto.getBirthDate();
+        LocalDate birthDate = LocalDate.parse(birthDateString);
+        user.setBirthDate(birthDate);
 
         // Set other fields as needed
         user.setCheckIn(false); // Assuming a new user is not checked in by default
-        user.setPoint(0L);
-        user.setPassTicket(0L);
+        user.setPoint(0);
+        user.setPassTicket(0);
 
         userRepository.save(user);
         return true; // Successful registration

@@ -50,6 +50,6 @@ public class GroupController {
         User participant = userService.findUserByUsername(username);
 
         Group newGroup = groupService.createNewGroup(groupDTO, String.valueOf(participant));
-        return "redirect:/group/" + newGroup.getId();
+        return "redirect:/group/" + newGroup.getGroupId();
     }
 }
