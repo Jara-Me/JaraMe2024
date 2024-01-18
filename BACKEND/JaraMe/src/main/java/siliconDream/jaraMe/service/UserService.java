@@ -16,6 +16,7 @@ public interface UserService {
     List<User> getAllUsers();
 
     void saveUser(User user);
-    /*오류나는 부분-커밋
-    User findUserByUsername(String username); */
+
+    //수정한 부분
+    User findUserByUserId(Long userId);
 }

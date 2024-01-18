@@ -69,10 +69,11 @@ public class UserServiceImpl implements UserService {
     public void saveUser(User user) {
         userRepository.save(user);
     }
-/*오류나는 부분 -커밋
+
     @Override
-    public User findUserByUsername(String username) {
+    public User findUserByUserId(Long userId) {
         // Implement the logic to find a user by username
-        return userRepository.findByUsername(username);
-    }*/
+        //수정한 부분
+        return userRepository.findByUserId(userId);
+    }
 }

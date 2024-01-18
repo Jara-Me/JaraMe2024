@@ -34,7 +34,7 @@ public class JaraUs {
     //private Set<Recurrence> recurrence;
 
 
-/*커밋 전에 주석 취소
+/*Account가 없는 상태라 에러나서 주석처리함.
     @ManyToMany
     private Set<Account> managers = new HashSet<>();
 
