@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface MissionPostService {
     Optional<GetMissionPostDTO> missionPost(MissionPostDTO missionPostDTO);
     Optional<GetMissionPostDTO>  getMissionPostDetails(Long missionPostId);
-    boolean dailyMissionFinish(Long userId, Long groupId);
+    boolean dailyMissionFinish(Long userId, Long jaraUsId);
     DailyMissionDTO getDailyMission(Long userId, LocalDateTime todayDate);
-    //boolean missionFinish(Long userId, Long groupId);
+    //boolean missionFinish(Long userId, Long jaraUsId);
     int missionParticipationRate(Long userId);
 
 

@@ -11,12 +11,13 @@ public class JoinUsers {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long joinUsersId;
 
+    @ManyToOne
     @JoinColumn(name="userId")
     private User userId;
 
-    @JoinColumn(name="groupId")
-    private Group groupId;
-
+    @ManyToOne
+    @JoinColumn(name="jaraUsId")
+    private JaraUs jaraUsId;
 
     //TODO: getter and setter
 
@@ -36,12 +37,12 @@ public class JoinUsers {
         this.userId = userId;
     }
 
-    public Group getGroupId() {
-        return groupId;
+    public JaraUs getJaraUsId() {
+        return jaraUsId;
     }
 
-    public void setGroupId(Group groupId) {
-        this.groupId = groupId;
+    public void setJaraUsId(JaraUs jaraUsId) {
+        this.jaraUsId = jaraUsId;
     }
 }
 

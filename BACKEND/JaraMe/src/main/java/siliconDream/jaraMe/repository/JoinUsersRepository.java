@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface JoinUsersRepository extends JpaRepository<JoinUsers,Long> {
 
-    List<Long> findUserIdsByGroupId(Long groupId);
+    List<Long> findUserIdsByJaraUsId_JaraUsId(Long jaraUsId);
 
 }

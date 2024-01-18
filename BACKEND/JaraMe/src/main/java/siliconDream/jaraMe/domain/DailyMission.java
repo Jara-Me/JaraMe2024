@@ -2,7 +2,6 @@ package siliconDream.jaraMe.domain;
 
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,11 +16,13 @@ public class DailyMission {
     private boolean dailyMissionResult;
 
     //FK
+    @ManyToOne
     @JoinColumn(name="userId")
     private User userId;
 
-    @JoinColumn(name="groupId")
-    private Group groupId;
+    @ManyToOne
+    @JoinColumn(name="jaraUsId")
+    private JaraUs jaraUsId;
 
     //TODO: getter and setter
     public Long getDailyMissionId() {

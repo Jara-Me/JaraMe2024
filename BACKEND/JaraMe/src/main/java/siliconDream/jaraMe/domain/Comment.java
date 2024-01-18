@@ -22,7 +22,7 @@ public class Comment {
 
     // FK
     @ManyToOne
-    @JoinColumn(name = "mission_postId")
+    @JoinColumn(name = "missionPostId")
     private MissionPost missionPostId;
 
     @ManyToOne

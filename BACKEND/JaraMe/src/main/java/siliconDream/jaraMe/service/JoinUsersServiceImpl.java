@@ -13,7 +13,7 @@ public class JoinUsersServiceImpl {
         this.joinUsersRepository=joinUsersRepository;
     }
 
-    public List<Long> findUserIdsByGroupId(Long groupId){
-        return joinUsersRepository.findUserIdsByGroupId(groupId);
+    public List<Long> findUserIdsByJaraUsId(Long jaraUsId){
+        return joinUsersRepository.findUserIdsByJaraUsId_JaraUsId(jaraUsId);
     }
 }

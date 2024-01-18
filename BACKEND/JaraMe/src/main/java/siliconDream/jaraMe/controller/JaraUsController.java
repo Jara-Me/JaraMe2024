@@ -11,45 +11,43 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
-import siliconDream.jaraMe.domain.Group;
 import siliconDream.jaraMe.domain.User;
-import siliconDream.jaraMe.dto.GroupDTO;
-import siliconDream.jaraMe.service.GroupService;
+import siliconDream.jaraMe.dto.JaraUsDTO;
+import siliconDream.jaraMe.service.JaraUsService;
 import siliconDream.jaraMe.service.UserService;
 
 @Controller
 @RequiredArgsConstructor
-public class GroupController {
+public class JaraUsController {
 
-    private final GroupService groupService;
+    private final JaraUsService jaraUsService;
     private final UserService userService;
 
-    @InitBinder("groupDTO")
-    public void groupDTOInitBinder(WebDataBinder webDataBinder) {
+    @InitBinder("jaraUsDTO")
+    public void jaraUsDTOInitBinder(WebDataBinder webDataBinder) {
     }
-
-    @GetMapping("/new-group")
-    public String newGroupForm(Model model) {
+/*오류나는 부분 -커밋
+    @GetMapping("/new-jaraUs")
+    public String newJaraUsForm(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User participant = userService.findUserByUsername(username);
 
         model.addAttribute("participant", participant);
-        model.addAttribute("groupDTO", new GroupDTO());
-        return "group/form";
+        model.addAttribute("jaraUsDTO", new JaraUsDTO());
+        return "jaraUs/form";
     }
 
-    @PostMapping("/new-group")
-    public String newGroupSubmit(@Valid GroupDTO groupDTO, Errors errors) {
+    @PostMapping("/new-jaraUs")
+    public String newJaraUsSubmit(@Valid JaraUsDTO jaraUsDTO, Errors errors) {
         if (errors.hasErrors()) {
-            return "group/form";
+            return "jaraUs/form";
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User participant = userService.findUserByUsername(username);
 
-        Group newGroup = groupService.createNewGroup(groupDTO, String.valueOf(participant));
-        return "redirect:/group/" + newGroup.getGroupId();
-    }
+        JaraUs newJaraUs = jaraUsService.createNewJaraUs(jaraUsDTO, String.valueOf(participant));
+        return "redirect:/jaraUs/" + newJaraUs.getJaraUsId();}*/
 }

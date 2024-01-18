@@ -9,6 +9,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     String findNicknameByNickname(String nickname);
 
+    /*오류나는 부분 -커밋
     User findByUsername(String username);
+     */
 
 }

@@ -2,45 +2,42 @@ package siliconDream.jaraMe.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import siliconDream.jaraMe.domain.Recurrence;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class GroupDTO {
+public class JaraUsDTO {
 
-    public GroupDTO(Long groupId, String groupName, String missionName, String explanation, String rule,
-                    String groupProfileImage, int maxMember, boolean display, LocalDate startDate,
-                    LocalDate endDate, Set<Recurrence> recurrenceSet) {
-        this.groupId = groupId;
-        this.groupName = groupName;
+    public JaraUsDTO(Long jaraUsId, String jaraUsName, String missionName, String explanation, String rule,
+                    String jaraUsProfileImage, int maxMember, boolean display, LocalDate startDate,
+                    LocalDate endDate){//, Set<Recurrence> recurrenceSet) {
+        this.jaraUsId = jaraUsId;
+        this.jaraUsName = jaraUsName;
         this.missionName = missionName;
         this.explanation = explanation;
         this.rule = rule;
-        this.groupProfileImage = groupProfileImage;
+        this.jaraUsProfileImage = jaraUsProfileImage;
         this.maxMember = maxMember;
         this.display = display;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.recurrence = recurrence;
+        //this.recurrence = recurrence;
     }
 
-    private Long groupId;
-    private String groupName;
+    private Long jaraUsId;
+    private String jaraUsName;
     private String missionName;
     private String explanation;
     private String rule;
-    private String groupProfileImage;
+    private String jaraUsProfileImage;
     private int maxMember;
     private boolean display;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Set<Recurrence> recurrence;
+    //private Set<Recurrence> recurrence;
 
-
+/*
     //TODO: getter and setter
     public Set<Recurrence> getRecurrence() {
         return recurrence;
@@ -49,5 +46,5 @@ public class GroupDTO {
     public void setRecurrence(Set<Recurrence> recurrence) {
         this.recurrence = recurrence;
     }
-
+*/
 }

@@ -16,5 +16,6 @@ public interface UserService {
     List<User> getAllUsers();
 
     void saveUser(User user);
-    User findUserByUsername(String username);
+    /*오류나는 부분-커밋
+    User findUserByUsername(String username); */
 }

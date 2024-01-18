@@ -13,7 +13,7 @@ import siliconDream.jaraMe.dto.UserDto;
 import siliconDream.jaraMe.service.UserService;
 
 @Controller
-@RequestMapping("/user/**")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired

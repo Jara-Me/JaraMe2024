@@ -25,7 +25,10 @@ public class MissionPostServiceImpl implements MissionPostService {
     private final PointRepository pointRepository;
 
     @Autowired
-    public MissionPostServiceImpl(MissionPostRepository missionPostRepository, ScheduleRepository scheduleRepository, DailyMissionRepository dailyMissionRepository, PointRepository pointRepository) {
+    public MissionPostServiceImpl(MissionPostRepository missionPostRepository,
+                                  ScheduleRepository scheduleRepository,
+                                  DailyMissionRepository dailyMissionRepository,
+                                  PointRepository pointRepository) {
         this.missionPostRepository = missionPostRepository;
         this.scheduleRepository = scheduleRepository;
         this.dailyMissionRepository = dailyMissionRepository;
@@ -42,10 +45,10 @@ public class MissionPostServiceImpl implements MissionPostService {
         //저장된 미션 인증글의 식별자(missionPostId) 얻기
         Long missionPostId = savedMissionPost.getMissionPostId();
 
-        Long groupId = savedMissionPost.getGroupId().getGroupId();
+        Long jaraUsId = savedMissionPost.getJaraUsId().getJaraUsId();
         Long userId = savedMissionPost.getUserId().getUserId();
         //TODO: 오늘의 미션 중 얼마나 완료했는지 반영
-        dailyMissionFinish(userId, groupId); //어떤 유저인지, 오늘의 미션 중 어떤 미션(그룹)을 완료했는지 전달
+        dailyMissionFinish(userId, jaraUsId); //어떤 유저인지, 오늘의 미션 중 어떤 미션(그룹)을 완료했는지 전달
 
         //게시글 조회에 필요한 정보 DTO 반환
         return getMissionPostDetails(missionPostId);
@@ -66,15 +69,15 @@ public class MissionPostServiceImpl implements MissionPostService {
     //오늘의 미션 완료
     //미션 인증글 등록 시 호출됨. => 미션 인증 여부를 업데이트한 후,
     //'오늘의 미션' 전체를 인증했는지 여부를 확인해서 모두 True인 경우 포인트 부여.
-    public boolean dailyMissionFinish(Long userId, Long groupId) {
+    public boolean dailyMissionFinish(Long userId, Long jaraUsId) {
         boolean result = false;
         // dailyMission 테이블에서 매개변수로 전달받은 userId로 필터링한 뒤,
-        //       매개변수로 전달받은 groupId로 필터링한 레코드의 dailyMissionResult F->T로 업데이트
-        dailyMissionRepository.updateDailyMissionStatus(userId, groupId);
+        //       매개변수로 전달받은 jaraUsId로 필터링한 레코드의 dailyMissionResult F->T로 업데이트
+        dailyMissionRepository.updateDailyMissionStatus(userId, jaraUsId);
 
         //LocalDate today = LocalDate.now();
         //오늘의 미션 전부 완료했는지 알아보는 부분
-        List<DailyMission> dailyMissionList = dailyMissionRepository.findByUserId(userId);
+        List<DailyMission> dailyMissionList = dailyMissionRepository.findByUserId_UserId(userId);
 
 
         // dailyMission 테이블에서 userId로 필터링했을 때 dailyMissionResult 컬럼이 모두 T인 경우,

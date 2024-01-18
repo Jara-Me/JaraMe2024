@@ -7,8 +7,8 @@ public class MissionPostDTO {
     //작성자 알기 위해 userId 필요(프로필)
     Long userId;
 
-    //어떤 미션인지 알기 위해서 groupId 필요
-    Long groupId;
+    //어떤 미션인지 알기 위해서 jaraUsId 필요
+    Long jaraUsId;
 
     //인증글 작성 시간
     LocalDateTime dateTime;
@@ -34,8 +34,8 @@ public class MissionPostDTO {
         return userId;
     }
 
-    public Long getGroupId() {
-        return groupId;
+    public Long getJaraUsId() {
+        return jaraUsId;
     }
 
     public LocalDateTime getDateTime() {

@@ -34,7 +34,7 @@ public class User {
     @Column(nullable=true)
     private LocalDate birthDate;
 
-    @Column(columnDefinition = "DEFAULT FALSE")
+    @Column
     private boolean checkIn;
 
     private int point=0;
@@ -43,32 +43,32 @@ public class User {
 
 
     //FK
-    @OneToMany(mappedBy="user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="userId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<MissionPost> missionPost;
 
-    @OneToMany(mappedBy="user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="userId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Comment> comment;
 
-    @OneToMany(mappedBy="user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="userId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Reaction> reaction;
 
 
     //FK
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="userId")
     @JsonIgnore
     private List<JoinUsers> joinUsers;
-
-    @OneToMany(mappedBy="user")
+/*
+    @OneToMany(mappedBy="userId")
     @JsonIgnore
     private List<MissionHistory> missionHistory;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="userId")
     @JsonIgnore
     private List<ToDoList> toDoList;
-
+*/
 
     //TODO: getter and setter
     public Long getUserId() {
@@ -79,17 +79,11 @@ public class User {
     }
 
 
-    public String getProfileImage() {
-        return profileImage;
-    }
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
@@ -174,7 +168,7 @@ public class User {
     public void setJoinUsers(List<JoinUsers> joinUsers) {
         this.joinUsers = joinUsers;
     }
-
+/*
     public List<MissionHistory> getMissionHistory() {
         return missionHistory;
     }
@@ -190,6 +184,6 @@ public class User {
     public void setToDoList(List<ToDoList> toDoList) {
         this.toDoList = toDoList;
     }
-
+*/
 
 }

@@ -34,14 +34,14 @@ public class MissionPost {
     User userId;
 
     @ManyToOne
-    @JoinColumn(name = "groupId")
-    Group groupId;
+    @JoinColumn(name = "jaraUsId")
+    JaraUs jaraUsId;
 
-    @OneToMany(mappedBy = "missionPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "missionPostId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Comment> comment;
 
-    @OneToMany(mappedBy = "missionPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "missionPostId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Reaction> reaction;
 
@@ -128,12 +128,12 @@ public class MissionPost {
         this.userId = userId;
     }
 
-    public Group getGroupId() {
-        return groupId;
+    public JaraUs getJaraUsId() {
+        return jaraUsId;
     }
 
-    public void setGroupId(Group groupId) {
-        this.groupId = groupId;
+    public void setJaraUsId(JaraUs jaraUsId) {
+        this.jaraUsId = jaraUsId;
     }
 
 }

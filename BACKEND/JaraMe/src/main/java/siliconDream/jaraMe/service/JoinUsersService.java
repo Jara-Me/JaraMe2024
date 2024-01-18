@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface JoinUsersService {
 
-    public List<Long> findUserIdsByGroupId(Long groupId);
+    public List<Long> findUserIdsByJaraUsId(Long JaraUsId);
 }

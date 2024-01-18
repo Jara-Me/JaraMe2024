@@ -1,48 +1,40 @@
 package siliconDream.jaraMe.domain;
-
 import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 
 @Table
-public class Group {
+public class JaraUs {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(nullable = false,unique = true)
-    private Long groupId;
-    private String groupName;
+    private Long jaraUsId;
+    private String jaraUsName;
     private String missionName;
     private String explanation;
     private String rule;
-    private String groupProfileImage;
+    private String jaraUsProfileImage;
     private int maxMember;
     private boolean display;
     private LocalDate startDate;
     private LocalDate endDate;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = Recurrence.class, fetch = FetchType.EAGER)
-    @CollectionTable(name="GroupAndRecurrence",joinColumns = @JoinColumn(name="groupId"))
-    @Column(name="recurrence")
-    private Set<Recurrence> recurrence;
+    //@ElementCollection(targetClass = Recurrence.class, fetch = FetchType.EAGER)
+    //@CollectionTable(name = "JaraUsAndRecurrence", joinColumns = @JoinColumn(name = "jaraUsId"))
+        //@Enumerated(EnumType.STRING)
+
+    //private Set<Recurrence> recurrence;
 
 
-
+/*커밋 전에 주석 취소
     @ManyToMany
     private Set<Account> managers = new HashSet<>();
 
@@ -50,38 +42,38 @@ public class Group {
         managers.add(account);
     }
 
-    public static Group createNewGroup(String groupName, String missionName, String explanation, String rule,
-                                       String groupProfileImage, int maxMember, boolean display, LocalDate startDate,
+    public static JaraUs createNewJaraUs(String jaraUsName, String missionName, String explanation, String rule,
+                                       String jaraUsProfileImage, int maxMember, boolean display, LocalDate startDate,
                                        LocalDate endDate, Set<Recurrence> recurrence) {
-        Group group = new Group();
-        group.groupName = groupName;
-        group.missionName = missionName;
-        group.explanation = explanation;
-        group.rule = rule;
-        group.groupProfileImage = groupProfileImage;
-        group.maxMember = maxMember;
-        group.display = display;
-        group.startDate = startDate;
-        group.endDate = endDate;
-        group.recurrence = recurrence;
+        JaraUs jaraUs = new JaraUs();
+        jaraUs.jaraUsName = jaraUsName;
+        jaraUs.missionName = missionName;
+        jaraUs.explanation = explanation;
+        jaraUs.rule = rule;
+        jaraUs.jaraUsProfileImage = jaraUsProfileImage;
+        jaraUs.maxMember = maxMember;
+        jaraUs.display = display;
+        jaraUs.startDate = startDate;
+        jaraUs.endDate = endDate;
+        jaraUs.recurrence = recurrence;
 
-        return group;
-    }
+        return jaraUs;
+    } */
     //TODO: getter and setter
-    public Long getGroupId() {
-        return groupId;
+    public Long getJaraUsId() {
+        return jaraUsId;
     }
 
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public void setJaraUsId(Long jaraUsId) {
+        this.jaraUsId = jaraUsId;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getJaraUsName() {
+        return jaraUsName;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setJaraUsName(String jaraUsName) {
+        this.jaraUsName = jaraUsName;
     }
 
     public String getMissionName() {
@@ -108,12 +100,12 @@ public class Group {
         this.rule = rule;
     }
 
-    public String getGroupProfileImage() {
-        return groupProfileImage;
+    public String getJaraUsProfileImage() {
+        return jaraUsProfileImage;
     }
 
-    public void setGroupProfileImage(String groupProfileImage) {
-        this.groupProfileImage = groupProfileImage;
+    public void setJaraUsProfileImage(String jaraUsProfileImage) {
+        this.jaraUsProfileImage = jaraUsProfileImage;
     }
 
     public int getMaxMember() {
@@ -147,12 +139,12 @@ public class Group {
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
-
+/*
     public Set<Recurrence> getRecurrence() {
         return recurrence;
     }
 
     public void setRecurrence(Set<Recurrence> recurrence) {
         this.recurrence = recurrence;
-    }
+    }*/
 }

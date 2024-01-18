@@ -1,5 +1,11 @@
 package siliconDream.jaraMe.domain;
 
+import lombok.ToString;
+
+@ToString
+//@Getter
+//@AllArgsConstructor
+
 public enum Recurrence {
     SUNDAY("Sunday"),
     MONDAY("Monday"),
