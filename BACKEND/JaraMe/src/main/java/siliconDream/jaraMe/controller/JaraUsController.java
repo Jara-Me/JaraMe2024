@@ -2,8 +2,8 @@ package siliconDream.jaraMe.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+//취소할 부분 import org.springframework.security.core.Authentication;
+//취소할 부분 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -16,7 +16,7 @@ import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.JaraUsDTO;
 import siliconDream.jaraMe.service.JaraUsService;
 import siliconDream.jaraMe.service.UserService;
-
+/*취소할 부분
 @Controller
 @RequiredArgsConstructor
 public class JaraUsController {
@@ -60,4 +60,4 @@ public class JaraUsController {
         //수정 전 : JaraUs newJaraUs = jaraUsService.createNewJaraUs(jaraUsDTO, String.valueOf(participant));
         return "redirect:/jaraUs/" + newJaraUs.getJaraUsId();
     }*/
-}
+//취소할 부분 }

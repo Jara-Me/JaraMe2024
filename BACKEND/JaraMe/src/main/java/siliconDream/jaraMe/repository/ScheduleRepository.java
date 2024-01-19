@@ -9,6 +9,7 @@ import siliconDream.jaraMe.domain.Schedule;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule,Long> {
@@ -19,5 +20,9 @@ public interface ScheduleRepository extends JpaRepository<Schedule,Long> {
     default void saveSchedule(Long jaraUsId, LocalDate targetDate){
 
      }
+
+    Set<LocalDate> findScheduleDateByJaraUsId(Long jaraUsId);
+
+
 
 }

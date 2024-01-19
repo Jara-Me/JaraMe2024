@@ -3,13 +3,15 @@ package siliconDream.jaraMe.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 
 @Table
@@ -18,7 +20,6 @@ public class JaraUs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false,unique = true)
-    private Long adminUserId;
     private Long jaraUsId;
     private String jaraUsName;
     private String missionName;
@@ -32,7 +33,7 @@ public class JaraUs {
 
 
     @ElementCollection(targetClass = Recurrence.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "JaraUsRecurrence", joinColumns = @JoinColumn(name = "jaraUsId"))
+    @CollectionTable(name = "JaraUsAndRecurrence", joinColumns = @JoinColumn(name = "jaraUsId"))
     @Enumerated(EnumType.STRING)
     private Set<Recurrence> recurrence;
 
@@ -70,7 +71,7 @@ public class JaraUs {
     //TODO: getter and setter
 
     public Long getAdminUserId() {
-        return adminUserId;
+        return administrator.getUserId();
     }
     public void setAdminUserId(User administrator) { this.administrator = administrator; }
     public Long getJaraUsId() {

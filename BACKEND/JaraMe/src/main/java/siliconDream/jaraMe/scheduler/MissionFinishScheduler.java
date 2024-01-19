@@ -69,8 +69,4 @@ public class MissionFinishScheduler {
 
 }
 
-/*
- * 미션에 참여한 유저의 참여율 알아내기
- * Schedule테이블에서 미션(과 유저)로 날짜를 찾은 뒤, for문을 둘면서 해당하는 날짜들에 인증을 했는지 여부를 가려내서 퍼센테이지 계산
- *  */
 

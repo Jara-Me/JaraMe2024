@@ -8,10 +8,7 @@ import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.MissionPostDTO;
 import siliconDream.jaraMe.dto.GetMissionPostDTO;
 import siliconDream.jaraMe.dto.DailyMissionDTO;
-import siliconDream.jaraMe.repository.DailyMissionRepository;
-import siliconDream.jaraMe.repository.MissionPostRepository;
-import siliconDream.jaraMe.repository.PointRepository;
-import siliconDream.jaraMe.repository.ScheduleRepository;
+import siliconDream.jaraMe.repository.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,16 +22,19 @@ public class MissionPostServiceImpl implements MissionPostService {
     private final ScheduleRepository scheduleRepository;
     private final DailyMissionRepository dailyMissionRepository;
     private final PointRepository pointRepository;
+    private final MissionHistoryRepository missionHistoryRepository;
 
     @Autowired
     public MissionPostServiceImpl(MissionPostRepository missionPostRepository,
                                   ScheduleRepository scheduleRepository,
                                   DailyMissionRepository dailyMissionRepository,
-                                  PointRepository pointRepository) {
+                                  PointRepository pointRepository,
+                                  MissionHistoryRepository missionHistoryRepository) {
         this.missionPostRepository = missionPostRepository;
         this.scheduleRepository = scheduleRepository;
         this.dailyMissionRepository = dailyMissionRepository;
         this.pointRepository = pointRepository;
+        this.missionHistoryRepository = missionHistoryRepository;
     }
 
     //미션 인증글 작성
@@ -114,7 +114,7 @@ public class MissionPostServiceImpl implements MissionPostService {
     }
 
     //미션에 참여한 유저들의 참여율 알아내기 => 스케줄링 구현 후에 할 수 있을 듯.
-    public int missionParticipationRate(Long userId,Long jaraUsId) {
+    public int missionParticipationRate(Long userId, Long jaraUsId) {
 
         //인증해야하는 날짜 전체 알아내기
         Set<LocalDate> totalDates = scheduleRepository.findScheduleDateByJaraUsId(jaraUsId);
@@ -122,25 +122,29 @@ public class MissionPostServiceImpl implements MissionPostService {
         int postNum = 0; //실제로 인증한 횟수
 
         //해당 유저가 인증한 날짜들 알아내기
-        Set<LocalDate> postedDates = missionHistoryRepository.findMissionDateByUserIdAndJaraUsId(userId, jaraUsId);
+        Set<LocalDate> postedDates = missionHistoryRepository.findMissionDateByUser_UserIdAndJaraUs_JaraUsId(userId, jaraUsId);
+        int result = 0;
+
+        for (LocalDate oneOfTotal : totalDates) {
+            if (postedDates.contains(oneOfTotal)) {
+                postNum++;
+            }
+        }
+
+        if (postNum == totalNum) {
+            result = 50;
+        } else if (postNum < totalNum && postNum >= totalNum * (2 / 3)) {
+            result = 20;
+        } else if (postNum < totalNum * (2 / 3) && postNum >= totalNum * (1 / 3)) {
+            result = 10;
+        } else if (postNum < totalNum * (1 / 3)) {
+            result = 0;
+        } else {
+            result = -1; //에러에 해당 }
 
 
-        //TODO: 있다면 postNum+=1, 없다면 패스
-        //TODO: <참여율 계산>
-        //       postNum == total => 50
-        //       postNum <total && postNum >=total*(2/3)=> 20
-        //       postNum <total*(2/3) && postNum >= total*(1/3) => 10
-        //       postNum < total*(1/3)(정수?) => 0
-        //TODO:
-        int codeNum = 0;
-        // 1/3 미만 : 미적립
-        // 1/3 이상~ 2/3 미만 : 10
-        // 2/3 이상~ 전체 미만 : 20
-        // 전체 : 50
+        }
 
-
-        return codeNum;
+        return result;
     }
-
-
 }
