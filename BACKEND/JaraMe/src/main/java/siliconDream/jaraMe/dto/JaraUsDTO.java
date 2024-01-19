@@ -2,16 +2,19 @@ package siliconDream.jaraMe.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import siliconDream.jaraMe.domain.Recurrence;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 public class JaraUsDTO {
 
-    public JaraUsDTO(Long jaraUsId, String jaraUsName, String missionName, String explanation, String rule,
+    public JaraUsDTO(Long adminUserId, Long jaraUsId, String jaraUsName, String missionName, String explanation, String rule,
                     String jaraUsProfileImage, int maxMember, boolean display, LocalDate startDate,
-                    LocalDate endDate){//, Set<Recurrence> recurrenceSet) {
+                    LocalDate endDate, Set<Recurrence> recurrence) {
+        this.adminUserId = adminUserId;
         this.jaraUsId = jaraUsId;
         this.jaraUsName = jaraUsName;
         this.missionName = missionName;
@@ -22,9 +25,10 @@ public class JaraUsDTO {
         this.display = display;
         this.startDate = startDate;
         this.endDate = endDate;
-        //this.recurrence = recurrence;
+        this.recurrence = recurrence;
     }
 
+    private Long adminUserId;
     private Long jaraUsId;
     private String jaraUsName;
     private String missionName;
@@ -35,7 +39,7 @@ public class JaraUsDTO {
     private boolean display;
     private LocalDate startDate;
     private LocalDate endDate;
-    //private Set<Recurrence> recurrence;
+    private Set<Recurrence> recurrence;
 
 /*
     //TODO: getter and setter

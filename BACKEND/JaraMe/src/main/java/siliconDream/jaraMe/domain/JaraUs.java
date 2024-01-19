@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,6 +17,7 @@ public class JaraUs {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(nullable = false,unique = true)
+    private Long adminUserId;
     private Long jaraUsId;
     private String jaraUsName;
     private String missionName;
@@ -26,6 +28,7 @@ public class JaraUs {
     private boolean display;
     private LocalDate startDate;
     private LocalDate endDate;
+    private Set<Recurrence> recurrence;
 
     //@ElementCollection(targetClass = Recurrence.class, fetch = FetchType.EAGER)
     //@CollectionTable(name = "JaraUsAndRecurrence", joinColumns = @JoinColumn(name = "jaraUsId"))
@@ -59,7 +62,17 @@ public class JaraUs {
 
         return jaraUs;
     } */
+
+    @ManyToOne
+    @JoinColumn(name = "admin_user_id", nullable = false)
+    private User administrator;
+
     //TODO: getter and setter
+
+    public Long getAdminUserId() {
+        return adminUserId;
+    }
+    public void setAdminUserId(User administrator) { this.administrator = administrator; }
     public Long getJaraUsId() {
         return jaraUsId;
     }
@@ -139,12 +152,12 @@ public class JaraUs {
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
-/*
+
     public Set<Recurrence> getRecurrence() {
         return recurrence;
     }
 
     public void setRecurrence(Set<Recurrence> recurrence) {
         this.recurrence = recurrence;
-    }*/
+    }
 }
