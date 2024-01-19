@@ -22,5 +22,7 @@ public interface DailyMissionRepository extends JpaRepository<DailyMission, Long
     default void updateDailyMissionStatus(Long userId, Long jaraUsId) {
     }
 
+    void deleteAll();
 
+    //void saveDailyMission(DailyMission dailyMission);
 }

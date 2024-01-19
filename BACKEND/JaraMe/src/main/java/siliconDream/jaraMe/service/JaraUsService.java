@@ -38,7 +38,7 @@ public interface JaraUsService {
 
 
     /////////////////////////////////////////추가
-    List<JaraUs> findEndDateToday();
+    List<JaraUs> findEndDateYesterDay();
 
 
 }

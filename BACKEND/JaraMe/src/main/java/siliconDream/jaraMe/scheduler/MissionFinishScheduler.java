@@ -31,15 +31,15 @@ public class MissionFinishScheduler {
     }
 
 
-    //미션 종료일 11:59:59이 되면
+    //미션 종료일 다음날 00:00:00에 실시
     //미션 인증일의 참여율이 얼마나 되는지 확인=> 포인트 서비스를 통해 포인트 적립
 
 
-    @Scheduled(cron = "59 59 23 * * *") //미션 종료일의 11:59:59에 실행되도록 함.
+    @Scheduled(cron = "0 0 0 * * *") //미션 종료일의 다음날 00:00:00에 실시되도록 함.
     public String missionComplete() {
 
-        //'오늘' 미션이 종료되는 그룹들을 리스트로 얻은 다음,
-        List<JaraUs> jaraUses = jaraUsService.findEndDateToday();
+        //어제 미션이 종료된 그룹들을 리스트로 얻은 다음,
+        List<JaraUs> jaraUses = jaraUsService.findEndDateYesterDay();
 
         for (JaraUs jaraUs : jaraUses) {
 
