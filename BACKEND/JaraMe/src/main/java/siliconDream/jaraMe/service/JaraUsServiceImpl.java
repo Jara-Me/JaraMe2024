@@ -1,10 +1,12 @@
 package siliconDream.jaraMe.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import siliconDream.jaraMe.domain.JaraUs;
 import siliconDream.jaraMe.domain.Recurrence;
+import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.JaraUsDTO;
 import siliconDream.jaraMe.repository.JaraUsRepository;
 import siliconDream.jaraMe.repository.ScheduleRepository;
@@ -22,6 +24,71 @@ public class JaraUsServiceImpl implements JaraUsService {
 
     private final JaraUsRepository jaraUsRepository;
     private final ScheduleRepository scheduleRepository;
+    private final UserService userService;
+
+    @Override
+    public JaraUs createNewJaraUs(JaraUsDTO jaraUsDTO, String userId) {
+        User administrator = userService.findUserByUserId(jaraUsDTO.getAdminUserId());
+        JaraUs jaraUs = new JaraUs();
+        jaraUs.setJaraUsName(jaraUsDTO.getJaraUsName());
+        jaraUs.setMissionName(jaraUsDTO.getMissionName());
+        jaraUs.setAdminUserId(administrator);
+        jaraUs.setRecurrence(jaraUsDTO.getRecurrence());
+        LocalDate startDate = jaraUsDTO.getStartDate();
+        if (startDate != null && startDate.isBefore(LocalDate.now().plusDays(1))) {
+            throw new IllegalArgumentException("시작일은 적어도 내일 이후여야 합니다.");
+        }
+
+        return jaraUsRepository.save(jaraUs);
+    }
+
+
+    @Override
+    public void participateInJaraUs(Long jaraUsId, String userId) {
+        JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
+                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+    }
+
+    @Override
+    public void runJaraUs(Long jaraUsId, String userId) {
+        JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
+                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+
+        // Perform run logic...
+    }
+
+    @Override
+    public void editJaraUs(Long jaraUsId, JaraUsDTO jaraUsDTO) {
+        JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
+                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+
+        // Perform edit logic...
+        jaraUs.setJaraUsName(jaraUsDTO.getJaraUsName());
+        jaraUs.setMissionName(jaraUsDTO.getMissionName());
+        // Set other fields...
+
+        jaraUsRepository.save(jaraUs);
+    }
+
+    @Override
+    public void deleteJaraUs(Long jaraUsId) {
+        // Implementation for delete logic...
+        jaraUsRepository.deleteById(jaraUsId);
+    }
+
+    @Override
+    public List<JaraUs> findJaraUsByAdministrator(Long adminUserId) {
+        return null;
+    }
+
+
+    @Override
+    public List<JaraUs> findExpiredJaraUs() {
+        // Implementation for finding expired JaraUs instances...
+        return jaraUsRepository.findExpiredJaraUs(LocalDate.now());
+    }
+    // Other method implementations...
+
 /* //주석처리돼있던 것같은 부분 (커밋 기록 기반)
         @Override
         public JaraUsDTO createNewJaraUs(JaraUsDTO jaraUsDTO, String userId) {
@@ -69,8 +136,10 @@ public class JaraUsServiceImpl implements JaraUsService {
         }*/
 
     //미션완주일이 오늘인 그룹 찾아내기
-    public List<JaraUs> findEndDateToday(){
+    public List<JaraUs> findEndDateToday() {
         return jaraUsRepository.findEndDateToday(LocalDate.now());
+
+
     }
 
 

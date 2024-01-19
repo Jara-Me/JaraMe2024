@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 
 @Table
@@ -17,7 +17,8 @@ public class JaraUs {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false,unique = true)
+    private Long adminUserId;
     private Long jaraUsId;
     private String jaraUsName;
     private String missionName;
@@ -28,6 +29,7 @@ public class JaraUs {
     private boolean display;
     private LocalDate startDate;
     private LocalDate endDate;
+
 
     @ElementCollection(targetClass = Recurrence.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "JaraUsRecurrence", joinColumns = @JoinColumn(name = "jaraUsId"))
@@ -58,9 +60,19 @@ public class JaraUs {
             jaraUs.endDate = endDate;
             jaraUs.recurrence = recurrence;
 
-            return jaraUs;
-        } */
+        return jaraUs;
+    } */
+
+    @ManyToOne
+    @JoinColumn(name = "admin_user_id", nullable = false)
+    private User administrator;
+
     //TODO: getter and setter
+
+    public Long getAdminUserId() {
+        return adminUserId;
+    }
+    public void setAdminUserId(User administrator) { this.administrator = administrator; }
     public Long getJaraUsId() {
         return jaraUsId;
     }

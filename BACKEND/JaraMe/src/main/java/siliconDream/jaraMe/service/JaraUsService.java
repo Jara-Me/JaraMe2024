@@ -11,6 +11,20 @@ import java.util.Set;
 
 public interface JaraUsService {
 
+    JaraUs createNewJaraUs(JaraUsDTO jaraUsDTO, String userId);
+
+    void participateInJaraUs(Long jaraUsId, String userId);
+
+    void runJaraUs(Long jaraUsId, String userId);
+
+    void editJaraUs(Long jaraUsId, JaraUsDTO jaraUsDTO);
+
+    void deleteJaraUs(Long jaraUsId);
+
+    List<JaraUs> findJaraUsByAdministrator(Long adminUserId);
+
+    List<JaraUs> findExpiredJaraUs();
+
     //JaraUsServiceImpl 에서 에러나서 주석처리한 함수 (JaraUsServiceImpl이 JaraUsService를 implements => 함수 구성이 똑같아야해서 아래의 함수를 일단 주석처리함.)
     // JaraUsDTO createNewJaraUs(JaraUsDTO jaraUsDTO, String userId);
 

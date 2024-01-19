@@ -11,9 +11,13 @@ import java.util.Set;
 @NoArgsConstructor
 public class JaraUsDTO {
 
-    public JaraUsDTO(Long jaraUsId, String jaraUsName, String missionName, String explanation, String rule,
+    public JaraUsDTO(Long adminUserId, Long jaraUsId, String jaraUsName, String missionName, String explanation, String rule,
                     String jaraUsProfileImage, int maxMember, boolean display, LocalDate startDate,
                     LocalDate endDate, Set<Recurrence> recurrence) {
+<<<<<<< HEAD
+=======
+        this.adminUserId = adminUserId;
+>>>>>>> b1f6d16748abaf71a4745a0ea4c0ef5a7183a30c
         this.jaraUsId = jaraUsId;
         this.jaraUsName = jaraUsName;
         this.missionName = missionName;
@@ -27,6 +31,7 @@ public class JaraUsDTO {
         this.recurrence = recurrence;
     }
 
+    private Long adminUserId;
     private Long jaraUsId;
     private String jaraUsName;
     private String missionName;

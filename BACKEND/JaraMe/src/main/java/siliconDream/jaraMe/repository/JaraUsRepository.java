@@ -15,6 +15,10 @@ public interface JaraUsRepository extends JpaRepository<JaraUs, Long> {
 /*
     boolean existsByPath(String path);
 */
+    List<JaraUs> findJaraUsByAdministrator(Long adminUserId);
+
+    @Query("SELECT j FROM JaraUs j WHERE j.endDate < :today")
+    List<JaraUs> findExpiredJaraUs(LocalDate today);
     @Query("SELECT j FROM JaraUs j WHERE j.endDate = :today")
     List<JaraUs> findEndDateToday(LocalDate today);
 
