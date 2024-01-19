@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class JoinUsers {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long joinUsersId;
 
     @ManyToOne

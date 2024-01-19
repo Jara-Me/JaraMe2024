@@ -14,7 +14,8 @@ public interface MissionPostService {
     boolean dailyMissionFinish(Long userId, Long jaraUsId);
     DailyMissionDTO getDailyMission(Long userId, LocalDateTime todayDate);
     //boolean missionFinish(Long userId, Long jaraUsId);
-    int missionParticipationRate(Long userId);
+    int missionParticipationRate(Long userId,Long jaraUsId);
+
 
 
 }

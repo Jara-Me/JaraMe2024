@@ -4,12 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import siliconDream.jaraMe.domain.JaraUs;
+import siliconDream.jaraMe.domain.Recurrence;
 import siliconDream.jaraMe.dto.JaraUsDTO;
 import siliconDream.jaraMe.repository.JaraUsRepository;
+import siliconDream.jaraMe.repository.ScheduleRepository;
 import siliconDream.jaraMe.service.JaraUsService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +21,7 @@ import java.util.List;
 public class JaraUsServiceImpl implements JaraUsService {
 
     private final JaraUsRepository jaraUsRepository;
+    private final ScheduleRepository scheduleRepository;
 /* //주석처리돼있던 것같은 부분 (커밋 기록 기반)
         @Override
         public JaraUsDTO createNewJaraUs(JaraUsDTO jaraUsDTO, String userId) {
@@ -63,9 +68,11 @@ public class JaraUsServiceImpl implements JaraUsService {
     
         }*/
 
+    //미션완주일이 오늘인 그룹 찾아내기
     public List<JaraUs> findEndDateToday(){
         return jaraUsRepository.findEndDateToday(LocalDate.now());
     }
+
 
 
 

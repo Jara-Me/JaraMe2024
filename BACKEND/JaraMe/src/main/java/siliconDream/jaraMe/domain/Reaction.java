@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class Reaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false,unique = true)
     private Long reactionId;
     private String reactionType;

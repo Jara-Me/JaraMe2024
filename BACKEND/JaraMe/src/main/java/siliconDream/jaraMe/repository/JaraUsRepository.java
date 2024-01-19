@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import siliconDream.jaraMe.domain.JaraUs;
+import siliconDream.jaraMe.dto.JaraUsDTO;
+import siliconDream.jaraMe.dto.sampleDTO;
 
 import java.time.LocalDate;
 import java.util.List;
