@@ -15,6 +15,7 @@ public class JaraUsDTO {
                     String jaraUsProfileImage, int maxMember, boolean display, LocalDate startDate,
                     LocalDate endDate, Set<Recurrence> recurrence) {
         this.adminUserId = adminUserId;
+
         this.jaraUsId = jaraUsId;
         this.jaraUsName = jaraUsName;
         this.missionName = missionName;

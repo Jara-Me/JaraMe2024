@@ -1,22 +1,25 @@
 package siliconDream.jaraMe.domain;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 
 @Table
 public class JaraUs {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false,unique = true)
     private Long adminUserId;
     private Long jaraUsId;
@@ -29,37 +32,36 @@ public class JaraUs {
     private boolean display;
     private LocalDate startDate;
     private LocalDate endDate;
+
+
+    @ElementCollection(targetClass = Recurrence.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "JaraUsRecurrence", joinColumns = @JoinColumn(name = "jaraUsId"))
+    @Enumerated(EnumType.STRING)
     private Set<Recurrence> recurrence;
 
-    //@ElementCollection(targetClass = Recurrence.class, fetch = FetchType.EAGER)
-    //@CollectionTable(name = "JaraUsAndRecurrence", joinColumns = @JoinColumn(name = "jaraUsId"))
-        //@Enumerated(EnumType.STRING)
 
-    //private Set<Recurrence> recurrence;
+    /*Account가 없는 상태라 에러나서 주석처리함.
+        @ManyToMany
+        private Set<Account> managers = new HashSet<>();
 
+        public void addManager(Account account) {
+            managers.add(account);
+        }
 
-/*Account가 없는 상태라 에러나서 주석처리함.
-    @ManyToMany
-    private Set<Account> managers = new HashSet<>();
-
-    public void addManager(Account account) {
-        managers.add(account);
-    }
-
-    public static JaraUs createNewJaraUs(String jaraUsName, String missionName, String explanation, String rule,
-                                       String jaraUsProfileImage, int maxMember, boolean display, LocalDate startDate,
-                                       LocalDate endDate, Set<Recurrence> recurrence) {
-        JaraUs jaraUs = new JaraUs();
-        jaraUs.jaraUsName = jaraUsName;
-        jaraUs.missionName = missionName;
-        jaraUs.explanation = explanation;
-        jaraUs.rule = rule;
-        jaraUs.jaraUsProfileImage = jaraUsProfileImage;
-        jaraUs.maxMember = maxMember;
-        jaraUs.display = display;
-        jaraUs.startDate = startDate;
-        jaraUs.endDate = endDate;
-        jaraUs.recurrence = recurrence;
+        public static JaraUs createNewJaraUs(String jaraUsName, String missionName, String explanation, String rule,
+                                           String jaraUsProfileImage, int maxMember, boolean display, LocalDate startDate,
+                                           LocalDate endDate, Set<Recurrence> recurrence) {
+            JaraUs jaraUs = new JaraUs();
+            jaraUs.jaraUsName = jaraUsName;
+            jaraUs.missionName = missionName;
+            jaraUs.explanation = explanation;
+            jaraUs.rule = rule;
+            jaraUs.jaraUsProfileImage = jaraUsProfileImage;
+            jaraUs.maxMember = maxMember;
+            jaraUs.display = display;
+            jaraUs.startDate = startDate;
+            jaraUs.endDate = endDate;
+            jaraUs.recurrence = recurrence;
 
         return jaraUs;
     } */

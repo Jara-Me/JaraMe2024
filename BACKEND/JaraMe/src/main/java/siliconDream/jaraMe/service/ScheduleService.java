@@ -1,9 +1,10 @@
 package siliconDream.jaraMe.service;
 
+import siliconDream.jaraMe.domain.JaraUs;
+
 public interface ScheduleService {
 
 
-
-    //public void saveScueduleDate(JaraUs jaraUs);
+    void jaraUsScheduling(JaraUs jaraUs);
 
 }

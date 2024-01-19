@@ -41,5 +41,4 @@ public interface JaraUsService {
     List<JaraUs> findEndDateToday();
 
 
-
 }

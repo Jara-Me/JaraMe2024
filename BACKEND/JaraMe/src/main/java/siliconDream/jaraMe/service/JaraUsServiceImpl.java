@@ -9,9 +9,10 @@ import siliconDream.jaraMe.domain.JoinUsers;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.JaraUsDTO;
 import siliconDream.jaraMe.repository.JaraUsRepository;
-
+import siliconDream.jaraMe.repository.ScheduleRepository;
 import java.time.LocalDate;
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ import java.util.List;
 public class JaraUsServiceImpl implements JaraUsService {
 
     private final JaraUsRepository jaraUsRepository;
+    private final ScheduleRepository scheduleRepository;
     private final UserService userService;
 
     @Override
@@ -143,9 +145,15 @@ public class JaraUsServiceImpl implements JaraUsService {
     
         }*/
 
+    //미션완주일이 오늘인 그룹 찾아내기
     public List<JaraUs> findEndDateToday() {
         return jaraUsRepository.findEndDateToday(LocalDate.now());
 
 
     }
+
+
+
+
+
 }
