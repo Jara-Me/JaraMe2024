@@ -43,21 +43,21 @@ public class User {
 
 
     //FK
-    @OneToMany(mappedBy="userId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<MissionPost> missionPost;
 
-    @OneToMany(mappedBy="userId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Comment> comment;
 
-    @OneToMany(mappedBy="userId",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Reaction> reaction;
 
 
     //FK
-    @OneToMany(mappedBy="userId")
+    @OneToMany(mappedBy="user")
     @JsonIgnore
     private List<JoinUsers> joinUsers;
 /*

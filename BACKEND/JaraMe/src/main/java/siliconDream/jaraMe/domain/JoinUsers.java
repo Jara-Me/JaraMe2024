@@ -12,12 +12,12 @@ public class JoinUsers {
     private Long joinUsersId;
 
     @ManyToOne
-    @JoinColumn(name="userId")
-    private User userId;
+    @JoinColumn(name="user")
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name="jaraUsId")
-    private JaraUs jaraUsId;
+    @JoinColumn(name="jaraUs")
+    private JaraUs jaraUs;
 
     //TODO: getter and setter
 
@@ -29,21 +29,22 @@ public class JoinUsers {
         this.joinUsersId = joinUsersId;
     }
 
-    public User getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public JaraUs getJaraUsId() {
-        return jaraUsId;
+    public JaraUs getJaraUs() {
+        return jaraUs;
     }
 
-    public void setJaraUsId(JaraUs jaraUsId) {
-        this.jaraUsId = jaraUsId;
+    public void setJaraUs(JaraUs jaraUs) {
+        this.jaraUs = jaraUs;
     }
+
 }
 
 

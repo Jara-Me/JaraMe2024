@@ -14,6 +14,6 @@ public class JoinUsersServiceImpl implements JoinUsersService {
     }
 
     public List<Long> findUserIdsByJaraUsId(Long jaraUsId){
-        return joinUsersRepository.findUserIdsByJaraUsId_JaraUsId(jaraUsId);
+        return joinUsersRepository.findUserIdsByJaraUs_JaraUsId(jaraUsId);
     }
 }

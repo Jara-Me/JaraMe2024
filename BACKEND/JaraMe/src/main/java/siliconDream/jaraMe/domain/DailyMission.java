@@ -15,14 +15,15 @@ public class DailyMission {
 
     private boolean dailyMissionResult;
 
+
     //FK
     @ManyToOne
-    @JoinColumn(name="userId")
-    private User userId;
+    @JoinColumn(name="user")
+    private User user;
 
     @ManyToOne
-    @JoinColumn(name="jaraUsId")
-    private JaraUs jaraUsId;
+    @JoinColumn(name="jaraUs")
+    private JaraUs jaraUs;
 
     //TODO: getter and setter
     public Long getDailyMissionId() {
@@ -40,7 +41,28 @@ public class DailyMission {
     public void setDailyMissionResult(boolean dailyMissionResult) {
         this.dailyMissionResult = dailyMissionResult;
     }
+    public LocalDateTime getDailyMissionDate() {
+        return dailyMissionDate;
+    }
 
+    public void setDailyMissionDate(LocalDateTime dailyMissionDate) {
+        this.dailyMissionDate = dailyMissionDate;
+    }
 
-    //마저 작성 필요
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public JaraUs getJaraUs() {
+        return jaraUs;
+    }
+
+    public void setJaraUs(JaraUs jaraUs) {
+        this.jaraUs = jaraUs;
+    }
+
 }

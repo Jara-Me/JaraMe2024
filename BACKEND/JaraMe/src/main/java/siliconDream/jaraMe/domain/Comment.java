@@ -20,14 +20,16 @@ public class Comment {
 
     private LocalDateTime commentDate;
 
+
+
     // FK
     @ManyToOne
-    @JoinColumn(name = "missionPostId")
-    private MissionPost missionPostId;
+    @JoinColumn(name = "missionPost")
+    private MissionPost missionPost;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
-    private User userId;
+    @JoinColumn(name = "user")
+    private User user;
 
 
     //TODO: getter and setter
@@ -55,22 +57,22 @@ public class Comment {
     public void setCommentDate(LocalDateTime commentDate) {
         this.commentDate = commentDate;
     }
-
-    public MissionPost getMissionPostId() {
-        return missionPostId;
+    public MissionPost getMissionPost() {
+        return missionPost;
     }
 
-    public void setMissionPostId(MissionPost missionPostId) {
-        this.missionPostId = missionPostId;
+    public void setMissionPost(MissionPost missionPost) {
+        this.missionPost = missionPost;
     }
 
-    public User getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
+
 
 
 }

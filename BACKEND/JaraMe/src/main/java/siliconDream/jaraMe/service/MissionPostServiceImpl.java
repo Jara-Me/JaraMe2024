@@ -47,8 +47,8 @@ public class MissionPostServiceImpl implements MissionPostService {
         //저장된 미션 인증글의 식별자(missionPostId) 얻기
         Long missionPostId = savedMissionPost.getMissionPostId();
 
-        Long jaraUsId = savedMissionPost.getJaraUsId().getJaraUsId();
-        Long userId = savedMissionPost.getUserId().getUserId();
+        Long jaraUsId = savedMissionPost.getJaraUs().getJaraUsId();
+        Long userId = savedMissionPost.getUser().getUserId();
         //TODO: 오늘의 미션 중 얼마나 완료했는지 반영
         dailyMissionFinish(userId, jaraUsId); //어떤 유저인지, 오늘의 미션 중 어떤 미션(그룹)을 완료했는지 전달
 
@@ -79,7 +79,7 @@ public class MissionPostServiceImpl implements MissionPostService {
 
         //LocalDate today = LocalDate.now();
         //오늘의 미션 전부 완료했는지 알아보는 부분
-        List<DailyMission> dailyMissionList = dailyMissionRepository.findByUserId_UserId(userId);
+        List<DailyMission> dailyMissionList = dailyMissionRepository.findByUser_UserId(userId);
 
 
         // dailyMission 테이블에서 userId로 필터링했을 때 dailyMissionResult 컬럼이 모두 T인 경우,

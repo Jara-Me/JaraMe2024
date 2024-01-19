@@ -21,8 +21,8 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
         MissionPost missionPost = new MissionPost();
 
         //컬럼값 설정
-        missionPost.setUserId(missionPost.getUserId());
-        missionPost.setJaraUsId(missionPost.getJaraUsId());
+        missionPost.setUser(missionPost.getUser());
+        missionPost.setJaraUs(missionPost.getJaraUs());
 
         missionPost.setDisplay(missionPost.isDisplay());
         missionPost.setAnonymous(missionPost.isAnonymous());
@@ -68,11 +68,11 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
             "mp.reaction as ReactionDTO) " +
             "FROM MissionPost mp " +
             "LEFT JOIN mp.comment c " +
-            "LEFT JOIN c.userId cu " +
+            "LEFT JOIN c.user cu " +
             "LEFT JOIN mp.reaction r " +
-            "LEFT JOIN r.userId ru " +
-            "LEFT JOIN mp.userId u " +
-            "WHERE mp.missionPostId = :missionPostId OR c.missionPostId.missionPostId = :missionPostId OR r.missionPostId.missionPostId = :missionPostId")
+            "LEFT JOIN r.user ru " +
+            "LEFT JOIN mp.user u " +
+            "WHERE mp.missionPostId = :missionPostId OR c.missionPost.missionPostId = :missionPostId OR r.missionPost.missionPostId = :missionPostId")
     GetMissionPostDTO findByMissionPostIdWithCommentsAndReactions(@Param("missionPostId") Long missionPostId);
 
 

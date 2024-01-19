@@ -12,13 +12,13 @@ import java.util.List;
 public interface DailyMissionRepository extends JpaRepository<DailyMission, Long> {
 
     //userId로 오늘의 미션 조회
-    List<DailyMission> findByUserId_UserId(Long userId);
+    List<DailyMission> findByUser_UserId(Long userId);
 
     //오늘의 미션(개별 미션) 진행상황 업데이트
     @Modifying
     @Query(
             "UPDATE DailyMission dm SET dm.dailyMissionResult = true " +
-                    "WHERE dm.userId = :userId.userId AND dm.jaraUsId.jaraUsId= :jaraUsId")
+                    "WHERE dm.user.userId = :userId AND dm.jaraUs.jaraUsId= :jaraUsId")
     default void updateDailyMissionStatus(Long userId, Long jaraUsId) {
     }
 

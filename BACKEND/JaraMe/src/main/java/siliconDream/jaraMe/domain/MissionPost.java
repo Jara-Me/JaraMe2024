@@ -30,18 +30,19 @@ public class MissionPost {
 
     //FK
     @ManyToOne
-    @JoinColumn(name = "userId")
-    User userId;
+    @JoinColumn(name = "user")
+    User user;
 
     @ManyToOne
-    @JoinColumn(name = "jaraUsId")
-    JaraUs jaraUsId;
+    @JoinColumn(name = "jaraUs")
+    JaraUs jaraUs;
 
-    @OneToMany(mappedBy = "missionPostId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "missionPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Comment> comment;
 
-    @OneToMany(mappedBy = "missionPostId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "missionPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Reaction> reaction;
 
@@ -120,20 +121,21 @@ public class MissionPost {
         this.display = display;
     }
 
-    public User getUserId() {
-        return userId;
+
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public JaraUs getJaraUsId() {
-        return jaraUsId;
+    public JaraUs getJaraUs() {
+        return jaraUs;
     }
 
-    public void setJaraUsId(JaraUs jaraUsId) {
-        this.jaraUsId = jaraUsId;
+    public void setJaraUs(JaraUs jaraUs) {
+        this.jaraUs = jaraUs;
     }
 
 }

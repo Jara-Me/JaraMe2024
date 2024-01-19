@@ -51,13 +51,13 @@ public class JaraUsServiceImpl implements JaraUsService {
             throw new IllegalStateException("Maximum number of participants reached for JaraUs");
         }
 
-        if (jaraUs.getJoinUsers().stream().anyMatch(joinUser -> joinUser.getUserId().equals(participant))) {
+        if (jaraUs.getJoinUsers().stream().anyMatch(joinUser -> joinUser.getUser().equals(participant))) {
             throw new IllegalStateException("User is already a participant in JaraUs");
         }
 
         JoinUsers joinUsers = new JoinUsers();
-        joinUsers.setUserId(participant);
-        joinUsers.setJaraUsId(jaraUs);
+        joinUsers.setUser(participant);
+        joinUsers.setJaraUs(jaraUs);
 
         jaraUs.getJoinUsers().add(joinUsers);
 
