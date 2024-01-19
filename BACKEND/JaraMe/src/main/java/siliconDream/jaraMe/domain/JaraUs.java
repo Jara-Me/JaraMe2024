@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -63,6 +64,10 @@ public class JaraUs {
 
         return jaraUs;
     } */
+
+
+    @OneToMany(mappedBy = "jaraUs", cascade = CascadeType.ALL)
+    private Set<JoinUsers> joinUsers = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "admin_user_id", nullable = false)
@@ -160,5 +165,12 @@ public class JaraUs {
 
     public void setRecurrence(Set<Recurrence> recurrence) {
         this.recurrence = recurrence;
+    }
+    public Set<JoinUsers> getJoinUsers() {
+        return joinUsers;
+    }
+
+    public void setJoinUsers(Set<JoinUsers> joinUsers) {
+        this.joinUsers = joinUsers;
     }
 }

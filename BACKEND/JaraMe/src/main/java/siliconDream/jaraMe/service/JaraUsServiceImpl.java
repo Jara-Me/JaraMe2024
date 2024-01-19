@@ -5,17 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import siliconDream.jaraMe.domain.JaraUs;
-import siliconDream.jaraMe.domain.Recurrence;
+import siliconDream.jaraMe.domain.JoinUsers;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.JaraUsDTO;
 import siliconDream.jaraMe.repository.JaraUsRepository;
 import siliconDream.jaraMe.repository.ScheduleRepository;
-import siliconDream.jaraMe.service.JaraUsService;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +24,7 @@ public class JaraUsServiceImpl implements JaraUsService {
     private final UserService userService;
 
     @Override
-    public JaraUs createNewJaraUs(JaraUsDTO jaraUsDTO, String userId) {
+    public JaraUs createNewJaraUs(JaraUsDTO jaraUsDTO) {
         User administrator = userService.findUserByUserId(jaraUsDTO.getAdminUserId());
         JaraUs jaraUs = new JaraUs();
         jaraUs.setJaraUsName(jaraUsDTO.getJaraUsName());
@@ -44,13 +41,31 @@ public class JaraUsServiceImpl implements JaraUsService {
 
 
     @Override
-    public void participateInJaraUs(Long jaraUsId, String userId) {
+    public void participateInJaraUs(Long jaraUsId, Long userId) {
         JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
                 .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+
+        User participant = userService.findUserByUserId(userId);
+
+        if (jaraUs.getJoinUsers().size() >= jaraUs.getMaxMember()) {
+            throw new IllegalStateException("Maximum number of participants reached for JaraUs");
+        }
+
+        if (jaraUs.getJoinUsers().stream().anyMatch(joinUser -> joinUser.getUserId().equals(participant))) {
+            throw new IllegalStateException("User is already a participant in JaraUs");
+        }
+
+        JoinUsers joinUsers = new JoinUsers();
+        joinUsers.setUserId(participant);
+        joinUsers.setJaraUsId(jaraUs);
+
+        jaraUs.getJoinUsers().add(joinUsers);
+
+        jaraUsRepository.save(jaraUs);
     }
 
     @Override
-    public void runJaraUs(Long jaraUsId, String userId) {
+    public void runJaraUs(Long jaraUsId, Long userId) {
         JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
                 .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
 
@@ -70,11 +85,6 @@ public class JaraUsServiceImpl implements JaraUsService {
         jaraUsRepository.save(jaraUs);
     }
 
-    @Override
-    public void deleteJaraUs(Long jaraUsId) {
-        // Implementation for delete logic...
-        jaraUsRepository.deleteById(jaraUsId);
-    }
 
     @Override
     public List<JaraUs> findJaraUsByAdministrator(Long adminUserId) {

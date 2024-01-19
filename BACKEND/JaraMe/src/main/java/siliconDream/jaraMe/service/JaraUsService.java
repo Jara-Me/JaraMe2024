@@ -11,15 +11,15 @@ import java.util.Set;
 
 public interface JaraUsService {
 
-    JaraUs createNewJaraUs(JaraUsDTO jaraUsDTO, String userId);
+    JaraUs createNewJaraUs(JaraUsDTO jaraUsDTO);
 
-    void participateInJaraUs(Long jaraUsId, String userId);
+    void participateInJaraUs(Long jaraUsId, Long userId);
 
-    void runJaraUs(Long jaraUsId, String userId);
+
+    void runJaraUs(Long jaraUsId, Long userId);
 
     void editJaraUs(Long jaraUsId, JaraUsDTO jaraUsDTO);
 
-    void deleteJaraUs(Long jaraUsId);
 
     List<JaraUs> findJaraUsByAdministrator(Long adminUserId);
 

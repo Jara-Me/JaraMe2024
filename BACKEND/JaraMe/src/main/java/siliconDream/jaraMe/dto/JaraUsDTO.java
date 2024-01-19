@@ -14,8 +14,13 @@ public class JaraUsDTO {
     public JaraUsDTO(Long adminUserId, Long jaraUsId, String jaraUsName, String missionName, String explanation, String rule,
                     String jaraUsProfileImage, int maxMember, boolean display, LocalDate startDate,
                     LocalDate endDate, Set<Recurrence> recurrence) {
+<<<<<<< HEAD
 
         this.adminUserId = adminUserId;
+=======
+        this.adminUserId = adminUserId;
+
+>>>>>>> 19bb46d5a0a40cf4ea51d344a29e1a22e9e240bb
         this.jaraUsId = jaraUsId;
         this.jaraUsName = jaraUsName;
         this.missionName = missionName;
