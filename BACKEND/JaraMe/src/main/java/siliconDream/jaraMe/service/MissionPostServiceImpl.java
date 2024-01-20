@@ -40,6 +40,9 @@ public class MissionPostServiceImpl implements MissionPostService {
     //미션 인증글 작성
     public Optional<GetMissionPostDTO> missionPost(MissionPostDTO missionPost) {
 
+        //TODO: 만약 오늘 해당 미션에 대해 인증글을 하나 올렸다면 못올리도록 하기
+        //TODO: 작성에 대한 규칙?
+
         //미션 인증글 저장하고 저장된 내용 받아오기
         Optional<MissionPost> savedMissionPostOptional = missionPostRepository.saveMissionPost(missionPost);
         MissionPost savedMissionPost = savedMissionPostOptional.get();
@@ -49,7 +52,7 @@ public class MissionPostServiceImpl implements MissionPostService {
 
         Long jaraUsId = savedMissionPost.getJaraUs().getJaraUsId();
         Long userId = savedMissionPost.getUser().getUserId();
-        //TODO: 오늘의 미션 중 얼마나 완료했는지 반영
+        // 오늘의 미션 중 얼마나 완료했는지 반영
         dailyMissionFinish(userId, jaraUsId); //어떤 유저인지, 오늘의 미션 중 어떤 미션(그룹)을 완료했는지 전달
 
         //게시글 조회에 필요한 정보 DTO 반환
@@ -101,7 +104,6 @@ public class MissionPostServiceImpl implements MissionPostService {
     }
 
 
-
     //미션에 참여한 유저들의 참여율 알아내기 => 스케줄링 구현 후에 할 수 있을 듯.
     public int missionParticipationRate(Long userId, Long jaraUsId) {
 
@@ -136,4 +138,40 @@ public class MissionPostServiceImpl implements MissionPostService {
 
         return result;
     }
+
+    //미션인증글 수정
+    //TODO: 오늘=> 내용과 공개/익명 정보 모두 수정 가능
+    //TODO: 오늘이 아닌 경우 => 공개/익명 정보만 수정 가능
+    public String updateMissionPost(Long missionPostId, MissionPostDTO missionPostDTO, Long userId, LocalDate todayDate) {
+        //해당 유저의 '오늘의 미션' 중 수정하려는 미션인증글 식별자가 있는지 찾기 (즉, 오늘 올린 미션인증글인지 확인하기)
+        List<Long> dailyMissionPostIds = dailyMissionRepository.findMissionPostIdsByUser_UserId(userId);
+        List<Long> missionHistoryMissionPostIds = missionHistoryRepository.findMissionPostIdsByUser_UserId(userId);
+
+        //오늘 올린 미션인증글 식별자들 중 수정하고자하는 미션인증글 식별자가 있다면 (즉, 오늘 올린 미션인증글이 맞다면)
+        if (dailyMissionPostIds.contains(missionPostId)) {
+
+            //dto에서 값을 꺼내서 전달 (수정할 값)
+            boolean display = missionPostDTO.isDisplay();
+            boolean anonymous = missionPostDTO.isAnonymous();
+
+            //인증 게시글 본문 (제목,내용,첨부이미지)
+            String textTitle=missionPostDTO.getTextTitle();
+            String textContent = missionPostDTO.getTextContent();
+            String imageContent = missionPostDTO.getImageContent();
+
+            missionPostRepository.updateMissionPostByMissionPostId(missionPostId, display, anonymous, textTitle, textContent, imageContent);
+            return "수정되었습니다.";
+        } /*else if (!missionHistoryMissionPostIds.contains(missionPostId)) { //해당 유저가 작성한 글은 맞지만 오늘 미션이 아니라면
+            // 추가해야하는 내용 : display와 anonymous 설정이 변경되었는지
+            missionPostRepository.updateMissionPostMetaDataByMissionPostId(missionPostId, display, anonymous); //작성 제목,내용은 수정못하고 공개/익명 여부만 수정 가능하도록
+            return "수정가능한 날짜가 지나 공개/익명 여부만 수정 가능합니다. ";
+            return false;*/
+        else {return "수정에 실패했습니다.";}
+    }
+
+
+
+
+    //미션인증글 삭제
+
 }

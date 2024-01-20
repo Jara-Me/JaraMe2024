@@ -6,6 +6,7 @@ import siliconDream.jaraMe.domain.MissionHistory;
 import siliconDream.jaraMe.dto.DailyMissionRecordDTO;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -20,4 +21,6 @@ public interface MissionHistoryRepository extends JpaRepository<MissionHistory,L
         missionHistory.setUser(dailyMissionRecordDTO.getUser());
         save(missionHistory);
     }
+
+    List<Long> findMissionPostIdsByUser_UserId(Long userId);
 }

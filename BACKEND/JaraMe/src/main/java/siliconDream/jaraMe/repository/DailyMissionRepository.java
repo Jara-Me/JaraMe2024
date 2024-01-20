@@ -9,6 +9,7 @@ import siliconDream.jaraMe.dto.DailyMissionDTO;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DailyMissionRepository extends JpaRepository<DailyMission, Long> {
@@ -34,4 +35,16 @@ public interface DailyMissionRepository extends JpaRepository<DailyMission, Long
             "LEFT JOIN d.jaraUs dj "+
             "WHERE d.user.userId = :userId AND d.scheduleDate = :todayDate")
     List<DailyMissionDTO> findByUser_UserIdAndScheduleDate(Long userId, LocalDate todayDate);
+
+
+
+    //dailyMission테이블에 있는지 찾아보기 => dailyMissionResult==true면 가장 최근 게시글이 MissionPostId와 동일하지도 체크 ? 아니면 DailyMission,MissionHistory테이블에 미션포스트넘버 추가?
+    //Optional<Long> postedMissionPostId = dailyMissionRepository.findMissionPostIdByUser_UserIdAndScheduleDateAndDailyMissionResult(userId,todayDate,true);
+    @Query("SELECT dm.missionPostId "+
+    "FROM DailyMission dm "+
+    "WHERE dm.user.userId= :userId AND dm.scheduleDate = :todayDate AND dm.dailyMissionResult = :dailyMissionResult")
+    Optional<Long> findMissionPostIdByUser_UserIdAndScheduleDateAndDailyMissionResult(Long userId, LocalDate todayDate, boolean dailyMissionResult);
+
+
+    List<Long> findMissionPostIdsByUser_UserId(Long userId); //TODO: missionPostId 컬럼 추가하기
 }

@@ -20,7 +20,7 @@ public class MissionPostDTO {
     boolean anonymous;
 
     //인증 내용
-    String title;
+    String textTitle;
     String textContent;
     String imageContent;
 
@@ -42,8 +42,8 @@ public class MissionPostDTO {
         return dateTime;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTextTitle() {
+        return textTitle;
     }
 
     public String getTextContent() {

@@ -18,6 +18,12 @@ public class DailyMission {
 
     private boolean dailyMissionResult;
 
+    @Column(name="missionPostId")
+    private Long missionPostId;
+
+    @OneToOne //확인 예정
+    @JoinColumn(name="missionPostId", insertable = false, updatable = false)
+    private MissionPost missionPost;
 
     //FK
     @ManyToOne

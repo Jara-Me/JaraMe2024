@@ -32,6 +32,9 @@ public class Comment {
     private User user;
 
 
+
+
+
     //TODO: getter and setter
 
     public Long getCommentId() {
