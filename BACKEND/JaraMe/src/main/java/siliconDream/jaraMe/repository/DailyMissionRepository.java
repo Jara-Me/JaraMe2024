@@ -5,7 +5,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import siliconDream.jaraMe.domain.DailyMission;
+import siliconDream.jaraMe.dto.DailyMissionDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -24,5 +26,12 @@ public interface DailyMissionRepository extends JpaRepository<DailyMission, Long
 
     void deleteAll();
 
-    //void saveDailyMission(DailyMission dailyMission);
+
+    @Query("SELECT new siliconDream.jaraMe.dto.DailyMissionDTO(" +
+            "d.dailyMissionResult, " +
+            "dj.jaraUsName, dj.missionName) "+
+            "FROM DailyMission d "+
+            "LEFT JOIN d.jaraUs dj "+
+            "WHERE d.user.userId = :userId AND d.scheduleDate = :todayDate")
+    List<DailyMissionDTO> findByUser_UserIdAndScheduleDate(Long userId, LocalDate todayDate);
 }

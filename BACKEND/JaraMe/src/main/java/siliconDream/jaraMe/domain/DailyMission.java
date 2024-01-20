@@ -2,6 +2,7 @@ package siliconDream.jaraMe.domain;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,18 +12,20 @@ public class DailyMission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dailyMissionId;
 
-    private LocalDateTime dailyMissionDate;
+
+    private LocalDateTime doneDateTime;
+    private LocalDate scheduleDate; //인증예정일 날짜 (오늘날짜의 데일리미션이 맞는지 확인하기 위함)
 
     private boolean dailyMissionResult;
 
 
     //FK
     @ManyToOne
-    @JoinColumn(name="user")
+    @JoinColumn(name = "user")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="jaraUs")
+    @JoinColumn(name = "jaraUs")
     private JaraUs jaraUs;
 
     //TODO: getter and setter
@@ -41,13 +44,6 @@ public class DailyMission {
     public void setDailyMissionResult(boolean dailyMissionResult) {
         this.dailyMissionResult = dailyMissionResult;
     }
-    public LocalDateTime getDailyMissionDate() {
-        return dailyMissionDate;
-    }
-
-    public void setDailyMissionDate(LocalDateTime dailyMissionDate) {
-        this.dailyMissionDate = dailyMissionDate;
-    }
 
     public User getUser() {
         return user;
@@ -65,4 +61,19 @@ public class DailyMission {
         this.jaraUs = jaraUs;
     }
 
+    public LocalDateTime getDoneDateTime() {
+        return doneDateTime;
+    }
+
+    public void setDoneDateTime(LocalDateTime doneDateTime) {
+        this.doneDateTime = doneDateTime;
+    }
+
+    public LocalDate getScheduleDate() {
+        return scheduleDate;
+    }
+
+    public void setScheduleDate(LocalDate scheduleDate) {
+        this.scheduleDate = scheduleDate;
+    }
 }

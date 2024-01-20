@@ -100,18 +100,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         return result;//예외처리 하기
     }
 
-    //TODO : 오늘의 미션 조회
-    public DailyMissionDTO getDailyMission(Long userId, LocalDateTime todayDate) {
-        DailyMissionDTO dailyMissionDTO = new DailyMissionDTO();
-        //TODO: userId와 todayDate 전달받기
-        //TODO: Schedule 테이블에서 매개변수로 받은 userId 필터링한 레코드 찾아서, scheduleId 추출하기
 
-
-        //TODO:ScheduleDate 테이블에서 매개변수로 받은 todayDate 와 scheduleId로 필터링해서 '오늘의 미션' 알아내기
-
-        //TODO: DTO 구성해서 반환하기 (dailyMissionId 혹은 DailyMission 테이블 자체도 포함하기 )
-        return dailyMissionDTO;
-    }
 
     //미션에 참여한 유저들의 참여율 알아내기 => 스케줄링 구현 후에 할 수 있을 듯.
     public int missionParticipationRate(Long userId, Long jaraUsId) {

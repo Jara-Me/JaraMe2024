@@ -28,7 +28,8 @@ public class MissionPostController {
     }
 
 
-    //미션 인증글 리액션 등록
+    //미션 인증글 조회
+
 
 
 

@@ -51,7 +51,7 @@ public class DailyMissionUpdateScheduler {
                 for (DailyMission one : doneDailyMission) {
                     if (one.isDailyMissionResult()) {
                         DailyMissionRecordDTO dailyMissionRecordDTO = new DailyMissionRecordDTO();
-                        dailyMissionRecordDTO.setMissionDate(one.getDailyMissionDate().toLocalDate());
+                        dailyMissionRecordDTO.setMissionDate(one.getDoneDateTime().toLocalDate());
                         missionHistoryRepository.saveDailyMissionRecord(dailyMissionRecordDTO);
 
                         dailyMissionRepository.deleteAll();
