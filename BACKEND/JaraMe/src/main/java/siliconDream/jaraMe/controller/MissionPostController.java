@@ -9,7 +9,7 @@ import siliconDream.jaraMe.service.MissionPostService;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/mission")
+@RequestMapping("/missionPost")
 public class MissionPostController {
     private final MissionPostService missionService;
 
@@ -29,7 +29,11 @@ public class MissionPostController {
 
 
     //미션 인증글 조회
-
+    @GetMapping("/get")
+    public Optional<GetMissionPostDTO> getMissionPost(@RequestParam Long missionPostId){ //전체 인증글 목록에서 얻어내기
+        Optional<GetMissionPostDTO> getMissionPostDTO = missionService.getMissionPostDetails(missionPostId);
+        return getMissionPostDTO;
+    }
 
 
 
