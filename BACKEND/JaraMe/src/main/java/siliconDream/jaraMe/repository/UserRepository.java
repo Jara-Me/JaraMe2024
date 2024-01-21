@@ -12,5 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //수정한 부분
     User findByUserId(Long userId);
 
+    //이메일로 사용자 찾기
+    User findByEmail(String email);
 
 }
