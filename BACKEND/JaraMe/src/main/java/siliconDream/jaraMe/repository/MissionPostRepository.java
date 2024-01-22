@@ -31,6 +31,13 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
     @Modifying
     @Query("UPDATE MissionPost mp SET mp.display = :display, mp.anonymous = :anonymous, mp.textTitle = :textTitle, mp.textContent = :textContent, mp.imageContent =:imageContent " +
             "WHERE mp.missionPostId = :missionPostId")
-    void updateMissionPostByMissionPostId(Long missionPostId, boolean display, boolean anonymous, String textTitle, String textContent, String imageContent);
-
+    default void updateMissionPostByMissionPostId(Long missionPostId, boolean display, boolean anonymous, String textTitle, String textContent, String imageContent){
+        MissionPost missionPost = findByMissionPostId(missionPostId);
+        missionPost.setDisplay(display);
+        missionPost.setAnonymous(anonymous);
+        missionPost.setTextTitle(textTitle);
+        missionPost.setTextContent(textContent);
+        missionPost.setImageContent(imageContent);
+        save(missionPost);
+    }
 }

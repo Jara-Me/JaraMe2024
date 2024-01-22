@@ -24,6 +24,7 @@ public class MissionPostController {
     }
 
     //미션 인증글 등록 =>테스트 완료 / 예외처리 전
+    //TODO: 오늘 해당 유저가 해당 자라어스에 대한 미션인증글을 이미 작성했다면
     @PostMapping("/post")
     public ResponseEntity<String> missionPost(@RequestBody MissionPostDTO missionPostDTO, @RequestParam Long userId) {
         String returnMessage = missionService.missionPost(missionPostDTO,userId);
@@ -60,10 +61,9 @@ public class MissionPostController {
     //TODO: 오늘=> 내용과 공개/익명 정보 모두 수정 가능
     //TODO: 오늘이 아닌 경우 => 공개/익명 정보만 수정 가능
     @PostMapping("/update")
-    public String updateMissionPost(@RequestParam Long missionPostId, @RequestBody MissionPostDTO missionPostDTO, Long userId){
+    public String updateMissionPost(@RequestParam Long missionPostId, @RequestBody MissionPostDTO missionPostDTO, @RequestParam Long userId){
 
         String resultMessage = missionService.updateMissionPost(missionPostId,missionPostDTO, userId, LocalDate.now());
-        //Optional<GetMissionPostDTO> getMissionPostDTO
 
         //수행결과에 따라 (수정되거나 수정되지않은) 미션 인증글 조회 결과 반환
         if (resultMessage=="수정되었습니다.") {

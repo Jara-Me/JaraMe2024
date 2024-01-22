@@ -206,12 +206,8 @@ return "";
 //TODO: 오늘=> 내용과 공개/익명 정보 모두 수정 가능
 //TODO: 오늘이 아닌 경우 => 공개/익명 정보만 수정 가능
     public String updateMissionPost(Long missionPostId, MissionPostDTO missionPostDTO, Long userId, LocalDate todayDate) {
-        //해당 유저의 '오늘의 미션' 중 수정하려는 미션인증글 식별자가 있는지 찾기 (즉, 오늘 올린 미션인증글인지 확인하기)
-        List<Long> dailyMissionPostIds = dailyMissionRepository.findMissionPostIdsByUser_UserId(userId);
-        List<Long> missionHistoryMissionPostIds = missionHistoryRepository.findMissionPostIdsByUser_UserId(userId);
-
-        //오늘 올린 미션인증글 식별자들 중 수정하고자하는 미션인증글 식별자가 있다면 (즉, 오늘 올린 미션인증글이 맞다면)
-        if (dailyMissionPostIds.contains(missionPostId)) {
+        MissionPost missionPost = missionPostRepository.findByMissionPostId(missionPostId);
+        if ((missionPost.getPostDateTime().toLocalDate()).equals(todayDate)){
 
             //dto에서 값을 꺼내서 전달 (수정할 값)
             boolean display = missionPostDTO.isDisplay();
@@ -224,11 +220,9 @@ return "";
 
             missionPostRepository.updateMissionPostByMissionPostId(missionPostId, display, anonymous, textTitle, textContent, imageContent);
             return "수정되었습니다.";
-        } /*else if (!missionHistoryMissionPostIds.contains(missionPostId)) { //해당 유저가 작성한 글은 맞지만 오늘 미션이 아니라면
-            // 추가해야하는 내용 : display와 anonymous 설정이 변경되었는지
-            missionPostRepository.updateMissionPostMetaDataByMissionPostId(missionPostId, display, anonymous); //작성 제목,내용은 수정못하고 공개/익명 여부만 수정 가능하도록
-            return "수정가능한 날짜가 지나 공개/익명 여부만 수정 가능합니다. ";
-            return false;*/ else {
+        } else if (!(missionPost.getPostDateTime().toLocalDate()).equals(todayDate)) { //해당 유저가 작성한 글은 맞지만 오늘 미션이 아니라면
+            return "오늘 등록한 미션 인증글만 수정 가능합니다.";
+        } else {
             return "수정에 실패했습니다.";
         }
     }
