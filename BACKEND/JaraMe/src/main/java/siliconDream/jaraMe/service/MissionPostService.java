@@ -22,7 +22,7 @@ public interface MissionPostService {
 
 
     String dailyMissionUpdate(Long userId,Long jaraUsId, Long missionPostId);
-    void  dailyMissionFinish(Long dailyMissionId, MissionPost savedMissionPost, LocalDateTime postedDateTime);
+    void  dailyMissionFinish(Long userId);
 
     //Optional<DailyMissionDTO> getDailyMission(Long userId, LocalDateTime todayDate);
     int missionParticipationRate(Long userId, Long jaraUsId);

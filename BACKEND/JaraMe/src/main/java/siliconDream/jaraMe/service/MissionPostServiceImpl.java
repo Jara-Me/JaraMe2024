@@ -126,39 +126,27 @@ public String dailyMissionUpdate(Long userId,Long jaraUsId, Long missionPostId){
     //저장한 missionPostId가 오늘의 미션 중 어느 미션을 인증하고자했던 것인지 파악
     // dailyMission 테이블에서 dailyMissionId로 레코드를 찾은 다음,
     Long dailyMissionId = dailyMissionRepository.findDailyMissionIdByUser_UserIdAndJaraUs_JaraUsId(userId, jaraUsId);
-    log.info("MissionPostController-dailyMissionUpdate-dailyMissionId: {}",dailyMissionId);
     MissionPost savedMissionPost = missionPostRepository.findByMissionPostId(missionPostId);
-dailyMissionFinish(dailyMissionId,savedMissionPost,savedMissionPost.getPostDateTime());
+    dailyMissionRepository.updateDailyMissionStatus(true,dailyMissionId, savedMissionPost, savedMissionPost.getPostDateTime());
+
+    dailyMissionFinish(userId);
 return "";
 }
 
     //오늘의 미션 완료
 //미션 인증글 등록 시 호출됨. => 미션 인증 여부를 업데이트한 후, '오늘의 미션' 전체를 인증했는지 여부를 확인해서 모두 True인 경우 포인트 부여.
     @Transactional
-    public void dailyMissionFinish(Long dailyMissionId, MissionPost savedMissionPost, LocalDateTime postedDateTime) {
+    public void dailyMissionFinish(Long userId) {
 
          // dailyMissionResult를 true로 설정하고,
         // savedMissionPostId,
         // postedDateTime 값으로 업데이트한다.
 
-        dailyMissionRepository.updateDailyMissionStatus(true,dailyMissionId, savedMissionPost, postedDateTime);
 
 
-        /**테스트 목적**//*
-        DailyMission testDailyMission = dailyMissionRepository.findDailyMissionByDailyMissionId(dailyMissionId);
 
-
-        log.info("MissionPostController-dailyMissionFinish-testDailyMission.getDailyMissionId: {}",testDailyMission.getDailyMissionId());
-        log.info("MissionPostController-dailyMissionFinish-testDailyMission.getMissionPostId: {}",testDailyMission.getMissionPost().getMissionPostId());
-
-        log.info("MissionPostController-dailyMissionFinish-testDailyMission.getJaraUs().getJaraUsId(): {}",testDailyMission.getJaraUs().getJaraUsId());
-        log.info("MissionPostController-dailyMissionFinish-testDailyMission.getUser().getUserId(): {}",testDailyMission.getUser().getUserId());
-        log.info("MissionPostController-dailyMissionFinish-testDailyMission.getScheduleDate();: {}",     testDailyMission.getScheduleDate());
-        log.info("MissionPostController-dailyMissionFinish-testDailyMission.getDoneDateTime();: {}",testDailyMission.getDoneDateTime());
-        log.info("MissionPostController-dailyMissionFinish-testDailyMission.getDailyMissionResult();: {}",testDailyMission.isDailyMissionResult());
-*/
         // TODO: 오늘의 미션 전부 완료했는지 알아보는 부분
-      /*  List<DailyMission> dailyMissionList = dailyMissionRepository.findByUser_UserId(userId);
+        List<DailyMission> dailyMissionList = dailyMissionRepository.findByUser_UserId(userId);
 
 
         // dailyMission 테이블에서 userId로 필터링했을 때 dailyMissionResult 컬럼이 모두 T인 경우,
@@ -175,7 +163,7 @@ return "";
             pointRepository.updateDailyMission(userId, earnedPoint);
         }
         //포인트 지급에 대한 return string 해야할 것같음! 수정 예정
-*/
+
     }
 
 
