@@ -39,8 +39,7 @@ public class DailyMissionServiceImpl implements DailyMissionService{
     }
     //오늘의 미션 조회
     public List<DailyMissionDTO> getDailyMission(Long userId, LocalDate todayDate) {
-        DailyMissionDTO dailyMissionDTO = new DailyMissionDTO();
-        //userId와 todayDate 전달받기
+//userId와 todayDate 전달받기
 
         //ScheduleDate 테이블에서 매개변수로 받은 todayDate 와 scheduleId로 필터링해서 '오늘의 미션' 알아내기
         List<DailyMissionDTO> dailyMissionDTOList= dailyMissionRepository.findByUser_UserIdAndScheduleDate(userId,todayDate);

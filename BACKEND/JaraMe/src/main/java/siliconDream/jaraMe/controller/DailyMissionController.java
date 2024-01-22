@@ -22,9 +22,9 @@ public class DailyMissionController {
         this.dailyMissionService = dailyMissionService;
     }
 
-    //오늘의 미션 조회
+    //오늘의 미션 조회 => 테스트완료 / 예외처리 전
     @GetMapping("/get")
-    public List<DailyMissionDTO> getDailyMission(@RequestParam  Long userId){
+    public List<DailyMissionDTO> getDailyMission(@RequestParam Long userId){
         List<DailyMissionDTO> dailyMissionDTOList = dailyMissionService.getDailyMission(userId, LocalDate.now());
         return dailyMissionDTOList;
     }

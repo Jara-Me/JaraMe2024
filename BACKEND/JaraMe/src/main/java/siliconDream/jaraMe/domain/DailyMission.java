@@ -13,17 +13,23 @@ public class DailyMission {
     private Long dailyMissionId;
 
 
+    public MissionPost getMissionPost() {
+        return missionPost;
+    }
+
+    public void setMissionPost(MissionPost missionPost) {
+        this.missionPost = missionPost;
+    }
+    @Column(nullable = true)
     private LocalDateTime doneDateTime;
     private LocalDate scheduleDate; //인증예정일 날짜 (오늘날짜의 데일리미션이 맞는지 확인하기 위함)
 
     @Column(columnDefinition = "boolean default false") //기본값 false로 설정
     private boolean dailyMissionResult;
 
-    @Column(name="missionPostId")
-    private Long missionPostId;
 
     @OneToOne //확인 예정
-    @JoinColumn(name="missionPostId", insertable = false, updatable = false)
+    @JoinColumn(name="missionPost", insertable = true, updatable = true) //updatable = false?
     private MissionPost missionPost;
 
     //FK

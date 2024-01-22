@@ -4,11 +4,13 @@ import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import siliconDream.jaraMe.domain.MissionPost;
 import siliconDream.jaraMe.dto.GetMissionPostDTO;
 import siliconDream.jaraMe.dto.MissionPostDTO;
 import siliconDream.jaraMe.service.MissionPostService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -27,6 +29,15 @@ public class MissionPostController {
         String returnMessage = missionService.missionPost(missionPostDTO,userId);
 
         return ResponseEntity.ok(returnMessage);
+    }
+
+    @PutMapping("/update")
+    public String dailyMissionUpdate(@RequestParam Long userId, @RequestParam Long  missionPostId, @RequestParam Long jaraUsId ){
+        //        void  dailyMissionFinish(Long userId, Long jaraUsId, MissionPost savedMissionPost, LocalDateTime postedDateTime);
+
+        String returnMassage = missionService.dailyMissionUpdate(userId, jaraUsId, missionPostId);
+
+                return returnMassage;
     }
 
 
