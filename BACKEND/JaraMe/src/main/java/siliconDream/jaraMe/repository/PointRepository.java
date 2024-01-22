@@ -19,7 +19,7 @@ public interface PointRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserId(Long userId);
 
     //출석체크 (포인트 적립)
-    default boolean updateCheckIn(Long userId) {
+    default void updateCheckIn(Long userId) {
         try {
             Optional<User> userOptional = findByUserId(userId);
 
@@ -28,14 +28,10 @@ public interface PointRepository extends JpaRepository<User, Long> {
                 user.setPoint(user.getPoint() + 2);
                 user.setCheckIn(true);
                 save(user);
-                return true;
-            } else {
-                return false;
             }
 
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
-            return false;
         }
 
     }

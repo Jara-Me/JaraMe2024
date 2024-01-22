@@ -34,14 +34,14 @@ public class User {
     @Column(nullable=true)
     private LocalDate birthDate;
 
-    @Column
+    @Column(columnDefinition = "boolean default false") //기본값 false로 설정
     private boolean checkIn;
 
-    private int point=0;
+    @Column(columnDefinition = "int default 0") //기본값 0으로 설정
+    private int point ;
 
-    private int passTicket=0;
-
-
+    @Column(columnDefinition = "int default 0")//기본값 0으로 설정
+    private int passTicket;
     //FK
     @OneToMany(mappedBy="user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

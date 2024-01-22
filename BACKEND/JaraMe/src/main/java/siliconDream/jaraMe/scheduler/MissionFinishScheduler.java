@@ -36,7 +36,7 @@ public class MissionFinishScheduler {
 
 
     @Scheduled(cron = "0 0 0 * * *") //미션 종료일의 다음날 00:00:00에 실시되도록 함.
-    public String missionComplete() {
+    public void missionComplete() {
 
         //어제 미션이 종료된 그룹들을 리스트로 얻은 다음,
         List<JaraUs> jaraUses = jaraUsService.findEndDateYesterDay();
@@ -63,7 +63,7 @@ public class MissionFinishScheduler {
             //return 메시지 작성 => mission연장 여부에 따라 결정
             //oo미션이 종료되었습니다. 포인트 ㅇㅇ이 적립되었습니다.
         }
-        return "수정 예정";
+        //notice테이블에 기록 남기기 (알림 보냈는지 여부를 나타내는 컬럼도 필요할 것같음)
     }
 
 

@@ -1,5 +1,6 @@
 package siliconDream.jaraMe.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -25,6 +26,9 @@ public class MissionPost {
 
     String imageContent;
 
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime postDateTime;
 
 
@@ -36,6 +40,7 @@ public class MissionPost {
     @ManyToOne
     @JoinColumn(name = "jaraUs")
     JaraUs jaraUs;
+
 
 
     @OneToMany(mappedBy = "missionPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

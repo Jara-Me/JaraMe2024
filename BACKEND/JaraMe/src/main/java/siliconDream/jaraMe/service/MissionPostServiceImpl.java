@@ -2,9 +2,11 @@ package siliconDream.jaraMe.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import siliconDream.jaraMe.domain.Comment;
 import siliconDream.jaraMe.domain.DailyMission;
 import siliconDream.jaraMe.domain.MissionPost;
 import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.dto.CommentDTO;
 import siliconDream.jaraMe.dto.MissionPostDTO;
 import siliconDream.jaraMe.dto.GetMissionPostDTO;
 import siliconDream.jaraMe.dto.DailyMissionDTO;
@@ -23,57 +25,103 @@ public class MissionPostServiceImpl implements MissionPostService {
     private final DailyMissionRepository dailyMissionRepository;
     private final PointRepository pointRepository;
     private final MissionHistoryRepository missionHistoryRepository;
+    private final UserRepository userRepository;
+    private final JaraUsRepository jaraUsRepository;
+    private final CommentRepository commentRepository;
+    private final ReactionRepository reactionRepository;
 
     @Autowired
     public MissionPostServiceImpl(MissionPostRepository missionPostRepository,
                                   ScheduleRepository scheduleRepository,
                                   DailyMissionRepository dailyMissionRepository,
                                   PointRepository pointRepository,
-                                  MissionHistoryRepository missionHistoryRepository) {
+                                  MissionHistoryRepository missionHistoryRepository,
+                                  UserRepository userRepository,
+                                  JaraUsRepository jaraUsRepository,
+                                  CommentRepository commentRepository,
+                                  ReactionRepository reactionRepository) {
         this.missionPostRepository = missionPostRepository;
         this.scheduleRepository = scheduleRepository;
         this.dailyMissionRepository = dailyMissionRepository;
         this.pointRepository = pointRepository;
         this.missionHistoryRepository = missionHistoryRepository;
+        this.userRepository = userRepository;
+        this.jaraUsRepository = jaraUsRepository;
+        this.commentRepository = commentRepository;
+        this.reactionRepository = reactionRepository;
     }
 
     //미션 인증글 작성
-    public Optional<GetMissionPostDTO> missionPost(MissionPostDTO missionPost) {
+    //TODO: 만약 오늘 해당 미션에 대해 인증글을 하나 올렸다면 못올리도록 하기
+    //TODO: 작성에 대한 규칙?
+    public String missionPost(MissionPostDTO missionPostDTO, Long userId) {
 
-        //TODO: 만약 오늘 해당 미션에 대해 인증글을 하나 올렸다면 못올리도록 하기
-        //TODO: 작성에 대한 규칙?
 
-        //미션 인증글 저장하고 저장된 내용 받아오기
-        Optional<MissionPost> savedMissionPostOptional = missionPostRepository.saveMissionPost(missionPost);
-        MissionPost savedMissionPost = savedMissionPostOptional.get();
+        MissionPost missionPost = new MissionPost();
+        missionPost.setAnonymous(missionPostDTO.isAnonymous());
+        missionPost.setDisplay(missionPostDTO.isDisplay());
+        missionPost.setTextTitle(missionPostDTO.getTextTitle());
+        missionPost.setTextContent(missionPostDTO.getTextContent());
+        missionPost.setImageContent(missionPostDTO.getImageContent());
+        missionPost.setPostDateTime(missionPostDTO.getPostDateTime());
+        missionPost.setUser(userRepository.findByUserId(userId));
 
-        //저장된 미션 인증글의 식별자(missionPostId) 얻기
-        Long missionPostId = savedMissionPost.getMissionPostId();
+        Long jaraUsId = missionPostDTO.getJaraUsId();
+        missionPost.setJaraUs(jaraUsRepository.findByJaraUsId(jaraUsId));
 
-        Long jaraUsId = savedMissionPost.getJaraUs().getJaraUsId();
-        Long userId = savedMissionPost.getUser().getUserId();
-        // 오늘의 미션 중 얼마나 완료했는지 반영
-        dailyMissionFinish(userId, jaraUsId); //어떤 유저인지, 오늘의 미션 중 어떤 미션(그룹)을 완료했는지 전달
+        //TODO: 저장 => 여길 Optional로 바꿔서 isPresent로 성공/실패여부 반영하기
+        MissionPost savedMissionPost = missionPostRepository.save(missionPost);
 
-        //게시글 조회에 필요한 정보 DTO 반환
-        return getMissionPostDetails(missionPostId);
+
+        //TODO: dailyMission테이블에도 missionPostId 저장하기
+        Long savedMissionPostId = savedMissionPost.getMissionPostId();
+        dailyMissionFinish(userId, jaraUsId);
+        return "저장이 완료되었습니다.";
     }
 
 
     //미션 인증글 조회
-    public Optional<GetMissionPostDTO> getMissionPostDetails(Long missionPostId) {
+    //TODO: 해당 missionId가 없다면?
+    //TODO: 비공개된 게시글이거나 삭제된 게시글이라면 ?
+    public GetMissionPostDTO getMissionPostDetails(Long missionPostId, Long userId) {
         //레코드 찾기
         //missionPostRepository.findByMissionPostId(missionPostId); //인증글 레코드만 전달받을 수 있음.
-        GetMissionPostDTO getMissionPostDTO = new GetMissionPostDTO();
-        getMissionPostDTO = missionPostRepository.findByMissionPostIdWithCommentsAndReactions(missionPostId); //댓글,리액션까지 전달.
+        Optional<MissionPost> missionPostOptional = missionPostRepository.findMissionPostByMissionPostId(missionPostId); //댓글,리액션까지 전달.
+        //TODO: 조회하는 사람이 해당 인증글에 단 리액션 정보 전달?
+        Optional<String> reactionTypeOptional = reactionRepository.findReactionTypeByMissionPost_MissionPostIdAndUser_UserId(missionPostId, userId);
 
-        return Optional.ofNullable(getMissionPostDTO);
+        Optional<List<CommentDTO>> commentOptional = commentRepository.findCommentByMissionPost_MissionPostId(missionPostId);
+
+        return makeGetMissionPostDTO(missionPostOptional, reactionTypeOptional, commentOptional);
+
+    }
+
+
+    //미션 인증글 조회를 위한 DTO 형성
+    public GetMissionPostDTO makeGetMissionPostDTO(Optional<MissionPost> missionPostOptional, Optional<String> reactionTypeOptional, Optional<List<CommentDTO>> commentOptional) {
+        GetMissionPostDTO getMissionPostDTO = new GetMissionPostDTO();
+
+        missionPostOptional.ifPresent(missionPost -> {
+            getMissionPostDTO.setMissionPostId(missionPost.getMissionPostId());
+            getMissionPostDTO.setTextTitle(missionPost.getTextTitle());
+            getMissionPostDTO.setTextContent(missionPost.getTextContent());
+            getMissionPostDTO.setImageContent(missionPost.getImageContent());
+            getMissionPostDTO.setPostDateTime(missionPost.getPostDateTime());
+            getMissionPostDTO.setNickname(missionPost.getUser().getNickname());
+            getMissionPostDTO.setProfileImage(missionPost.getUser().getProfileImage());
+        });
+
+        reactionTypeOptional.ifPresent(getMissionPostDTO::setReactionType);
+
+        commentOptional.ifPresent(getMissionPostDTO::setCommentDTO);
+
+        return getMissionPostDTO;
     }
 
 
     //오늘의 미션 완료
-    //미션 인증글 등록 시 호출됨. => 미션 인증 여부를 업데이트한 후,
-    //'오늘의 미션' 전체를 인증했는지 여부를 확인해서 모두 True인 경우 포인트 부여.
+//미션 인증글 등록 시 호출됨. => 미션 인증 여부를 업데이트한 후,
+//'오늘의 미션' 전체를 인증했는지 여부를 확인해서 모두 True인 경우 포인트 부여.
     public boolean dailyMissionFinish(Long userId, Long jaraUsId) {
         boolean result = false;
         // dailyMission 테이블에서 매개변수로 전달받은 userId로 필터링한 뒤,
@@ -140,8 +188,8 @@ public class MissionPostServiceImpl implements MissionPostService {
     }
 
     //미션인증글 수정
-    //TODO: 오늘=> 내용과 공개/익명 정보 모두 수정 가능
-    //TODO: 오늘이 아닌 경우 => 공개/익명 정보만 수정 가능
+//TODO: 오늘=> 내용과 공개/익명 정보 모두 수정 가능
+//TODO: 오늘이 아닌 경우 => 공개/익명 정보만 수정 가능
     public String updateMissionPost(Long missionPostId, MissionPostDTO missionPostDTO, Long userId, LocalDate todayDate) {
         //해당 유저의 '오늘의 미션' 중 수정하려는 미션인증글 식별자가 있는지 찾기 (즉, 오늘 올린 미션인증글인지 확인하기)
         List<Long> dailyMissionPostIds = dailyMissionRepository.findMissionPostIdsByUser_UserId(userId);
@@ -155,7 +203,7 @@ public class MissionPostServiceImpl implements MissionPostService {
             boolean anonymous = missionPostDTO.isAnonymous();
 
             //인증 게시글 본문 (제목,내용,첨부이미지)
-            String textTitle=missionPostDTO.getTextTitle();
+            String textTitle = missionPostDTO.getTextTitle();
             String textContent = missionPostDTO.getTextContent();
             String imageContent = missionPostDTO.getImageContent();
 
@@ -165,11 +213,10 @@ public class MissionPostServiceImpl implements MissionPostService {
             // 추가해야하는 내용 : display와 anonymous 설정이 변경되었는지
             missionPostRepository.updateMissionPostMetaDataByMissionPostId(missionPostId, display, anonymous); //작성 제목,내용은 수정못하고 공개/익명 여부만 수정 가능하도록
             return "수정가능한 날짜가 지나 공개/익명 여부만 수정 가능합니다. ";
-            return false;*/
-        else {return "수정에 실패했습니다.";}
+            return false;*/ else {
+            return "수정에 실패했습니다.";
+        }
     }
-
-
 
 
     //미션인증글 삭제

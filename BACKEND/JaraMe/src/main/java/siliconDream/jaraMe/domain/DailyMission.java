@@ -16,6 +16,7 @@ public class DailyMission {
     private LocalDateTime doneDateTime;
     private LocalDate scheduleDate; //인증예정일 날짜 (오늘날짜의 데일리미션이 맞는지 확인하기 위함)
 
+    @Column(columnDefinition = "boolean default false") //기본값 false로 설정
     private boolean dailyMissionResult;
 
     @Column(name="missionPostId")

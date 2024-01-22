@@ -4,19 +4,19 @@ import java.awt.*;
 import java.time.LocalDateTime;
 
 public class MissionPostDTO {
-    //작성자 알기 위해 userId 필요(프로필)
+    /*//작성자 알기 위해 userId 필요(프로필)
     Long userId;
-
+*/
     //어떤 미션인지 알기 위해서 jaraUsId 필요
     Long jaraUsId;
 
     //인증글 작성 시간
-    LocalDateTime dateTime;
+    LocalDateTime postDateTime;
 
     //전체 공개 여부
     boolean display;
 
-    //익명 여부
+    //익명 여부 => TODO: 프론트엔드 프로토타입 기반 => 상의 필요
     boolean anonymous;
 
     //인증 내용
@@ -30,16 +30,17 @@ public class MissionPostDTO {
 
 
     //TODO:Getter and Setter
+    /*
     public Long getUserId() {
         return userId;
-    }
+    }*/
 
     public Long getJaraUsId() {
         return jaraUsId;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getPostDateTime() {
+        return postDateTime;
     }
 
     public String getTextTitle() {

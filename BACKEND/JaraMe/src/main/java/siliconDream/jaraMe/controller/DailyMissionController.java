@@ -3,6 +3,7 @@ package siliconDream.jaraMe.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import siliconDream.jaraMe.dto.DailyMissionDTO;
 import siliconDream.jaraMe.service.DailyMissionService;
@@ -23,7 +24,7 @@ public class DailyMissionController {
 
     //오늘의 미션 조회
     @GetMapping("/get")
-    public List<DailyMissionDTO> getDailyMission(Long userId){
+    public List<DailyMissionDTO> getDailyMission(@RequestParam  Long userId){
         List<DailyMissionDTO> dailyMissionDTOList = dailyMissionService.getDailyMission(userId, LocalDate.now());
         return dailyMissionDTOList;
     }

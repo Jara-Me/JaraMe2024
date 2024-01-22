@@ -25,31 +25,19 @@ public class PointController {
     @PostMapping("/checkIn") //@ResponseBody
     public String checkIn(@RequestParam Long userId, @RequestParam @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss") LocalDateTime dateTime) {
         //return pointService.checkIn(userId, dateTime);
-        boolean httpResponse = pointService.checkIn(userId, dateTime);
-        if (httpResponse) {
-            return "출석체크 포인트가 지급되었습니다! (+2p)";
-        } else {
-            //throw new CustomException(POINT_NOT_FOUND);
-            return "출석체크에 실패하였습니다!";
-        }
+        String responseMessage = pointService.checkIn(userId, dateTime);
+        return responseMessage;
     }
 
     //패스권 구매
     @PostMapping("/passTicket")
-    @ResponseBody
-    public ResponseEntity passTicket(@RequestParam Long userId) throws Exception {
+    public String passTicket(@RequestParam Long userId) {
         //HttpHeaders httpHeaders = new HttpHeaders();
 
-        boolean httpResponse = pointService.passTicket(userId);
-        if (httpResponse) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            //throw new CustomException(POINT_NOT_FOUND);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        String resultMessage = pointService.passTicket(userId);
+        return resultMessage;
     }
 
-    //스토어 구매 api => 아이템 정해져야 할 수 있음
 
     //패스권 사용 api => Point관련된 로직은 아니라서 다른 Controller가 적합할 것같음.
 }

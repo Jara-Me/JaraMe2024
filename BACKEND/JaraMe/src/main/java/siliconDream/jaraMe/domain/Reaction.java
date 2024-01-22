@@ -11,7 +11,7 @@ public class Reaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false,unique = true)
     private Long reactionId;
-    private String reactionType;
+    private String reactionType; //like, smile, good
 
 
 
