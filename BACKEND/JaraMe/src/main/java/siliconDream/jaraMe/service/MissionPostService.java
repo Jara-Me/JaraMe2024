@@ -29,5 +29,5 @@ public interface MissionPostService {
 
     String updateMissionPost(Long missionPostId, MissionPostDTO missionPostDTO, Long userId, LocalDate todayDate);
 
-
+    String deleteMissionPost(Long missionPostId,Long userId);
     }

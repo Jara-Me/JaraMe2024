@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
-import siliconDream.jaraMe.domain.Comment;
-import siliconDream.jaraMe.domain.DailyMission;
-import siliconDream.jaraMe.domain.MissionPost;
-import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.domain.*;
 import siliconDream.jaraMe.dto.CommentDTO;
 import siliconDream.jaraMe.dto.MissionPostDTO;
 import siliconDream.jaraMe.dto.GetMissionPostDTO;
@@ -20,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 @Slf4j
 @Service
 public class MissionPostServiceImpl implements MissionPostService {
@@ -121,28 +119,27 @@ public class MissionPostServiceImpl implements MissionPostService {
 
         return getMissionPostDTO;
     }
-public String dailyMissionUpdate(Long userId,Long jaraUsId, Long missionPostId){
-        missionPostRepository.findByMissionPostId(missionPostId);
-    //저장한 missionPostId가 오늘의 미션 중 어느 미션을 인증하고자했던 것인지 파악
-    // dailyMission 테이블에서 dailyMissionId로 레코드를 찾은 다음,
-    Long dailyMissionId = dailyMissionRepository.findDailyMissionIdByUser_UserIdAndJaraUs_JaraUsId(userId, jaraUsId);
-    MissionPost savedMissionPost = missionPostRepository.findByMissionPostId(missionPostId);
-    dailyMissionRepository.updateDailyMissionStatus(true,dailyMissionId, savedMissionPost, savedMissionPost.getPostDateTime());
 
-    dailyMissionFinish(userId);
-return "";
-}
+    public String dailyMissionUpdate(Long userId, Long jaraUsId, Long missionPostId) {
+        missionPostRepository.findByMissionPostId(missionPostId);
+        //저장한 missionPostId가 오늘의 미션 중 어느 미션을 인증하고자했던 것인지 파악
+        // dailyMission 테이블에서 dailyMissionId로 레코드를 찾은 다음,
+        Long dailyMissionId = dailyMissionRepository.findDailyMissionIdByUser_UserIdAndJaraUs_JaraUsId(userId, jaraUsId);
+        MissionPost savedMissionPost = missionPostRepository.findByMissionPostId(missionPostId);
+        dailyMissionRepository.updateDailyMissionStatus(true, dailyMissionId, savedMissionPost, savedMissionPost.getPostDateTime());
+
+        dailyMissionFinish(userId);
+        return "";
+    }
 
     //오늘의 미션 완료
 //미션 인증글 등록 시 호출됨. => 미션 인증 여부를 업데이트한 후, '오늘의 미션' 전체를 인증했는지 여부를 확인해서 모두 True인 경우 포인트 부여.
     @Transactional
     public void dailyMissionFinish(Long userId) {
 
-         // dailyMissionResult를 true로 설정하고,
+        // dailyMissionResult를 true로 설정하고,
         // savedMissionPostId,
         // postedDateTime 값으로 업데이트한다.
-
-
 
 
         // TODO: 오늘의 미션 전부 완료했는지 알아보는 부분
@@ -207,7 +204,7 @@ return "";
 //TODO: 오늘이 아닌 경우 => 공개/익명 정보만 수정 가능
     public String updateMissionPost(Long missionPostId, MissionPostDTO missionPostDTO, Long userId, LocalDate todayDate) {
         MissionPost missionPost = missionPostRepository.findByMissionPostId(missionPostId);
-        if ((missionPost.getPostDateTime().toLocalDate()).equals(todayDate)){
+        if ((missionPost.getPostDateTime().toLocalDate()).equals(todayDate)) {
 
             //dto에서 값을 꺼내서 전달 (수정할 값)
             boolean display = missionPostDTO.isDisplay();
@@ -228,6 +225,20 @@ return "";
     }
 
 
-    //미션인증글 삭제
-
+    //미션인증글 삭제 => 보류
+    //TODO : 예외처리 : 미션인증글이 삭제되면서 미션 기록, 오늘의 미션, 해당 미션인증글에 달린 댓글,리액션 모두 삭제돼야함.
+    public String deleteMissionPost(Long missionPostId, Long userId) {
+        MissionPost missionPost = missionPostRepository.findByMissionPostId(missionPostId);
+        JaraUs jaraUs = jaraUsRepository.findByJaraUsId(missionPost.getJaraUs().getJaraUsId());
+        LocalDate endDate = jaraUs.getEndDate();
+        if (missionPost.getUser().getUserId().equals(userId)) {
+            if (endDate.isAfter(LocalDate.now())) {
+                missionPostRepository.delete(missionPost);
+                return "삭제가 완료되었습니다.";
+            } else if (endDate.isBefore(LocalDate.now())) {
+                return "미션이 종료되어 삭제가 불가능합니다.";
+            }
+        }else if (!missionPost.getUser().getUserId().equals(userId)){
+        return "작성자가 일치하지않습니다.";} return "삭제를 실패했습니다.";
+    }
 }

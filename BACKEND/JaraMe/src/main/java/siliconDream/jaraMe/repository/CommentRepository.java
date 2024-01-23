@@ -14,9 +14,9 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
 
     Comment save(Comment comment);
 
-    void deleteCommentByCommentIdAndUser_UserId(Long commentId,Long userId);
+    void deleteCommentByCommentId(Long commentId);
 
-
+    Comment findCommentByCommentId(Long commentId);
 
     @Query("SELECT  new siliconDream.jaraMe.dto.CommentDTO("+
             "c.commentId, c.commentContent, c.commentDate, cu.nickname, cu.profileImage) "+

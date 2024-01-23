@@ -23,11 +23,11 @@ public class Comment {
 
 
     // FK
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "missionPost")
     private MissionPost missionPost;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user")
     private User user;
 
