@@ -14,11 +14,20 @@ public class Schedule {
     private Long scheduleId;
 
 
-    private Long jaraUsId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="jaraUs")
+    private JaraUs jaraUs;
+
     private LocalDate scheduleDate;
 
     //TODO: getter and setter
 
+    public JaraUs getJaraUs() {
+        return jaraUs;
+    }
+   public void setJaraUs(JaraUs jaraUs) {
+        this.jaraUs = jaraUs;
+    }
 
     public Long getScheduleId() {
         return scheduleId;
@@ -28,13 +37,6 @@ public class Schedule {
         this.scheduleId = scheduleId;
     }
 
-    public Long getJaraUsId() {
-        return jaraUsId;
-    }
-
-    public void setJaraUsId(Long jaraUsId) {
-        this.jaraUsId = jaraUsId;
-    }
 
     public LocalDate getScheduleDate() {
         return scheduleDate;

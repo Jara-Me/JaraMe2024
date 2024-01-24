@@ -1,23 +1,26 @@
 package siliconDream.jaraMe.scheduler;
 
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import siliconDream.jaraMe.domain.DailyMission;
 import siliconDream.jaraMe.domain.Schedule;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.DailyMissionRecordDTO;
-import siliconDream.jaraMe.repository.DailyMissionRepository;
-import siliconDream.jaraMe.repository.JoinUsersRepository;
-import siliconDream.jaraMe.repository.MissionHistoryRepository;
-import siliconDream.jaraMe.repository.ScheduleRepository;
+import siliconDream.jaraMe.repository.*;
 import siliconDream.jaraMe.service.DailyMissionService;
 import siliconDream.jaraMe.service.UserService;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Component
 public class DailyMissionUpdateScheduler {
+    private final UserRepository userRepository;
 
     private final DailyMissionRepository dailyMissionRepository;
     private final MissionHistoryRepository missionHistoryRepository;
@@ -31,44 +34,63 @@ public class DailyMissionUpdateScheduler {
                                        ScheduleRepository scheduleRepository,
                                        UserService userService,
                                        JoinUsersRepository joinUsersRepository,
-                                       DailyMissionService dailyMissionService) {
+                                       DailyMissionService dailyMissionService,
+                                       UserRepository userRepository) {
         this.dailyMissionRepository = dailyMissionRepository;
         this.missionHistoryRepository = missionHistoryRepository;
         this.scheduleRepository = scheduleRepository;
         this.userService = userService;
         this.joinUsersRepository = joinUsersRepository;
-        this.dailyMissionService = dailyMissionService;}
-
+        this.dailyMissionService = dailyMissionService;
+        this.userRepository = userRepository;
+    }
+    @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void transferDailyMission() {
-
+        log.info("start  ?");
         //모든 유저
         List<User> allUsers = userService.getAllUsers();
         for (User user : allUsers) {
             //데일리미션테이블에 레코드가 있는 경우 => 미션기록테이블에 복사 후 전체 삭제
             List<DailyMission> doneDailyMission = dailyMissionRepository.findAll();
+            log.info("delete! ");
             if (!doneDailyMission.isEmpty()) {
+                log.info("isEmpty? ");
                 for (DailyMission one : doneDailyMission) {
+                    log.info("one");
                     if (one.isDailyMissionResult()) {
+                        log.info("one.isDailyMissionResult:{}",one.isDailyMissionResult());
                         DailyMissionRecordDTO dailyMissionRecordDTO = new DailyMissionRecordDTO();
                         dailyMissionRecordDTO.setMissionDate(one.getDoneDateTime().toLocalDate());
+                        dailyMissionRecordDTO.setJaraUs(one.getJaraUs());
+                        dailyMissionRecordDTO.setUser(user);
+                        dailyMissionRecordDTO.setMissionPost(one.getMissionPost());
+                        log.info("set");
                         missionHistoryRepository.saveDailyMissionRecord(dailyMissionRecordDTO);
+                        log.info("save");
 
-                        dailyMissionRepository.deleteAll();
-                    }
+                    } dailyMissionRepository.deleteByUserUserId(user.getUserId());
+                    log.info("delete-done");
 
                 }
             }
+            log.info("userId:{}",user.getUserId());
             //해당 유저가 참여하고 있는 자라어스 식별자들을 얻은 후,
-            List<Long> joinedJaraUsIds = joinUsersRepository.findJaraUs_jaraUsIdsByUser_userId(user.getUserId());
+            Optional<List<Long>> joinedJaraUsIds = joinUsersRepository.findJaraUs_jaraUsIdsByUser_userId(user.getUserId());
+            log.info("joinedJaraUsIds:{}",joinedJaraUsIds);
 
-            //얻어온 자라어스 식별자들 중 오늘 인증하는 날인 미션이라면 스케줄 레코드를 가져옴
-            List<Schedule> todaySchedule = scheduleRepository.findScheduleDateByTodayAndJaraUsId(LocalDate.now(),joinedJaraUsIds);
+            for (Long jaraUsId : joinedJaraUsIds.get()) {
+                log.info("for-");
+                //얻어온 자라어스 식별자들 중 오늘 인증하는 날인 미션이라면 스케줄 레코드를 가져옴
+                Optional<Long> todayScheduledJaraUsId = scheduleRepository.findJaraUs_JaraUsIdByScheduleDateAndJaraUsId(LocalDate.now(), jaraUsId);
 
-            //스케줄 레코드와 유저식별자를 통해 오늘의 미션을 업데이트함
-            dailyMissionService.makeDailyMission(user.getUserId(),todaySchedule);
-
-
+                if (todayScheduledJaraUsId.isPresent()) {
+                    log.info("if-todayScheduledJaraUsId. isPresent? :");
+                    //스케줄 레코드와 유저식별자를 통해 오늘의 미션을 업데이트함
+                    dailyMissionService.makeDailyMission(user.getUserId(), jaraUsId);
+                    log.info("done");
+                }
+            }
 
         }
     }

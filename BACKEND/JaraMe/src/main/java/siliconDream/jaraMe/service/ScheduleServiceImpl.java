@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import siliconDream.jaraMe.domain.JaraUs;
 import siliconDream.jaraMe.domain.Recurrence;
 import siliconDream.jaraMe.domain.Schedule;
+import siliconDream.jaraMe.repository.JaraUsRepository;
 import siliconDream.jaraMe.repository.ScheduleRepository;
 
 import java.time.DayOfWeek;
@@ -16,10 +17,13 @@ import java.util.Set;
 @Slf4j
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
+    private final JaraUsRepository jaraUsRepository;
     private ScheduleRepository scheduleRepository;
 
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository,
+                               JaraUsRepository jaraUsRepository) {
         this.scheduleRepository = scheduleRepository;
+        this.jaraUsRepository = jaraUsRepository;
     }
 
     //미션 시작일,종료일 사이의 반복요일의 정확한 날짜 구해서 schedule테이블에 기록하기
@@ -42,7 +46,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                  if (DayOfWeek.valueOf(recurrence.getValue()).equals(nowDate.getDayOfWeek())) {
 
                        Schedule schedule = new Schedule();
-                    schedule.setJaraUsId(jaraUsId);
+                    schedule.setJaraUs(jaraUsRepository.findByJaraUsId(jaraUsId));
                     schedule.setScheduleDate(nowDate);
                     log.info("will be save - nowDate:{}",nowDate);
                     scheduleRepository.save(schedule);

@@ -19,6 +19,7 @@ public interface MissionHistoryRepository extends JpaRepository<MissionHistory,L
         missionHistory.setMissionDate(dailyMissionRecordDTO.getMissionDate());
         missionHistory.setJaraUs(dailyMissionRecordDTO.getJaraUs());
         missionHistory.setUser(dailyMissionRecordDTO.getUser());
+        missionHistory.setMissionPost(dailyMissionRecordDTO.getMissionPost());
         save(missionHistory);
     }
 

@@ -10,23 +10,22 @@ import siliconDream.jaraMe.domain.Schedule;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
-public interface ScheduleRepository extends JpaRepository<Schedule,Long> {
+public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
+    Schedule save(Schedule schedule);
 
-    @Modifying
-    @Query ("INSERT INTO Schedule (jaraUsId,scheduleDate) VALUES (:jaraUsId, :targetDate)")
-    default void saveSchedule(Long jaraUsId, LocalDate targetDate){
-
-     }
-
+    @Query("SELECT s.scheduleDate FROM Schedule s LEFT JOIN s.jaraUs as sj WHERE sj.jaraUsId = :jaraUsId")
     Set<LocalDate> findScheduleDateByJaraUsId(Long jaraUsId);
 
-    //// 자라어스 식별자들 중 오늘 인증하는 날인 미션이라면 스케줄 레코드를 전달함
-    @Query("SELECT s FROM Schedule s WHERE s.scheduleDate = :today AND s.jaraUsId IN :jaraUsIds")
-    List<Schedule> findScheduleDateByTodayAndJaraUsId(@Param("today") LocalDate today,@Param("jaraUsIds") List<Long> jaraUsIds);
 
+    @Query("SELECT sj.jaraUsId " +
+            "FROM Schedule s " +
+            "LEFT JOIN s.jaraUs as sj " +
+            "WHERE s.scheduleDate = :today AND sj.jaraUsId = :jaraUsId")
+    Optional<Long> findJaraUs_JaraUsIdByScheduleDateAndJaraUsId(LocalDate today, Long jaraUsId);
 
 }

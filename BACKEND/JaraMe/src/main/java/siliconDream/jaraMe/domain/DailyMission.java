@@ -12,20 +12,13 @@ public class DailyMission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dailyMissionId;
 
+    @Column(columnDefinition = "boolean default false") //기본값 false로 설정
+    private boolean dailyMissionResult;
 
-    public MissionPost getMissionPost() {
-        return missionPost;
-    }
 
-    public void setMissionPost(MissionPost missionPost) {
-        this.missionPost = missionPost;
-    }
     @Column(nullable = true)
     private LocalDateTime doneDateTime;
     private LocalDate scheduleDate; //인증예정일 날짜 (오늘날짜의 데일리미션이 맞는지 확인하기 위함)
-
-    @Column(columnDefinition = "boolean default false") //기본값 false로 설정
-    private boolean dailyMissionResult;
 
 
     @OneToOne //확인 예정
@@ -88,5 +81,13 @@ public class DailyMission {
 
     public void setScheduleDate(LocalDate scheduleDate) {
         this.scheduleDate = scheduleDate;
+    }
+
+    public MissionPost getMissionPost() {
+        return missionPost;
+    }
+
+    public void setMissionPost(MissionPost missionPost) {
+        this.missionPost = missionPost;
     }
 }

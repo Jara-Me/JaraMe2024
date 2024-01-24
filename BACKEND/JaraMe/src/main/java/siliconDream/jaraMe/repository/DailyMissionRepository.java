@@ -45,16 +45,12 @@ public interface DailyMissionRepository extends JpaRepository<DailyMission, Long
 
     DailyMission findDailyMissionByDailyMissionId(Long dailyMissionId);
 
+    @Transactional
+    void deleteByUserUserId(Long userId);
 
-    void deleteAll();
-
-    @Query("SELECT new siliconDream.jaraMe.dto.DailyMissionDTO(" +
-            "d.dailyMissionResult, " +
-            "dj.jaraUsName, dj.missionName) " +
-            "FROM DailyMission d " +
-            "LEFT JOIN d.jaraUs dj " +
-            "WHERE d.user.userId = :userId AND d.scheduleDate = :todayDate")
-    List<DailyMissionDTO> findByUser_UserIdAndScheduleDate(Long userId, LocalDate todayDate);
+    @Query("SELECT new siliconDream.jaraMe.dto.DailyMissionDTO(dm.dailyMissionResult, dmj.jaraUsName, dmj.missionName) " +
+            "FROM DailyMission dm LEFT JOIN dm.jaraUs dmj WHERE dm.user.userId = :userId AND dm.scheduleDate = :scheduleDate")
+    List<DailyMissionDTO> findDailyMissionDTOByScheduleDateAndUser_UserId( LocalDate scheduleDate,Long userId);
 
 
     //dailyMission테이블에 있는지 찾아보기 => dailyMissionResult==true면 가장 최근 게시글이 MissionPostId와 동일하지도 체크 ? 아니면 DailyMission,MissionHistory테이블에 미션포스트넘버 추가?
