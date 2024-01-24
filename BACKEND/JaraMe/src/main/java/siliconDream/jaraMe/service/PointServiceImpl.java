@@ -1,8 +1,11 @@
 package siliconDream.jaraMe.service;
 
 import org.springframework.stereotype.Service;
+import siliconDream.jaraMe.domain.PointHistory;
 import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.repository.PointHistoryRepository;
 import siliconDream.jaraMe.repository.PointRepository;
+import siliconDream.jaraMe.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,9 +14,15 @@ import java.util.Optional;
 @Service
 public class PointServiceImpl implements PointService {
     private final PointRepository pointRepository;
+    private final UserRepository userRepository;
+    private final PointHistoryRepository pointHistoryRepository;
 
-    public PointServiceImpl(PointRepository pointRepository) {
+    public PointServiceImpl(PointRepository pointRepository,
+                            UserRepository userRepository,
+                            PointHistoryRepository pointHistoryRepository) {
         this.pointRepository = pointRepository;
+        this.userRepository = userRepository;
+        this.pointHistoryRepository = pointHistoryRepository;
     }
 
     //출석체크
@@ -25,8 +34,21 @@ public class PointServiceImpl implements PointService {
             if (dateTime.toLocalDate().equals(LocalDate.now())) { //오늘날짜가 맞는지
                 //오늘 출석체크한 적이 없는지
                 if (pointRepository.findByUserId(userId).get().isCheckIn() == false) {
+                    /**추가**/
+                    PointHistory pointHistory = new PointHistory();
+                    pointHistory.setPoint(2+userRepository.findByUserId(userId).getPoint());
+                    pointHistory.setChangeAmount(2);
+                    pointHistory.setPlusOrMinus(true);
+                    pointHistory.setTransactionTime(LocalDateTime.now());
+                    pointHistory.setNotice(true);
+                    pointHistory.setTask("checkIn");
+                    pointHistory.setUser(userRepository.findByUserId(userId));
+
+                    pointHistoryRepository.save(pointHistory);
+
                     pointRepository.updateCheckIn(userId);
                     resultMessage = "출석체크되었습니다! (+2포인트)"; //출석체크 성공
+
                 } else if (pointRepository.findByUserId(userId).get().isCheckIn() == true) {
                     resultMessage = "오늘 이미 출석체크를 하셨습니다!";
                 }
@@ -46,9 +68,23 @@ public class PointServiceImpl implements PointService {
         int point = user.get().getPoint();
 
         if (point >= 60) {
+            resultMessage = "패스권 구입에 성공했습니다!(-60포인트)";
+            /**추가**/
+            PointHistory pointHistory = new PointHistory();
+            pointHistory.setPoint(userRepository.findByUserId(userId).getPoint()-60);
+            pointHistory.setChangeAmount(60);
+            pointHistory.setPlusOrMinus(false);
+            pointHistory.setTransactionTime(LocalDateTime.now());
+            pointHistory.setNotice(true);
+            pointHistory.setTask("passTicket");
+            pointHistory.setUser(userRepository.findByUserId(userId));
+
+            pointHistoryRepository.save(pointHistory);
+
             //dao 통해 passTicket은 +1, point는 -60
             pointRepository.updatePassTicket(userId);
-            resultMessage = "패스권 구입에 성공했습니다!(-60포인트)";
+
+
 
         } else if (point < 60) {
             resultMessage = "포인트가 부족합니다.";
@@ -57,10 +93,21 @@ public class PointServiceImpl implements PointService {
     }
 
     //참여율에 따라 포인트 지급 (pointService? )
-    public int pointPlus(Long userId, int changeAmount) {
+    public int pointPlus(Long userId, int changeAmount,Long jaraUsId) {
         int updatedPoint = 0;
+        /**추가**/
+        PointHistory pointHistory = new PointHistory();
+        pointHistory.setPoint(userRepository.findByUserId(userId).getPoint()+changeAmount);
+        pointHistory.setChangeAmount(changeAmount);
+        pointHistory.setPlusOrMinus(true);
+        pointHistory.setTransactionTime(LocalDateTime.now());
+        pointHistory.setNotice(false);
+        pointHistory.setTask(String.format("missionComplete {}",jaraUsId));
+        pointHistory.setUser(userRepository.findByUserId(userId));
 
+        pointHistoryRepository.save(pointHistory);
         updatedPoint = pointRepository.plusPoint(userId, changeAmount);
+
 
         return updatedPoint;
     }

@@ -11,6 +11,6 @@ public interface PointService {
    String checkIn(Long userId, LocalDateTime dateTime);
    String passTicket(Long userId);
 
-   int pointPlus(Long userId, int changeAmount);
+   int pointPlus(Long userId, int changeAmount,Long jaraUsId);
 
 }

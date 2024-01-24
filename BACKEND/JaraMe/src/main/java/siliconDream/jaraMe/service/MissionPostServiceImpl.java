@@ -21,6 +21,7 @@ import java.util.Set;
 @Slf4j
 @Service
 public class MissionPostServiceImpl implements MissionPostService {
+    private final PointHistoryRepository pointHistoryRepository;
     private final MissionPostRepository missionPostRepository;
     private final ScheduleRepository scheduleRepository;
     private final DailyMissionRepository dailyMissionRepository;
@@ -40,7 +41,8 @@ public class MissionPostServiceImpl implements MissionPostService {
                                   UserRepository userRepository,
                                   JaraUsRepository jaraUsRepository,
                                   CommentRepository commentRepository,
-                                  ReactionRepository reactionRepository) {
+                                  ReactionRepository reactionRepository,
+                                  PointHistoryRepository pointHistoryRepository) {
         this.missionPostRepository = missionPostRepository;
         this.scheduleRepository = scheduleRepository;
         this.dailyMissionRepository = dailyMissionRepository;
@@ -50,6 +52,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         this.jaraUsRepository = jaraUsRepository;
         this.commentRepository = commentRepository;
         this.reactionRepository = reactionRepository;
+        this.pointHistoryRepository = pointHistoryRepository;
     }
 
     //미션 인증글 작성
@@ -76,11 +79,63 @@ public class MissionPostServiceImpl implements MissionPostService {
 
         //TODO: dailyMission테이블에도 missionPostId 저장하기
         Long savedMissionPostId = savedMissionPost.getMissionPostId();
+        dailyMissionUpdate(userId,jaraUsId,savedMissionPostId);
 //
 //        dailyMissionFinish(userId, jaraUsId, savedMissionPost, savedMissionPost.getPostDateTime());
         return "저장이 완료되었습니다.";
     }
+    public String dailyMissionUpdate(Long userId, Long jaraUsId, Long missionPostId) {
+        missionPostRepository.findByMissionPostId(missionPostId);
+        //저장한 missionPostId가 오늘의 미션 중 어느 미션을 인증하고자했던 것인지 파악
+        // dailyMission 테이블에서 dailyMissionId로 레코드를 찾은 다음,
+        Long dailyMissionId = dailyMissionRepository.findDailyMissionIdByUser_UserIdAndJaraUs_JaraUsId(userId, jaraUsId);
+        MissionPost savedMissionPost = missionPostRepository.findByMissionPostId(missionPostId);
+        dailyMissionRepository.updateDailyMissionStatus(true, dailyMissionId, savedMissionPost, savedMissionPost.getPostDateTime());
 
+        dailyMissionFinish(userId);
+        return "";
+    }
+
+    //오늘의 미션 완료
+//미션 인증글 등록 시 호출됨. => 미션 인증 여부를 업데이트한 후, '오늘의 미션' 전체를 인증했는지 여부를 확인해서 모두 True인 경우 포인트 부여.
+    @Transactional
+    public void dailyMissionFinish(Long userId) {
+
+        // dailyMissionResult를 true로 설정하고,
+        // savedMissionPostId,
+        // postedDateTime 값으로 업데이트한다.
+
+
+        // TODO: 오늘의 미션 전부 완료했는지 알아보는 부분
+        List<DailyMission> dailyMissionList = dailyMissionRepository.findByUser_UserId(userId);
+
+
+        // dailyMission 테이블에서 userId로 필터링했을 때 dailyMissionResult 컬럼이 모두 T인 경우,
+        //       레코드가 몇개인지 개수 세기
+        //       그리고 레코드의 개수*3만큼의 포인트 지급
+        //전달받은 dailyMissionList의 dailyMissionStatus 컬럼이 모두 true
+        boolean allTrue = dailyMissionList.stream()
+                .allMatch(dailyMission -> dailyMission.isDailyMissionResult());
+
+        //모든 레코드의 컬럼 값이 true라면 포인트 지급
+        if (allTrue) {
+            int taskNumber = dailyMissionList.size();
+            int earnedPoint = taskNumber * 3;
+            pointRepository.updateDailyMission(userId, earnedPoint);
+            /**추가**/
+            PointHistory pointHistory = new PointHistory();
+            pointHistory.setPoint(earnedPoint+userRepository.findByUserId(userId).getPoint());
+            pointHistory.setChangeAmount(earnedPoint);
+            pointHistory.setPlusOrMinus(true);
+            pointHistory.setTransactionTime(LocalDateTime.now());
+            pointHistory.setNotice(true);
+            pointHistory.setTask(String.format("dailyMission (%s)",taskNumber));
+            pointHistory.setUser(userRepository.findByUserId(userId));
+            pointHistoryRepository.save(pointHistory);
+        }
+        //포인트 지급에 대한 return string 해야할 것같음! 수정 예정
+
+    }
 
     //미션 인증글 조회
     //TODO: 해당 missionId가 없다면?
@@ -120,48 +175,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         return getMissionPostDTO;
     }
 
-    public String dailyMissionUpdate(Long userId, Long jaraUsId, Long missionPostId) {
-        missionPostRepository.findByMissionPostId(missionPostId);
-        //저장한 missionPostId가 오늘의 미션 중 어느 미션을 인증하고자했던 것인지 파악
-        // dailyMission 테이블에서 dailyMissionId로 레코드를 찾은 다음,
-        Long dailyMissionId = dailyMissionRepository.findDailyMissionIdByUser_UserIdAndJaraUs_JaraUsId(userId, jaraUsId);
-        MissionPost savedMissionPost = missionPostRepository.findByMissionPostId(missionPostId);
-        dailyMissionRepository.updateDailyMissionStatus(true, dailyMissionId, savedMissionPost, savedMissionPost.getPostDateTime());
 
-        dailyMissionFinish(userId);
-        return "";
-    }
-
-    //오늘의 미션 완료
-//미션 인증글 등록 시 호출됨. => 미션 인증 여부를 업데이트한 후, '오늘의 미션' 전체를 인증했는지 여부를 확인해서 모두 True인 경우 포인트 부여.
-    @Transactional
-    public void dailyMissionFinish(Long userId) {
-
-        // dailyMissionResult를 true로 설정하고,
-        // savedMissionPostId,
-        // postedDateTime 값으로 업데이트한다.
-
-
-        // TODO: 오늘의 미션 전부 완료했는지 알아보는 부분
-        List<DailyMission> dailyMissionList = dailyMissionRepository.findByUser_UserId(userId);
-
-
-        // dailyMission 테이블에서 userId로 필터링했을 때 dailyMissionResult 컬럼이 모두 T인 경우,
-        //       레코드가 몇개인지 개수 세기
-        //       그리고 레코드의 개수*3만큼의 포인트 지급
-        //전달받은 dailyMissionList의 dailyMissionStatus 컬럼이 모두 true
-        boolean allTrue = dailyMissionList.stream()
-                .allMatch(dailyMission -> dailyMission.isDailyMissionResult());
-
-        //모든 레코드의 컬럼 값이 true라면 포인트 지급
-        if (allTrue) {
-            int taskNumber = dailyMissionList.size();
-            int earnedPoint = taskNumber * 3;
-            pointRepository.updateDailyMission(userId, earnedPoint);
-        }
-        //포인트 지급에 대한 return string 해야할 것같음! 수정 예정
-
-    }
 
 
     //미션에 참여한 유저들의 참여율 알아내기 => 스케줄링 구현 후에 할 수 있을 듯.

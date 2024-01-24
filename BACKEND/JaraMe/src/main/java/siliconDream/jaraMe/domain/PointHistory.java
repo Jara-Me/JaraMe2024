@@ -14,10 +14,13 @@ public class PointHistory {
     //오늘의미션완료 : dailyMission (미션개수변수)
     //미션완주 : missionComplete (자라어스아이디, 참여율)
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pointHistoryId;
-    private int point; //user의 point컬럼으로 연동하기
+
+    private int point;
     private int changeAmount;
     private boolean plusOrMinus;
     private LocalDateTime transactionTime;
@@ -25,7 +28,13 @@ public class PointHistory {
     @Column(columnDefinition = "boolean default false")
     private boolean notice;//erd다이어그림에 업데이트하기
     private String task;
+    //fk
+    @ManyToOne
+    @JoinColumn(name="user")
+    private User user;
 
+
+    //TODO: getter and setter
     public Long getPointHistoryId() {
         return pointHistoryId;
     }
@@ -90,9 +99,5 @@ public class PointHistory {
         this.user = user;
     }
 
-    //fk
-    @ManyToOne
-    @JoinColumn(name="user")
-    private User user;
 
 }
