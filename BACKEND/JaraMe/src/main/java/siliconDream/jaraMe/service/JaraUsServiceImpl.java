@@ -145,7 +145,7 @@ public class JaraUsServiceImpl implements JaraUsService {
     
         }*/
 
-    //미션완주일이 오늘인 그룹 찾아내기
+    //미션완주일이 어제인 그룹 찾아내기
     public List<JaraUs> findEndDateYesterDay() {
         return jaraUsRepository.findEndDateYesterDay(LocalDate.now().minusDays(1));
 
