@@ -40,4 +40,11 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
         missionPost.setImageContent(imageContent);
         save(missionPost);
     }
+
+
+    @Query("SELECT mp.missionPostId " +
+            "FROM MissionPost mp " +
+            "LEFT JOIN mp.user as mpu " +
+            "WHERE mpu.userId = :userId")
+    Optional<List<Long>> findMissionPostIdByUser_UserId(Long userId);
 }

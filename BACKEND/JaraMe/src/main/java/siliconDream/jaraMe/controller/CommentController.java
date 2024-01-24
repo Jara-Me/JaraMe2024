@@ -24,8 +24,8 @@ public class CommentController {
     //미션 인증글 댓글 삭제
     @DeleteMapping("/delete")
     //예외처리 : 해당 미션 인증글에서 실제로 댓글 삭제되었는지 확인
-    public void deleteComment(@RequestParam Long commentId,@RequestParam Long userId) {
-        commentService.deleteComment(commentId, userId);
+    public String deleteComment(@RequestParam Long commentId,@RequestParam Long userId) {
+        return commentService.deleteComment(commentId, userId);
     }
 
 

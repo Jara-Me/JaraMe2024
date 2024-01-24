@@ -3,6 +3,7 @@ package siliconDream.jaraMe.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 import siliconDream.jaraMe.domain.Comment;
 import siliconDream.jaraMe.domain.Reaction;
 
@@ -16,8 +17,14 @@ public interface ReactionRepository extends JpaRepository<Reaction,Long> {
     Optional<Reaction> findReactionByMissionPost_MissionPostIdAndUser_UserId(Long missionPostId, Long userId);
 
 
-    //리액션 안단 경우에는 ? => optional?
+    //미션 인증글 조회 = 리액션 안단 경우에는 => optional을 통해 null
     @Query("SELECT r.reactionType FROM Reaction r WHERE r.missionPost.missionPostId = :missionPostId AND r.user.userId = :userId")
     Optional<String> findReactionTypeByMissionPost_MissionPostIdAndUser_UserId(Long missionPostId, Long userId);
 
+
+    @Query("SELECT r.reactionType " +
+            "FROM Reaction r " +
+            "LEFT JOIN r.missionPost as rmp " +
+            "WHERE rmp.missionPostId = :missionPostId")
+    Optional<List<String>> findReactionTypeByMissionPost_MissionPostId(@RequestParam Long missionPostId);
 }

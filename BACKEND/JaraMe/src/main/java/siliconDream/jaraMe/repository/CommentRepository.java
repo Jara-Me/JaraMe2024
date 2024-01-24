@@ -11,7 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment,Long> {
-
+    void delete (Comment comment);
+    Comment findByCommentId(Long commentId);
     Comment save(Comment comment);
 
     void deleteCommentByCommentId(Long commentId);

@@ -1,8 +1,10 @@
 package siliconDream.jaraMe.service;
 
 
-import siliconDream.jaraMe.dto.MissionFinishNoticeDTO;
+import siliconDream.jaraMe.dto.NoticeDTO;
+
+import java.util.Optional;
 
 public interface NoticeService {
-    MissionFinishNoticeDTO findNoticeMessageByUserIdAndNoticeStatus(Long userId);
+    Optional<NoticeDTO> findNoticeMessageByUserIdAndNoticeStatus(Long userId);
 }

@@ -29,11 +29,13 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.save(comment);
     }
 
-    public void deleteComment(Long commentId, Long userId){
+    public String deleteComment(Long commentId, Long userId){
+        //미션 종료일 지난 거면 못하도록 예외처리하기
         Comment comment = commentRepository.findCommentByCommentId(commentId);
         if (comment.getUser().getUserId().equals(userId)){
-            commentRepository.deleteCommentByCommentId(commentId);
+            commentRepository.delete(commentRepository.findByCommentId(commentId));
+            return "댓글이 삭제되었습니다.";
 
-        }
+        }return "작성자가 일치하지않습니다.";
     }
 }
