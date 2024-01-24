@@ -1,11 +1,13 @@
 package siliconDream.jaraMe.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
 import siliconDream.jaraMe.domain.Comment;
 import siliconDream.jaraMe.domain.Reaction;
+import siliconDream.jaraMe.dto.ReactionCountDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +24,30 @@ public interface ReactionRepository extends JpaRepository<Reaction,Long> {
     Optional<String> findReactionTypeByMissionPost_MissionPostIdAndUser_UserId(Long missionPostId, Long userId);
 
 
-    @Query("SELECT r.reactionType " +
+    @Query("SELECT r.reactionType, COUNT(*) as count " +
+            "FROM Reaction r " +
+            "LEFT JOIN r.missionPost as rmp " +
+            "WHERE rmp.missionPostId = :missionPostId " +
+            "GROUP BY r.reactionType")
+    Optional<List<Object[]>> findByMissionPost_MissionPostId(@RequestParam Long missionPostId);
+
+    @Query("SELECT r " +
             "FROM Reaction r " +
             "LEFT JOIN r.missionPost as rmp " +
             "WHERE rmp.missionPostId = :missionPostId")
-    Optional<List<String>> findReactionTypeByMissionPost_MissionPostId(@RequestParam Long missionPostId);
+    List<Reaction> findReactionByMissionPost_MissionPostId(@RequestParam Long missionPostId);
+
+    @Modifying
+    @Query("UPDATE Reaction r " +
+            "SET r.notice = :notice " +
+            "WHERE r.missionPost.missionPostId = :missionPostId ")
+    default void updateNoticeByMissionPost_MissionPostId(@RequestParam Long missionPostId,boolean notice) {
+        List<Reaction> reactionList = findReactionByMissionPost_MissionPostId(missionPostId);
+        for (Reaction one : reactionList) {
+            one.setNotice(notice);
+            save(one);
+        }
+
+    }
+
 }
