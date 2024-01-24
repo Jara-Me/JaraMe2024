@@ -17,7 +17,7 @@ public class PointHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pointHistoryId;
-    private int point;
+    private int point; //user의 point컬럼으로 연동하기
     private int changeAmount;
     private boolean plusOrMinus;
     private LocalDateTime transactionTime;

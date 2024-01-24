@@ -56,10 +56,11 @@ public class NoticeServiceImpl implements NoticeService {
 
                 log.info("oneMissionPostId:{}", oneMissionPostId); //ok
                 Optional<List<String>> reactionTypes = reactionRepository.findReactionTypeByMissionPost_MissionPostId(oneMissionPostId);
+                //TODO: 여기서 가져온 Reaction 레코드들의 notice필드를 true로 업데이트해야함
                 log.info("reactionTypes:{}", reactionTypes.get()); //ok
 
-                //개별 미션 인증글에 달린 리액션들이 존재한다면 ,
-                if (reactionTypes.isPresent()) {
+                //개별 미션 인증글에 달린 리액션이 하나라도 존재한다면 ,
+                if (reactionTypes.get().size()!=0) {
                     int like = 0;
                     int good = 0;
                     int smile = 0;
@@ -105,10 +106,10 @@ public class NoticeServiceImpl implements NoticeService {
      **/
     //해당 유저의 포인트 지급 기록 중 미션완주를 했을 때 지급되는 포인트 지급-공지사항을 전달한 적 없는 기록을 가져오기
     Optional<List<PointHistory>> pointHistories = pointHistoryRepository.findByUser_UserIdAndNotice(userId, false);
-    //해당 유저가 미션완주 후 포인트를 지급받았는데, 전달한 적 없는 기록이 있다면,
-        if(pointHistories.isPresent())
+        log.info("log: pointHistories:{}", pointHistories.get());
 
-    {
+        //해당 유저가 미션완주 후 포인트를 지급받았는데, 전달한 적 없는 기록이 있다면,
+        if(pointHistories.get().size()!=0){
             /*
              //미션 이름 , 자라어스 이름, 기간, 지급 포인트
             private Long earnPoint;
@@ -116,10 +117,12 @@ public class NoticeServiceImpl implements NoticeService {
             private String jaraUsName;
             private String period;
             */
-        List<PointHistory> pointHistoryList = pointHistories.get();
-        List<MissionCompleteNoticeDTO> missionCompleteNoticeDTOList = new ArrayList<>();
-        for (PointHistory one : pointHistoryList) {
+            
+        List<MissionCompleteNoticeDTO> missionCompleteNoticeDTOs = new ArrayList<>();
+        for (PointHistory one : pointHistories.get()) {
+            log.info("log: one.getTask():{}", one.getTask());
             String jaraUsIdPart = one.getTask().replace("missionComplete ", "");
+            log.info("log: jaraUsIdPart:{}", jaraUsIdPart);
             Long jaraUsId = Long.parseLong(jaraUsIdPart);
 
             JaraUs jaraUs = jaraUsRepository.findByJaraUsId(jaraUsId);
@@ -131,14 +134,14 @@ public class NoticeServiceImpl implements NoticeService {
             MissionCompleteNoticeDTO missionCompleteNoticeDTO = new MissionCompleteNoticeDTO(one.getChangeAmount(),
                     jaraUs.getMissionName(),
                     jaraUs.getJaraUsName(),
-                    startDateString + "~" + endDateString);
-            missionCompleteNoticeDTOList.add(missionCompleteNoticeDTO);
+                    startDateString + " ~ " + endDateString);
+            missionCompleteNoticeDTOs.add(missionCompleteNoticeDTO);
         }
-        noticeDTO.setMissionCompleteNoticeDTO(Optional.of(missionCompleteNoticeDTOList));
+        noticeDTO.setMissionCompleteNoticeDTO(Optional.of(missionCompleteNoticeDTOs));
     }
 
-    Optional<NoticeDTO> noticeDTOOptional = Optional.of(noticeDTO);
-        return noticeDTOOptional;
+
+        return Optional.of(noticeDTO);
 
 }
 /*
