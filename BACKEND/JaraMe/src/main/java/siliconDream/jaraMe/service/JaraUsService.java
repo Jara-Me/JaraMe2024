@@ -15,13 +15,11 @@ public interface JaraUsService {
 
     void participateInJaraUs(Long jaraUsId, Long userId);
 
+    void withdrawFromJaraUs(Long jaraUsId, Long userId);
 
-    void runJaraUs(Long jaraUsId, Long userId);
+    void editJaraUsByAdmin(Long jaraUsId, Long adminUserId, JaraUsDTO jaraUsDTO);
 
-    void editJaraUs(Long jaraUsId, JaraUsDTO jaraUsDTO);
-
-
-    List<JaraUs> findJaraUsByAdministrator(Long adminUserId);
+    JaraUs editJaraUsInformation(Long userId, JaraUsDTO jaraUsDTO)
 
     List<JaraUs> findExpiredJaraUs();
 

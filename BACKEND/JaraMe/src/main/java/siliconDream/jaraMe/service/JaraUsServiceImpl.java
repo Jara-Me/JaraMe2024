@@ -11,7 +11,9 @@ import siliconDream.jaraMe.dto.JaraUsDTO;
 import siliconDream.jaraMe.repository.JaraUsRepository;
 import siliconDream.jaraMe.repository.ScheduleRepository;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -35,6 +37,7 @@ public class JaraUsServiceImpl implements JaraUsService {
         if (startDate != null && startDate.isBefore(LocalDate.now().plusDays(1))) {
             throw new IllegalArgumentException("시작일은 적어도 내일 이후여야 합니다.");
         }
+        LocalDate endDate = jaraUsDTO.getEndDate();
 
         return jaraUsRepository.save(jaraUs);
     }
@@ -58,6 +61,7 @@ public class JaraUsServiceImpl implements JaraUsService {
         JoinUsers joinUsers = new JoinUsers();
         joinUsers.setUser(participant);
         joinUsers.setJaraUs(jaraUs);
+        joinUsers.setSignUpDate(LocalDate.now());
 
         jaraUs.getJoinUsers().add(joinUsers);
 
@@ -65,85 +69,93 @@ public class JaraUsServiceImpl implements JaraUsService {
     }
 
     @Override
-    public void runJaraUs(Long jaraUsId, Long userId) {
+    public void withdrawFromJaraUs(Long jaraUsId, Long userId) {
         JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
                 .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
 
-        // Perform run logic...
-    }
+        User withdrawingUser = userService.findUserByUserId(userId);
 
-    @Override
-    public void editJaraUs(Long jaraUsId, JaraUsDTO jaraUsDTO) {
-        JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
-                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+        if (jaraUs.getAdminUserId().equals(withdrawingUser.getUserId())) {
+            throw new IllegalStateException("Administrator cannot withdraw without handing over the role.");
+        }
 
-        // Perform edit logic...
-        jaraUs.setJaraUsName(jaraUsDTO.getJaraUsName());
-        jaraUs.setMissionName(jaraUsDTO.getMissionName());
-        // Set other fields...
+        jaraUs.getJoinUsers().removeIf(joinUser -> joinUser.getUser().equals(withdrawingUser));
 
         jaraUsRepository.save(jaraUs);
     }
 
 
     @Override
-    public List<JaraUs> findJaraUsByAdministrator(Long adminUserId) {
-        return null;
-    }
+    public void editJaraUsByAdmin(Long jaraUsId, Long adminUserId, JaraUsDTO jaraUsDTO) {
+        JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
+                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
 
+        User adminUser = userService.findUserByUserId(adminUserId);
+
+        if (!jaraUs.getAdminUserId().equals(adminUser.getUserId())) {
+            throw new IllegalStateException("You are not the administrator of this JaraUs.");
+        }
+
+        // Get the list of joinUsers sorted by signup date
+        List<JoinUsers> sortedJoinUsers = jaraUs.getJoinUsers().stream()
+                .sorted(Comparator.comparing(JoinUsers::getSignUpDate))
+                .collect(Collectors.toList());
+
+        if (!sortedJoinUsers.isEmpty()) {
+            JoinUsers nextAdmin = sortedJoinUsers.get(0);
+            User newAdminUser = nextAdmin.getUser();
+
+            jaraUs.setAdminUserId(newAdminUser);
+        }
+
+        // Perform edit logic...
+        jaraUs.setJaraUsName(jaraUsDTO.getJaraUsName());
+        jaraUs.setMissionName(jaraUsDTO.getMissionName());
+        jaraUs.setRecurrence(jaraUsDTO.getRecurrence());
+        jaraUs.setEndDate(jaraUsDTO.getEndDate());
+
+        jaraUsRepository.save(jaraUs);
+    }
 
     @Override
     public List<JaraUs> findExpiredJaraUs() {
-        // Implementation for finding expired JaraUs instances...
-        return jaraUsRepository.findExpiredJaraUs(LocalDate.now());
+        List<JaraUs> allJaraUs = jaraUsRepository.findAll();
+
+        List<JaraUs> expiredJaraUs = allJaraUs.stream()
+                .filter(jaraUs -> jaraUs.getStartDate() == null && jaraUs.getEndDate() == null)
+                .collect(Collectors.toList());
+
+        return expiredJaraUs;
     }
-    // Other method implementations...
 
-/* //주석처리돼있던 것같은 부분 (커밋 기록 기반)
-        @Override
-        public JaraUsDTO createNewJaraUs(JaraUsDTO jaraUsDTO, String userId) {
-            // Extract relevant information from jaraUsDTO
-            String jaraUsName = jaraUsDTO.getJaraUsName();
-            String missionName = jaraUsDTO.getMissionName();
-            String explanation = jaraUsDTO.getExplanation();
-            String rule = jaraUsDTO.getRule();
-            String jaraUsProfileImage = jaraUsDTO.getJaraUsProfileImage();
-            int maxMember = jaraUsDTO.getMaxMember();
-            boolean display = jaraUsDTO.isDisplay();
-            LocalDate startDate = jaraUsDTO.getStartDate();
-            LocalDate endDate = jaraUsDTO.getEndDate();
-            //Set<Recurrence> recurrence = jaraUsDTO.getRecurrence(); 추가예정
-    
-    
+    @Override
+    public JaraUs editJaraUsInformation(Long userId, JaraUsDTO jaraUsDTO) {
+        JaraUs jaraUs = jaraUsRepository.findById(jaraUsDTO.getJaraUsId())
+                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
 
-            // Create a new jaraUs
-            JaraUs jaraUs = JaraUs.createNewJaraUs(jaraUsName, missionName, explanation, rule, jaraUsProfileImage,
-                    maxMember, display, startDate, endDate); //, recurrence 추가예정
-    
-            // Save the jaraUs
-            JaraUs savedJaraUs = jaraUsRepository.save(jaraUs);
-    
-            // Convert the savedJaraUs to JaraUsDTO and return
-            return convertToDTO(savedJaraUs);
+        User editorUser = userService.findUserByUserId(userId);
+
+        // Check if the editor is the administrator of the JaraUs
+        if (!jaraUs.getAdminUserId().equals(editorUser)) {
+            throw new IllegalStateException("Only administrators can edit JaraUs information.");
         }
-    
-        // Your logic to convert JaraUs to JaraUsDTO
-        private JaraUsDTO convertToDTO(JaraUs jaraUs) {
-            return new JaraUsDTO(
-                    jaraUs.getJaraUsId(),
-                    jaraUs.getJaraUsName(),
-                    jaraUs.getMissionName(),
-                    jaraUs.getExplanation(),
-                    jaraUs.getRule(),
-                    jaraUs.getJaraUsProfileImage(),
-                    jaraUs.getMaxMember(),
-                    jaraUs.isDisplay(),
-                    jaraUs.getStartDate(),
-                    jaraUs.getEndDate()
 
-            );  // jaraUs.getRecurrence() 추가 예정
-    
-        }*/
+        jaraUs.setJaraUsName(jaraUsDTO.getJaraUsName());
+        jaraUs.setMissionName(jaraUsDTO.getMissionName());
+        jaraUs.setRecurrence(jaraUsDTO.getRecurrence());
+
+        LocalDate startDate = jaraUsDTO.getStartDate();
+        if (startDate != null && startDate.isBefore(LocalDate.now().plusDays(1))) {
+            throw new IllegalArgumentException("Start date must be at least one day ahead of today.");
+        }
+        jaraUs.setStartDate(startDate);
+
+        LocalDate endDate = jaraUsDTO.getEndDate();
+        jaraUs.setEndDate(endDate);
+
+        // Save the updated JaraUs entity
+        return jaraUsRepository.save(jaraUs);
+    }
 
     //미션완주일이 오늘인 그룹 찾아내기
     public List<JaraUs> findEndDateYesterDay() {

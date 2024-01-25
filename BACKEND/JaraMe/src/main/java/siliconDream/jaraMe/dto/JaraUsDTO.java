@@ -42,14 +42,4 @@ public class JaraUsDTO {
     private LocalDate endDate;
     private Set<Recurrence> recurrence;
 
-/*
-    //TODO: getter and setter
-    public Set<Recurrence> getRecurrence() {
-        return recurrence;
-    }
-
-    public void setRecurrence(Set<Recurrence> recurrence) {
-        this.recurrence = recurrence;
-    }
-*/
 }

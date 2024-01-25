@@ -39,33 +39,6 @@ public class JaraUs {
     private Set<Recurrence> recurrence;
 
 
-    /*Account가 없는 상태라 에러나서 주석처리함.
-        @ManyToMany
-        private Set<Account> managers = new HashSet<>();
-
-        public void addManager(Account account) {
-            managers.add(account);
-        }
-
-        public static JaraUs createNewJaraUs(String jaraUsName, String missionName, String explanation, String rule,
-                                           String jaraUsProfileImage, int maxMember, boolean display, LocalDate startDate,
-                                           LocalDate endDate, Set<Recurrence> recurrence) {
-            JaraUs jaraUs = new JaraUs();
-            jaraUs.jaraUsName = jaraUsName;
-            jaraUs.missionName = missionName;
-            jaraUs.explanation = explanation;
-            jaraUs.rule = rule;
-            jaraUs.jaraUsProfileImage = jaraUsProfileImage;
-            jaraUs.maxMember = maxMember;
-            jaraUs.display = display;
-            jaraUs.startDate = startDate;
-            jaraUs.endDate = endDate;
-            jaraUs.recurrence = recurrence;
-
-        return jaraUs;
-    } */
-
-
     @OneToMany(mappedBy = "jaraUs", cascade = CascadeType.ALL)
     private Set<JoinUsers> joinUsers = new HashSet<>();
 
