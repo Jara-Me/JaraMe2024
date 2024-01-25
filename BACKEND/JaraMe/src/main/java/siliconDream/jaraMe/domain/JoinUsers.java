@@ -2,6 +2,8 @@ package siliconDream.jaraMe.domain;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 
 @Table
@@ -19,8 +21,19 @@ public class JoinUsers {
     @JoinColumn(name="jaraUs")
     private JaraUs jaraUs;
 
+    @Column(name = "signUpDate")
+    private LocalDate signUpDate;
+
+
     //TODO: getter and setter
 
+    public LocalDate getSignUpDate() {
+        return signUpDate;
+    }
+
+    public void setSignUpDate(LocalDate signUpDate) {
+        this.signUpDate = signUpDate;
+    }
     public Long getJoinUsersId() {
         return joinUsersId;
     }
@@ -44,6 +57,7 @@ public class JoinUsers {
     public void setJaraUs(JaraUs jaraUs) {
         this.jaraUs = jaraUs;
     }
+
 
 }
 
