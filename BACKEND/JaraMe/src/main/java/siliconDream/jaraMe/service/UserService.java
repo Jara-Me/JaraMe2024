@@ -19,10 +19,10 @@ public interface UserService {
 
     //수정한 부분
     User findUserByUserId(Long userId);
-
+/*테스트 목적 주석처리 - 커밋 전에 취소
     //로그인 메소드
     User login(String email, String password);
-
+*/
     User findUserByEmail(String email);
 
     // 회원 탈퇴

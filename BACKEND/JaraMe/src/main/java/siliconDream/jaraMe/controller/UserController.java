@@ -2,7 +2,7 @@ package siliconDream.jaraMe.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+//import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -36,7 +36,7 @@ public class UserController {
         String check = userService.emailCheck(email);
         return check != null;
     }
-
+/* 테스트 목적 주석처리 - 커밋 전에 취소
     @RequestMapping(value = "signup", method = RequestMethod.POST)
     public ModelAndView createPost(@Valid UserDto userDto, BindingResult bindingResult) {
         ModelAndView mav = new ModelAndView();
@@ -64,7 +64,7 @@ public class UserController {
         }
         return mav;
     }
-
+*/
     // 로그인 페이지 이동
     @RequestMapping("login")
     public String loginPage() {

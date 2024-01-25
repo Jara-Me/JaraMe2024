@@ -1,7 +1,9 @@
 package siliconDream.jaraMe.service;
 
+import siliconDream.jaraMe.dto.MissionReactionDTO;
+
 public interface ReactionService {
 
-    void addReaction(Long missionPostId,String reactionType, Long userId);
-    void deleteReaction(Long missionPostId,String reactionType, Long userId);
+    String addReaction(MissionReactionDTO missionReactionDTO, Long userId);
+    String deleteReaction(MissionReactionDTO missionReactionDTO, Long userId);
 }

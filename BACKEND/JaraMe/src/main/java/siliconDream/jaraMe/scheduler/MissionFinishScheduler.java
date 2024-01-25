@@ -57,7 +57,7 @@ public class MissionFinishScheduler {
                 // 전체 : 50
 
                 //포인트 지급 로직 이용
-                int updatedPoint = pointService.pointPlus(userId, plusPoint);
+                int updatedPoint = pointService.pointPlus(userId, plusPoint,jaraUsId);
             }
 
             //return 메시지 작성 => mission연장 여부에 따라 결정

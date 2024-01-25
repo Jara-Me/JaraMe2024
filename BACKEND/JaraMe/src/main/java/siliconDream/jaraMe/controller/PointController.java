@@ -21,7 +21,7 @@ public class PointController {
     }
 
 
-    //출석체크
+    //출석체크 => 테스트 완료 / 예외처리 전
     @PostMapping("/checkIn") //@ResponseBody
     public String checkIn(@RequestParam Long userId, @RequestParam @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss") LocalDateTime dateTime) {
         //return pointService.checkIn(userId, dateTime);
@@ -29,7 +29,7 @@ public class PointController {
         return responseMessage;
     }
 
-    //패스권 구매
+    //패스권 구매 => 테스트완료 / 예외처리 전
     @PostMapping("/passTicket")
     public String passTicket(@RequestParam Long userId) {
         //HttpHeaders httpHeaders = new HttpHeaders();

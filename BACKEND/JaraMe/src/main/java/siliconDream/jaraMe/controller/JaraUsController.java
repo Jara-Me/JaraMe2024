@@ -1,9 +1,9 @@
 package siliconDream.jaraMe.controller;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-//취소할 부분 import org.springframework.security.core.Authentication;
-//취소할 부분 import org.springframework.security.core.context.SecurityContextHolder;
+//커밋 전에 취소할 부분 import jakarta.validation.Valid;
+//커밋 전에 취소할 부분 import lombok.RequiredArgsConstructor;
+//커밋 전에 취소할 부분 import org.springframework.security.core.Authentication;
+//커밋 전에 취소할 부분 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;

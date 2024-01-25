@@ -1,40 +1,43 @@
 package siliconDream.jaraMe.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import siliconDream.jaraMe.dto.MissionFinishNoticeDTO;
-import siliconDream.jaraMe.dto.ReactionNoticeDTO;
+import org.springframework.web.bind.annotation.*;
+import siliconDream.jaraMe.dto.NoticeDTO;
+import siliconDream.jaraMe.repository.JaraUsRepository;
+import siliconDream.jaraMe.service.JaraUsService;
 import siliconDream.jaraMe.service.MissionHistoryService;
 import siliconDream.jaraMe.service.NoticeService;
+import siliconDream.jaraMe.service.ScheduleService;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/notice")
 public class NoticeController {
     private final NoticeService noticeService;
+    private final ScheduleService scheduleService;
     private final MissionHistoryService missionHistoryService;
+    private final JaraUsRepository jaraUsRepository;
 
     public NoticeController(NoticeService noticeService,
-                            MissionHistoryService missionHistoryService){
+                            ScheduleService scheduleService,
+                            MissionHistoryService missionHistoryService,
+                            JaraUsRepository jaraUsRepository){
         this.noticeService=noticeService;
+        this.scheduleService =scheduleService;
         this.missionHistoryService = missionHistoryService;
+        this.jaraUsRepository = jaraUsRepository;
     }
 
-    //로그아웃 상태였을 때 미션완주로 포인트 적립된 것이 있다면
-    @GetMapping("/missionFinish")
-    public MissionFinishNoticeDTO missionFinishNotice(Long userId){
-        MissionFinishNoticeDTO missionFinishNoticeDTO=noticeService.findNoticeMessageByUserIdAndNoticeStatus(userId);
-        return missionFinishNoticeDTO;
+    //미션완주,리액션통계
+    @GetMapping("/get")
+    public Optional<NoticeDTO> missionFinishNotice(@RequestParam Long userId){
+        Optional<NoticeDTO> noticeDTO =noticeService.findNoticeMessageByUserIdAndNoticeStatus(userId);
+        return noticeDTO;
     }
 
-
-    //리액션 통계 전달
-
-    @GetMapping("/reaction")
-    public ReactionNoticeDTO reactionNotice(Long userId){
-        //MissionHistory테이블에서 해당 유저의 게시글 중 리액션 업데이트 정보를 전달
-        ReactionNoticeDTO reactionNoticeDTO = missionHistoryService.findTotalNewReactionNumberByUserId(userId);
-                //notice전달이 되지않은(false인 상태인 컬럼인 것이) like, good, smile 모두 각각 몇개인지 전달
-        return reactionNoticeDTO;
+    //자라어스 생성 시 스케줄링 테스트 용도
+    @PostMapping("/scheduling")
+    public void scheduling (@RequestParam Long jaraUsId){
+        scheduleService.jaraUsScheduling(jaraUsRepository.findByJaraUsId(jaraUsId));
     }
 }

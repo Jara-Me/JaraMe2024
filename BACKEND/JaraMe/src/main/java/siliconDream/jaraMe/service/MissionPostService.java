@@ -20,12 +20,14 @@ public interface MissionPostService {
     GetMissionPostDTO getMissionPostDetails(Long missionPostId,Long userId);
     GetMissionPostDTO makeGetMissionPostDTO(Optional<MissionPost> missionPostOptional, Optional<String> reactionTypeOptional, Optional<List<CommentDTO>> commentOptional);
 
-    boolean dailyMissionFinish(Long userId, Long jaraUsId);
+
+    String dailyMissionUpdate(Long userId,Long jaraUsId, Long missionPostId);
+    void  dailyMissionFinish(Long userId);
 
     //Optional<DailyMissionDTO> getDailyMission(Long userId, LocalDateTime todayDate);
     int missionParticipationRate(Long userId, Long jaraUsId);
 
     String updateMissionPost(Long missionPostId, MissionPostDTO missionPostDTO, Long userId, LocalDate todayDate);
 
-
+    String deleteMissionPost(Long missionPostId,Long userId);
     }
