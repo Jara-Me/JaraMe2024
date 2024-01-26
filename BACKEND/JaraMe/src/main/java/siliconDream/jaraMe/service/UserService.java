@@ -33,4 +33,6 @@ public interface UserService {
     // 프로필 사진 업로드 및 수정
     void updateProfileImage(Long userId, String profileImagePath);
 
+
+    int getPassTicket(Long userId);
 }

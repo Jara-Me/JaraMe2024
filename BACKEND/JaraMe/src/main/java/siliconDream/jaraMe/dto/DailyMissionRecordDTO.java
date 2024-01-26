@@ -17,7 +17,7 @@ public class DailyMissionRecordDTO {
     private LocalDate missionDate;
     private User user;
     private MissionPost missionPost;
-
+    private boolean missionResult;
 
 
     private JaraUs jaraUs;

@@ -17,7 +17,7 @@ public class MissionHistory {
     private Long missionHistoryId;
 
     private LocalDate missionDate;
-
+    private boolean missionResult;
     //fk
     @JoinColumn(name="user")
     @ManyToOne

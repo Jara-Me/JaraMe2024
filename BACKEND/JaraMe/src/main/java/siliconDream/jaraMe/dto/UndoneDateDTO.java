@@ -3,10 +3,12 @@ package siliconDream.jaraMe.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
-public class ReactionCountDTO {
+public class UndoneDateDTO {
 
-    private String reactionType;
+    private LocalDate undoneDate;
     private int count;
 }

@@ -106,4 +106,8 @@ public class UserServiceImpl implements UserService {
     public void updateProfileImage(Long userId, String profileImagePath) {
 
     }
+
+    public int getPassTicket(Long userId){
+        return userRepository.findPassTicketByUserId(userId);
+    }
 }

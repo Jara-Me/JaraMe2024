@@ -15,4 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //이메일로 사용자 찾기
     User findByEmail(String email);
 
+
+    int findPassTicketByUserId(Long userId);
+
 }

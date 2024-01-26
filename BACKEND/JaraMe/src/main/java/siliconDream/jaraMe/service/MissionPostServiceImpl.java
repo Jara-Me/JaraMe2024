@@ -192,7 +192,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         }
 
         //해당 유저가 인증한 날짜들 알아내기 //=> 수정해야함
-        Set<LocalDate> postedDates = missionHistoryRepository.findMissionDateByUser_UserIdAndJaraUs_JaraUsId(userId, jaraUsId);
+        Set<LocalDate> postedDates = missionHistoryRepository.findMissionDateByUser_UserIdAndJaraUs_JaraUsIdAndMissionResult(userId, jaraUsId,true);
         log.info("userId:{} / postedDates:{}",userId,postedDates);
         int result = 0;
 

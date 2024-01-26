@@ -39,5 +39,5 @@ public class PointController {
     }
 
 
-    //패스권 사용 api => Point관련된 로직은 아니라서 다른 Controller가 적합할 것같음.
+
 }
