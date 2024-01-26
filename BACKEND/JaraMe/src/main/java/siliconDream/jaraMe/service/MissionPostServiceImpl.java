@@ -183,32 +183,48 @@ public class MissionPostServiceImpl implements MissionPostService {
 
         //인증해야하는 날짜 전체 알아내기
         Set<LocalDate> totalDates = scheduleRepository.findScheduleDateByJaraUsId(jaraUsId);
+        log.info("totalDates:{}",totalDates);
         int totalNum = totalDates.size();//총 인증해야하는 횟수
         int postNum = 0; //실제로 인증한 횟수
 
-        //해당 유저가 인증한 날짜들 알아내기
+        if (totalDates.size() < 3){
+            return 0;
+        }
+
+        //해당 유저가 인증한 날짜들 알아내기 //=> 수정해야함
         Set<LocalDate> postedDates = missionHistoryRepository.findMissionDateByUser_UserIdAndJaraUs_JaraUsId(userId, jaraUsId);
+        log.info("userId:{} / postedDates:{}",userId,postedDates);
         int result = 0;
 
         for (LocalDate oneOfTotal : totalDates) {
             if (postedDates.contains(oneOfTotal)) {
                 postNum++;
+                log.info("postNum:{}",postNum);
             }
         }
 
+        float oneThird = totalNum * ((float)1 / (float)3);
+        float twoThird = totalNum * ((float)2 / (float)3);
+        float total = (float)totalNum;
+
         if (postNum == totalNum) {
             result = 50;
-        } else if (postNum < totalNum && postNum >= totalNum * (2 / 3)) {
+            log.info("first");
+        } else if (postNum < total && postNum >= twoThird) {
             result = 20;
-        } else if (postNum < totalNum * (2 / 3) && postNum >= totalNum * (1 / 3)) {
+            log.info("second");
+        } else if (postNum < twoThird && postNum >= oneThird) {
             result = 10;
-        } else if (postNum < totalNum * (1 / 3)) {
+            log.info("third");
+        } else if (postNum < oneThird) {
             result = 0;
+            log.info("fourth");
         } else {
             result = -1; //에러에 해당 }
 
 
         }
+        log.info("result = {}",result);
 
         return result;
     }

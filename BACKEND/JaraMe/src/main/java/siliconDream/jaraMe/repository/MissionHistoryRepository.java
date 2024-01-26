@@ -1,6 +1,7 @@
 package siliconDream.jaraMe.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import siliconDream.jaraMe.domain.MissionHistory;
 import siliconDream.jaraMe.dto.DailyMissionRecordDTO;
@@ -12,6 +13,11 @@ import java.util.Set;
 @Repository
 public interface MissionHistoryRepository extends JpaRepository<MissionHistory,Long> {
 
+    @Query("SELECT m.missionDate " +
+            "FROM MissionHistory m " +
+            "LEFT JOIN m.jaraUs mj " +
+            "LEFT JOIN m.user mu " +
+            "WHERE mu.userId = :userId AND mj.jaraUsId = :jaraUsId")
     Set<LocalDate> findMissionDateByUser_UserIdAndJaraUs_JaraUsId(Long userId, Long jaraUsId);
 
     default void saveDailyMissionRecord(DailyMissionRecordDTO dailyMissionRecordDTO){

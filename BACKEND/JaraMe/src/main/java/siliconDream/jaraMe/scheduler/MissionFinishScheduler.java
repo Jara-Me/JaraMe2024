@@ -1,5 +1,6 @@
 package siliconDream.jaraMe.scheduler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,9 @@ import siliconDream.jaraMe.service.MissionPostService;
 import siliconDream.jaraMe.service.PointService;
 
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
 @Component
 public class MissionFinishScheduler {
     private final JaraUsService jaraUsService;
@@ -35,22 +38,25 @@ public class MissionFinishScheduler {
     //미션 인증일의 참여율이 얼마나 되는지 확인=> 포인트 서비스를 통해 포인트 적립
 
 
-    @Scheduled(cron = "0 0 0 * * *") //미션 종료일의 다음날 00:00:00에 실시되도록 함.
+    @Scheduled(cron = "10 45 12 * * *") //미션 종료일의 다음날 00:00:00에 실시되도록 함.
     public void missionComplete() {
-
+        log.info("start");
         //어제 미션이 종료된 그룹들을 리스트로 얻은 다음,
         List<JaraUs> jaraUses = jaraUsService.findEndDateYesterDay();
-
+        log.info("jaraUses:{}",jaraUses);
         for (JaraUs jaraUs : jaraUses) {
-
             Long jaraUsId = jaraUs.getJaraUsId();
-            //jaraUsId로 JoinUsers테이블에 필터링해서 참여중인 유저 알아내기
-            List<Long> userIds = joinUsersService.findUserIdsByJaraUsId(jaraUsId);
-            for (Long userId : userIds) {
+            log.info("jaraUsId:{}",jaraUsId);
 
+            //jaraUsId로 JoinUsers테이블에 필터링해서 참여중인 유저 알아내기
+            Optional<List<Long>> userIds = joinUsersService.findUserIdsByJaraUsId(jaraUsId);
+            log.info("userIds:{}",userIds.get());
+            for (Long userId : userIds.get()) {
+                log.info("userId:{}",userId);
 
                 //미션에 참여한 유저들의 참여율 알아내기
                 int plusPoint = missionPostService.missionParticipationRate(userId,jaraUsId); //JaraUsService가 더 적합할 것 같음.
+                log.info("userId:{} / plusPoint:{}",userId,plusPoint);
                 // 1/3 미만 : 미적립
                 // 1/3 이상~ 2/3 미만 : 10
                 // 2/3 이상~ 전체 미만 : 20
