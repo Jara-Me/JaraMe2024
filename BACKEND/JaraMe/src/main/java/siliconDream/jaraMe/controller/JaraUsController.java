@@ -1,10 +1,10 @@
 package siliconDream.jaraMe.controller;
-
+/*커밋 전에 취소
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
+*/
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -17,7 +17,7 @@ import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.JaraUsDTO;
 import siliconDream.jaraMe.service.JaraUsService;
 import siliconDream.jaraMe.service.UserService;
-
+/* 커밋 전에 취소
 @Controller
 @RequiredArgsConstructor
 public class JaraUsController {
@@ -42,4 +42,4 @@ public class JaraUsController {
         model.addAttribute("jaraUsDTO", new JaraUsDTO());
         return "jaraUs/form";
     }
-}
+}*/

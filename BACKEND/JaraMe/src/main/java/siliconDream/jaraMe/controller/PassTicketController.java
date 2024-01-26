@@ -1,13 +1,17 @@
 package siliconDream.jaraMe.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import siliconDream.jaraMe.domain.GetPassTicketDTO;
+import siliconDream.jaraMe.dto.UndoneDateDTO;
 import siliconDream.jaraMe.repository.MissionHistoryRepository;
 import siliconDream.jaraMe.service.UserService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @RestController
 @RequestMapping("/passTicket")
 public class PassTicketController {
@@ -28,35 +32,28 @@ public class PassTicketController {
     @GetMapping("/get")
     public GetPassTicketDTO getPassTicketAmount(@RequestParam Long userId){
         GetPassTicketDTO getPassTicketDTO = new GetPassTicketDTO();
-        getPassTicketDTO.setPassTicket(userService.getPassTicket(userId));
 
 
-        /*   Optional<List<Object[]>> reactionCountDTOs = reactionRepository.findByMissionPost_MissionPostId(oneMissionPostId);
-                if (reactionCountDTOs.isPresent()) {
-                    for (Object[] object : reactionCountDTOs.get()) {
-                        for (int i = 0; i < 3; i++) {
-                            if (object[0].equals("smile")) {
-                                smile = ((Number) object[1]).intValue();
-                            }
-                            else if (object[0].equals("like")) {
-                                like = ((Number) object[1]).intValue();
-                            }else if (object[0].equals("good")) {
-                                good = ((Number) object[1]).intValue();
-                            }
+        int passTicket = userService.getPassTicket(userId);
+        log.info("passTicket:{}",passTicket);
+        getPassTicketDTO.setPassTicket((int) passTicket);
 
 
-                    }
-                }
+        Optional<List<Object[]>> undoneDatesOptional=missionHistoryRepository.findMissionDateByUser_UserIdAndMissionResult(userId,false);
+        List<UndoneDateDTO> undoneDateDTOs = new ArrayList<>();
 
-                    ReactionNoticeDTO reactionNoticeDTO = new ReactionNoticeDTO(oneMissionPostId,
-                            missionPostRepository.findByMissionPostId(oneMissionPostId).getTextTitle(),
-                            like,
-                            good,
-                            smile);
-*/
+        if (undoneDatesOptional.isPresent()){
+            for (Object[] object : undoneDatesOptional.get()){
+                log.info("object:{} / undoneDate? => object[0]:{}",object,object[0] );
+                log.info("object:{} / count? => object[1]:{}",object,object[1] );
+                UndoneDateDTO undoneDateDTO = new UndoneDateDTO((LocalDate) object[0], ((Number)object[1]).intValue());
+                undoneDateDTOs.add(undoneDateDTO);
+               }
+        getPassTicketDTO.setUndoneDates(Optional.of(undoneDateDTOs));
+        }
 
 
-        getPassTicketDTO.setUndoneDateDTOs(missionHistoryRepository.findMissionDateByUser_UserIdAndMissionResult(userId,false));
+
         return getPassTicketDTO;
     }
 /*

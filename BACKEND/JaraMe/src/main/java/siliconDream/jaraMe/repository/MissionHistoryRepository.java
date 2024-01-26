@@ -35,16 +35,10 @@ public interface MissionHistoryRepository extends JpaRepository<MissionHistory,L
     List<Long> findMissionPostIdsByUser_UserId(Long userId);
 
 
-    /*  @Query("SELECT r.reactionType, COUNT(*) as count " +
-            "FROM Reaction r " +
-            "LEFT JOIN r.missionPost as rmp " +
-            "WHERE rmp.missionPostId = :missionPostId " +
-            "GROUP BY r.reactionType")
-    Optional<List<Object[]>> findByMissionPost_MissionPostId(@RequestParam Long missionPostId);
-*/
     @Query("SELECT mh.missionDate, COUNT(*) as count " +
             "FROM MissionHistory mh " +
             "LEFT JOIN mh.user mhu " +
-            "WHERE mhu.userId = :userId AND mh.missionResult = :missionResult")
+            "WHERE mhu.userId = :userId AND mh.missionResult = :missionResult " +
+            "GROUP BY mh.missionDate")
     Optional<List<Object[]>> findMissionDateByUser_UserIdAndMissionResult(Long userId, boolean missionResult);
 }

@@ -15,5 +15,5 @@ public class GetPassTicketDTO {
 
     private int passTicket;
 
-    private Optional<List<Object[]>> undoneDateDTOs;
+    private Optional<List<UndoneDateDTO>> undoneDates;
 }
