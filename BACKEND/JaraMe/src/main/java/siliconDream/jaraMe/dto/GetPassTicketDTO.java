@@ -1,4 +1,4 @@
-package siliconDream.jaraMe.domain;
+package siliconDream.jaraMe.dto;
 
 import lombok.Getter;
 import lombok.Setter;

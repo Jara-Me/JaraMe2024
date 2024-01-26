@@ -20,7 +20,7 @@ public class MissionHistory {
     private boolean missionResult;
     //fk
     @JoinColumn(name="user")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
     @JoinColumn(name="jaraUs")
