@@ -257,13 +257,31 @@ public class MissionPostServiceImpl implements MissionPostService {
 
     //미션인증글 삭제 => 보류
     //TODO : 예외처리 : 미션인증글이 삭제되면서 미션 기록, 오늘의 미션, 해당 미션인증글에 달린 댓글,리액션 모두 삭제돼야함.
+    @Transactional
     public String deleteMissionPost(Long missionPostId, Long userId) {
         MissionPost missionPost = missionPostRepository.findByMissionPostId(missionPostId);
+
         JaraUs jaraUs = jaraUsRepository.findByJaraUsId(missionPost.getJaraUs().getJaraUsId());
         LocalDate endDate = jaraUs.getEndDate();
+        log.info("test/ start ");
         if (missionPost.getUser().getUserId().equals(userId)) {
             if (endDate.isAfter(LocalDate.now())) {
-                missionPostRepository.delete(missionPost);
+                log.info("test/ start 2");
+                if (missionPost.getPostDateTime().toLocalDate().equals(LocalDate.now())){
+                    DailyMission dailyMission =dailyMissionRepository.findDailyMissionByMissionPost_MissionPostId(missionPostId);
+                    log.info("test/ start 3");
+                    dailyMission.setMissionPost(null);
+                    dailyMissionRepository.save(dailyMission);
+                }
+                else if (!missionPost.getPostDateTime().toLocalDate().equals(LocalDate.now())){
+                    log.info("test/ start 4");
+                    MissionHistory missionHistory = missionHistoryRepository.findMissionHistoryIdByMissionPost_MissionPostId(missionPostId);
+                    log.info("missionPost:{}",missionPost);
+                    missionHistory.setMissionPost(null);
+                    log.info("missionPost:{}",missionPost);
+                    missionHistoryRepository.save(missionHistory);
+                }
+                //missionPostRepository.delete(missionPost);
                 return "삭제가 완료되었습니다.";
             } else if (endDate.isBefore(LocalDate.now())) {
                 return "미션이 종료되어 삭제가 불가능합니다.";

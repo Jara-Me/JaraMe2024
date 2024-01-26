@@ -60,7 +60,21 @@ public interface MissionHistoryRepository extends JpaRepository<MissionHistory, 
                                                         @Param("missionDate") LocalDate missionDate,
                                                         @Param("missionResult") boolean missionResult);
 
-}
 
+
+    @Query("SELECT MissionHistory mh " +
+            "FROM MissionHistory mh " +
+            "LEFT JOIN mh.missionPost mhm " +
+            "WHERE mhm.missionPostId = :missionPostId")
+    MissionHistory findMissionHistoryIdByMissionPost_MissionPostId(Long missionPostId);
+
+
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE MissionHistory mh SET mh.missionPost = null WHERE mh.missionPost.missionPostId = :missionPostId")
+
+    void updateMissionPostToNull(@Param("missionPostId") Long missionPostId);
+}
 
 
