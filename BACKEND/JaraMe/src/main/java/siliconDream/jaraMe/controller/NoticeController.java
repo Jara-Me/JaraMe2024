@@ -30,14 +30,14 @@ public class NoticeController {
 
     //미션완주,리액션통계
     @GetMapping("/get")
-    public Optional<NoticeDTO> missionFinishNotice(@RequestParam Long userId){
+    public Optional<NoticeDTO> missionFinishNotice(@SessionAttribute(name = "userId", required = true) Long userId){
         Optional<NoticeDTO> noticeDTO =noticeService.findNoticeMessageByUserIdAndNoticeStatus(userId);
         return noticeDTO;
     }
-
+/*테스트 목적으로 생성한 메서드 =>실제로는 사용x
     //자라어스 생성 시 스케줄링 테스트 용도
     @PostMapping("/scheduling")
     public void scheduling (@RequestParam Long jaraUsId){
         scheduleService.jaraUsScheduling(jaraUsRepository.findByJaraUsId(jaraUsId));
-    }
+    }*/
 }

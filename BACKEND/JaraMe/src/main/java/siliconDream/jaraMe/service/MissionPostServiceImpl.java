@@ -58,7 +58,7 @@ public class MissionPostServiceImpl implements MissionPostService {
     //미션 인증글 작성
     //TODO: 만약 오늘 해당 미션에 대해 인증글을 하나 올렸다면 못올리도록 하기
     //TODO: 작성에 대한 규칙?
-    public String missionPost(MissionPostDTO missionPostDTO, Long userId) {
+    public boolean missionPost(MissionPostDTO missionPostDTO, Long userId) {
 
 
         MissionPost missionPost = new MissionPost();
@@ -74,17 +74,22 @@ public class MissionPostServiceImpl implements MissionPostService {
         missionPost.setJaraUs(jaraUsRepository.findByJaraUsId(jaraUsId));
 
         //TODO: 저장 => 여길 Optional로 바꿔서 isPresent로 성공/실패여부 반영하기
-        MissionPost savedMissionPost = missionPostRepository.save(missionPost);
+        Optional<MissionPost> savedMissionPost = missionPostRepository.save(missionPost);
+        if (savedMissionPost.isPresent()) {
+
+            //TODO: dailyMission테이블에도 missionPostId 저장하기
+            Long savedMissionPostId = savedMissionPost.get().getMissionPostId();
+            dailyMissionUpdate(userId, jaraUsId, savedMissionPostId);
+            return true;
+        } else if (savedMissionPost.isEmpty()) {
+            return false;
+        }else {return false;}
 
 
-        //TODO: dailyMission테이블에도 missionPostId 저장하기
-        Long savedMissionPostId = savedMissionPost.getMissionPostId();
-        dailyMissionUpdate(userId,jaraUsId,savedMissionPostId);
-//
-//        dailyMissionFinish(userId, jaraUsId, savedMissionPost, savedMissionPost.getPostDateTime());
-        return "저장이 완료되었습니다.";
+
     }
-    public String dailyMissionUpdate(Long userId, Long jaraUsId, Long missionPostId) {
+
+    public void dailyMissionUpdate(Long userId, Long jaraUsId, Long missionPostId) {
         missionPostRepository.findByMissionPostId(missionPostId);
         //저장한 missionPostId가 오늘의 미션 중 어느 미션을 인증하고자했던 것인지 파악
         // dailyMission 테이블에서 dailyMissionId로 레코드를 찾은 다음,
@@ -93,7 +98,6 @@ public class MissionPostServiceImpl implements MissionPostService {
         dailyMissionRepository.updateDailyMissionStatus(true, dailyMissionId, savedMissionPost, savedMissionPost.getPostDateTime());
 
         dailyMissionFinish(userId);
-        return "";
     }
 
     //오늘의 미션 완료
@@ -124,12 +128,12 @@ public class MissionPostServiceImpl implements MissionPostService {
             pointRepository.updateDailyMission(userId, earnedPoint);
             /**추가**/
             PointHistory pointHistory = new PointHistory();
-            pointHistory.setPoint(earnedPoint+userRepository.findByUserId(userId).getPoint());
+            pointHistory.setPoint(earnedPoint + userRepository.findByUserId(userId).getPoint());
             pointHistory.setChangeAmount(earnedPoint);
             pointHistory.setPlusOrMinus(true);
             pointHistory.setTransactionTime(LocalDateTime.now());
             pointHistory.setNotice(true);
-            pointHistory.setTask(String.format("dailyMission (%s)",taskNumber));
+            pointHistory.setTask(String.format("dailyMission (%s)", taskNumber));
             pointHistory.setUser(userRepository.findByUserId(userId));
             pointHistoryRepository.save(pointHistory);
         }
@@ -176,36 +180,34 @@ public class MissionPostServiceImpl implements MissionPostService {
     }
 
 
-
-
     //미션에 참여한 유저들의 참여율 알아내기 => 스케줄링 구현 후에 할 수 있을 듯.
     public int missionParticipationRate(Long userId, Long jaraUsId) {
 
         //인증해야하는 날짜 전체 알아내기
         Set<LocalDate> totalDates = scheduleRepository.findScheduleDateByJaraUsId(jaraUsId);
-        log.info("totalDates:{}",totalDates);
+        log.info("totalDates:{}", totalDates);
         int totalNum = totalDates.size();//총 인증해야하는 횟수
         int postNum = 0; //실제로 인증한 횟수
 
-        if (totalDates.size() < 3){
+        if (totalDates.size() < 3) {
             return 0;
         }
 
         //해당 유저가 인증한 날짜들 알아내기 //=> 수정해야함
-        Set<LocalDate> postedDates = missionHistoryRepository.findMissionDateByUser_UserIdAndJaraUs_JaraUsIdAndMissionResult(userId, jaraUsId,true);
-        log.info("userId:{} / postedDates:{}",userId,postedDates);
+        Set<LocalDate> postedDates = missionHistoryRepository.findMissionDateByUser_UserIdAndJaraUs_JaraUsIdAndMissionResult(userId, jaraUsId, true);
+        log.info("userId:{} / postedDates:{}", userId, postedDates);
         int result = 0;
 
         for (LocalDate oneOfTotal : totalDates) {
             if (postedDates.contains(oneOfTotal)) {
                 postNum++;
-                log.info("postNum:{}",postNum);
+                log.info("postNum:{}", postNum);
             }
         }
 
-        float oneThird = totalNum * ((float)1 / (float)3);
-        float twoThird = totalNum * ((float)2 / (float)3);
-        float total = (float)totalNum;
+        float oneThird = totalNum * ((float) 1 / (float) 3);
+        float twoThird = totalNum * ((float) 2 / (float) 3);
+        float total = (float) totalNum;
 
         if (postNum == totalNum) {
             result = 50;
@@ -224,7 +226,7 @@ public class MissionPostServiceImpl implements MissionPostService {
 
 
         }
-        log.info("result = {}",result);
+        log.info("result = {}", result);
 
         return result;
     }
@@ -254,7 +256,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         }
     }
 
-
+/*
     //미션인증글 삭제 => 보류
     //TODO : 예외처리 : 미션인증글이 삭제되면서 미션 기록, 오늘의 미션, 해당 미션인증글에 달린 댓글,리액션 모두 삭제돼야함.
     @Transactional
@@ -267,6 +269,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         if (missionPost.getUser().getUserId().equals(userId)) {
             if (endDate.isAfter(LocalDate.now())) {
                 log.info("test/ start 2");
+
                 if (missionPost.getPostDateTime().toLocalDate().equals(LocalDate.now())){
                     DailyMission dailyMission =dailyMissionRepository.findDailyMissionByMissionPost_MissionPostId(missionPostId);
                     log.info("test/ start 3");
@@ -281,12 +284,12 @@ public class MissionPostServiceImpl implements MissionPostService {
                     log.info("missionPost:{}",missionPost);
                     missionHistoryRepository.save(missionHistory);
                 }
-                //missionPostRepository.delete(missionPost);
+                missionPostRepository.delete(missionPost);
                 return "삭제가 완료되었습니다.";
             } else if (endDate.isBefore(LocalDate.now())) {
                 return "미션이 종료되어 삭제가 불가능합니다.";
             }
         }else if (!missionPost.getUser().getUserId().equals(userId)){
         return "작성자가 일치하지않습니다.";} return "삭제를 실패했습니다.";
-    }
+    }*/
 }
