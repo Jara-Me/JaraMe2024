@@ -23,21 +23,27 @@ public class PointController {
 
     //출석체크 => 테스트 완료 / 예외처리 전
     @PostMapping("/checkIn") //@ResponseBody
-    public String checkIn(@RequestParam Long userId, @RequestParam @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss") LocalDateTime dateTime) {
-        //return pointService.checkIn(userId, dateTime);
-        String responseMessage = pointService.checkIn(userId, dateTime);
-        return responseMessage;
+    public ResponseEntity<String> checkIn(@SessionAttribute(name = "userId", required = true) Long userId, @RequestParam @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss") LocalDateTime dateTime) {
+        String resultMessage = pointService.checkIn(userId, dateTime);
+        if (resultMessage.equals("출석체크되었습니다! (+2포인트)")) {
+            return ResponseEntity.status(HttpStatus.OK).body(resultMessage);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resultMessage);
+        }
     }
 
     //패스권 구매 => 테스트완료 / 예외처리 전
     @PostMapping("/passTicket")
-    public String passTicket(@RequestParam Long userId) {
-        //HttpHeaders httpHeaders = new HttpHeaders();
+    public ResponseEntity<String> passTicket(@SessionAttribute(name = "userId", required = true) Long userId) {
 
         String resultMessage = pointService.passTicket(userId);
-        return resultMessage;
+        if (resultMessage.equals("패스권 구입에 성공했습니다!(-60포인트)")) {
+            return ResponseEntity.status(HttpStatus.OK).body(resultMessage);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resultMessage);
+        }
     }
 
 
-    //패스권 사용 api => Point관련된 로직은 아니라서 다른 Controller가 적합할 것같음.
+
 }

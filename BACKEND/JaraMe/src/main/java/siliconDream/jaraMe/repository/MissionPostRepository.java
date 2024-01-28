@@ -47,4 +47,6 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
             "LEFT JOIN mp.user as mpu " +
             "WHERE mpu.userId = :userId")
     Optional<List<Long>> findMissionPostIdByUser_UserId(Long userId);
+/* 
+    void delete(MissionPost missionPost);*/
 }

@@ -20,6 +20,7 @@ public interface UserService {
     //수정한 부분
     User findUserByUserId(Long userId);
 
+    //로그인 메소드
     User login(String email, String password);
 
     User findUserByEmail(String email);
@@ -30,4 +31,6 @@ public interface UserService {
     // 프로필 사진 업로드 및 수정
     void updateProfileImage(Long userId, String profileImagePath);
 
+
+    int getPassTicket(Long userId);
 }

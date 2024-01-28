@@ -58,18 +58,32 @@ public class DailyMissionUpdateScheduler {
                 log.info("isEmpty? ");
                 for (DailyMission one : doneDailyMission) {
                     log.info("one");
+<<<<<<< HEAD
                     if (one.isDailyMissionResult()) {
+=======
+
+                    //미션기록테이블에 저장
+>>>>>>> develop_hm
                         log.info("one.isDailyMissionResult:{}",one.isDailyMissionResult());
                         DailyMissionRecordDTO dailyMissionRecordDTO = new DailyMissionRecordDTO();
                         dailyMissionRecordDTO.setMissionDate(one.getDoneDateTime().toLocalDate());
                         dailyMissionRecordDTO.setJaraUs(one.getJaraUs());
                         dailyMissionRecordDTO.setUser(user);
                         dailyMissionRecordDTO.setMissionPost(one.getMissionPost());
+<<<<<<< HEAD
+=======
+                        dailyMissionRecordDTO.setMissionResult(one.isDailyMissionResult());
+>>>>>>> develop_hm
                         log.info("set");
                         missionHistoryRepository.saveDailyMissionRecord(dailyMissionRecordDTO);
                         log.info("save");
 
+<<<<<<< HEAD
                     } dailyMissionRepository.deleteByUserUserId(user.getUserId());
+=======
+
+                     dailyMissionRepository.deleteByUserUserId(user.getUserId());
+>>>>>>> develop_hm
                     log.info("delete-done");
 
                 }

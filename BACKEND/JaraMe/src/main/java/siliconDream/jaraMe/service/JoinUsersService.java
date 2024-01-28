@@ -3,8 +3,9 @@ package siliconDream.jaraMe.service;
 import siliconDream.jaraMe.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface JoinUsersService {
 
-    public List<Long> findUserIdsByJaraUsId(Long JaraUsId);
+    public Optional<List<Long>> findUserIdsByJaraUsId(Long JaraUsId);
 }
