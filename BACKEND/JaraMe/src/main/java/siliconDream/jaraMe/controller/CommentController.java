@@ -19,6 +19,7 @@ public class CommentController {
     //미션 인증글 댓글 등록
     @PostMapping("/add")
     //예외처리 : 공백만 아니면 될 것같음.
+
     public ResponseEntity<String> addComment(@RequestBody MissionCommentDTO missionCommentDTO, @SessionAttribute(name = "userId", required = true) Long userId) {
 
         boolean result = commentService.addComment(userId, missionCommentDTO);

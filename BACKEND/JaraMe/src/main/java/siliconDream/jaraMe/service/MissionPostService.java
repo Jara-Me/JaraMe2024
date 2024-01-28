@@ -21,6 +21,7 @@ public interface MissionPostService {
     GetMissionPostDTO makeGetMissionPostDTO(Optional<MissionPost> missionPostOptional, Optional<String> reactionTypeOptional, Optional<List<CommentDTO>> commentOptional);
 
 
+
     void dailyMissionUpdate(Long userId,Long jaraUsId, Long missionPostId);
     void  dailyMissionFinish(Long userId);
 
@@ -29,5 +30,7 @@ public interface MissionPostService {
 
     String updateMissionPost(Long missionPostId, MissionPostDTO missionPostDTO, Long userId, LocalDate todayDate);
 
+
     //String deleteMissionPost(Long missionPostId,Long userId); 보류
+
     }

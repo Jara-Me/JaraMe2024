@@ -44,6 +44,7 @@ public class DailyMissionUpdateScheduler {
         this.dailyMissionService = dailyMissionService;
         this.userRepository = userRepository;
     }
+
     @Transactional
     @Scheduled(cron = "0 0 0 * * *")
     public void transferDailyMission() {
@@ -58,29 +59,29 @@ public class DailyMissionUpdateScheduler {
                 log.info("isEmpty? ");
                 for (DailyMission one : doneDailyMission) {
                     log.info("one");
-
                     //미션기록테이블에 저장
-                        log.info("one.isDailyMissionResult:{}",one.isDailyMissionResult());
-                        DailyMissionRecordDTO dailyMissionRecordDTO = new DailyMissionRecordDTO();
-                        dailyMissionRecordDTO.setMissionDate(one.getDoneDateTime().toLocalDate());
-                        dailyMissionRecordDTO.setJaraUs(one.getJaraUs());
-                        dailyMissionRecordDTO.setUser(user);
-                        dailyMissionRecordDTO.setMissionPost(one.getMissionPost());
-                        dailyMissionRecordDTO.setMissionResult(one.isDailyMissionResult());
-                        log.info("set");
-                        missionHistoryRepository.saveDailyMissionRecord(dailyMissionRecordDTO);
-                        log.info("save");
 
+                    log.info("one.isDailyMissionResult:{}", one.isDailyMissionResult());
+                    DailyMissionRecordDTO dailyMissionRecordDTO = new DailyMissionRecordDTO();
+                    dailyMissionRecordDTO.setMissionDate(one.getDoneDateTime().toLocalDate());
+                    dailyMissionRecordDTO.setJaraUs(one.getJaraUs());
+                    dailyMissionRecordDTO.setUser(user);
+                    dailyMissionRecordDTO.setMissionResult(one.isDailyMissionResult());
 
-                     dailyMissionRepository.deleteByUserUserId(user.getUserId());
+                    log.info("set");
+                    missionHistoryRepository.saveDailyMissionRecord(dailyMissionRecordDTO);
+                    log.info("save");
+
+                    dailyMissionRepository.deleteByUserUserId(user.getUserId());
+
                     log.info("delete-done");
 
                 }
             }
-            log.info("userId:{}",user.getUserId());
+            log.info("userId:{}", user.getUserId());
             //해당 유저가 참여하고 있는 자라어스 식별자들을 얻은 후,
             Optional<List<Long>> joinedJaraUsIds = joinUsersRepository.findJaraUs_jaraUsIdsByUser_userId(user.getUserId());
-            log.info("joinedJaraUsIds:{}",joinedJaraUsIds);
+            log.info("joinedJaraUsIds:{}", joinedJaraUsIds);
 
             for (Long jaraUsId : joinedJaraUsIds.get()) {
                 log.info("for-");

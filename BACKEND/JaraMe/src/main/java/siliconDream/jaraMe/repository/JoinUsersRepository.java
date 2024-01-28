@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface JoinUsersRepository extends JpaRepository<JoinUsers,Long> {
 
+
     @Query("SELECT ju.userId " +
             "FROM JoinUsers j " +
             "LEFT JOIN j.jaraUs jj " +
