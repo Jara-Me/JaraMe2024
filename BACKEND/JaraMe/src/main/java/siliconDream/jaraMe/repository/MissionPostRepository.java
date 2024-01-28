@@ -18,7 +18,7 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
     MissionPost findByMissionPostId(Long missionPostId);
 
 
-    Optional<MissionPost> save(MissionPost missionPost);
+    MissionPost save(MissionPost missionPost);
 
 
     //미션 인증글 조회

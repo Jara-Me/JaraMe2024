@@ -74,8 +74,9 @@ public class MissionPostServiceImpl implements MissionPostService {
         missionPost.setJaraUs(jaraUsRepository.findByJaraUsId(jaraUsId));
 
         //TODO: 저장 => 여길 Optional로 바꿔서 isPresent로 성공/실패여부 반영하기
-        Optional<MissionPost> savedMissionPost = missionPostRepository.save(missionPost);
-        if (savedMissionPost.isPresent()) {
+        MissionPost savedMissionPost = missionPostRepository.save(missionPost);
+        return true;
+        /*if (savedMissionPost) {
 
             //TODO: dailyMission테이블에도 missionPostId 저장하기
             Long savedMissionPostId = savedMissionPost.get().getMissionPostId();
@@ -85,7 +86,7 @@ public class MissionPostServiceImpl implements MissionPostService {
             return false;
         }else {return false;}
 
-
+*/
 
     }
 
