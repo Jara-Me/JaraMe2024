@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         //수정한 부분
         return userRepository.findByUserId(userId);
     }
-/* 커밋 전에 취소
+
     @Override
     public User login(String email, String password) {
         User user = userRepository.findByEmail(email);
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
             throw new BadCredentialsException("이메일 또는 비밀번호를 다시 확인해주세요."); // 비밀번호 불일치
         }
         return user; // 성공적인 로그인
-    }*/
+    }
     @Override
     public User findUserByEmail(String email){
         return userRepository.findByEmail(email);

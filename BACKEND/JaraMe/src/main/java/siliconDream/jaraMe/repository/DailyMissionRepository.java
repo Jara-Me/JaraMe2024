@@ -8,10 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import siliconDream.jaraMe.domain.DailyMission;
-<<<<<<< HEAD
-=======
 import siliconDream.jaraMe.domain.MissionHistory;
->>>>>>> develop_hm
 import siliconDream.jaraMe.domain.MissionPost;
 import siliconDream.jaraMe.dto.DailyMissionDTO;
 

@@ -17,14 +17,7 @@ public class DailyMissionRecordDTO {
     private LocalDate missionDate;
     private User user;
     private MissionPost missionPost;
-<<<<<<< HEAD
-
-
-=======
     private boolean missionResult;
-
->>>>>>> develop_hm
-
     private JaraUs jaraUs;
 
 }

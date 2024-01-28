@@ -88,28 +88,8 @@ public class MissionPostServiceImpl implements MissionPostService {
 
 */
 
-<<<<<<< HEAD
-        //TODO: dailyMission테이블에도 missionPostId 저장하기
-        Long savedMissionPostId = savedMissionPost.getMissionPostId();
-        dailyMissionUpdate(userId,jaraUsId,savedMissionPostId);
-//
-//        dailyMissionFinish(userId, jaraUsId, savedMissionPost, savedMissionPost.getPostDateTime());
-        return "저장이 완료되었습니다.";
-=======
->>>>>>> develop_hm
     }
-    public String dailyMissionUpdate(Long userId, Long jaraUsId, Long missionPostId) {
-        missionPostRepository.findByMissionPostId(missionPostId);
-        //저장한 missionPostId가 오늘의 미션 중 어느 미션을 인증하고자했던 것인지 파악
-        // dailyMission 테이블에서 dailyMissionId로 레코드를 찾은 다음,
-        Long dailyMissionId = dailyMissionRepository.findDailyMissionIdByUser_UserIdAndJaraUs_JaraUsId(userId, jaraUsId);
-        MissionPost savedMissionPost = missionPostRepository.findByMissionPostId(missionPostId);
-        dailyMissionRepository.updateDailyMissionStatus(true, dailyMissionId, savedMissionPost, savedMissionPost.getPostDateTime());
 
-<<<<<<< HEAD
-        dailyMissionFinish(userId);
-        return "";
-=======
     public void dailyMissionUpdate(Long userId, Long jaraUsId, Long missionPostId) {
         missionPostRepository.findByMissionPostId(missionPostId);
         //저장한 missionPostId가 오늘의 미션 중 어느 미션을 인증하고자했던 것인지 파악
@@ -119,7 +99,6 @@ public class MissionPostServiceImpl implements MissionPostService {
         dailyMissionRepository.updateDailyMissionStatus(true, dailyMissionId, savedMissionPost, savedMissionPost.getPostDateTime());
 
         dailyMissionFinish(userId);
->>>>>>> develop_hm
     }
 
     //오늘의 미션 완료
@@ -150,20 +129,12 @@ public class MissionPostServiceImpl implements MissionPostService {
             pointRepository.updateDailyMission(userId, earnedPoint);
             /**추가**/
             PointHistory pointHistory = new PointHistory();
-<<<<<<< HEAD
-            pointHistory.setPoint(earnedPoint+userRepository.findByUserId(userId).getPoint());
-=======
             pointHistory.setPoint(earnedPoint + userRepository.findByUserId(userId).getPoint());
->>>>>>> develop_hm
             pointHistory.setChangeAmount(earnedPoint);
             pointHistory.setPlusOrMinus(true);
             pointHistory.setTransactionTime(LocalDateTime.now());
             pointHistory.setNotice(true);
-<<<<<<< HEAD
-            pointHistory.setTask(String.format("dailyMission (%s)",taskNumber));
-=======
             pointHistory.setTask(String.format("dailyMission (%s)", taskNumber));
->>>>>>> develop_hm
             pointHistory.setUser(userRepository.findByUserId(userId));
             pointHistoryRepository.save(pointHistory);
         }
@@ -210,11 +181,6 @@ public class MissionPostServiceImpl implements MissionPostService {
     }
 
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> develop_hm
     //미션에 참여한 유저들의 참여율 알아내기 => 스케줄링 구현 후에 할 수 있을 듯.
     public int missionParticipationRate(Long userId, Long jaraUsId) {
 
@@ -298,16 +264,6 @@ public class MissionPostServiceImpl implements MissionPostService {
     public String deleteMissionPost(Long missionPostId, Long userId) {
         MissionPost missionPost = missionPostRepository.findByMissionPostId(missionPostId);
 
-<<<<<<< HEAD
-    //미션인증글 삭제 => 보류
-    //TODO : 예외처리 : 미션인증글이 삭제되면서 미션 기록, 오늘의 미션, 해당 미션인증글에 달린 댓글,리액션 모두 삭제돼야함.
-    public String deleteMissionPost(Long missionPostId, Long userId) {
-        MissionPost missionPost = missionPostRepository.findByMissionPostId(missionPostId);
-        JaraUs jaraUs = jaraUsRepository.findByJaraUsId(missionPost.getJaraUs().getJaraUsId());
-        LocalDate endDate = jaraUs.getEndDate();
-        if (missionPost.getUser().getUserId().equals(userId)) {
-            if (endDate.isAfter(LocalDate.now())) {
-=======
         JaraUs jaraUs = jaraUsRepository.findByJaraUsId(missionPost.getJaraUs().getJaraUsId());
         LocalDate endDate = jaraUs.getEndDate();
         log.info("test/ start ");
@@ -329,7 +285,6 @@ public class MissionPostServiceImpl implements MissionPostService {
                     log.info("missionPost:{}",missionPost);
                     missionHistoryRepository.save(missionHistory);
                 }
->>>>>>> develop_hm
                 missionPostRepository.delete(missionPost);
                 return "삭제가 완료되었습니다.";
             } else if (endDate.isBefore(LocalDate.now())) {
@@ -337,9 +292,5 @@ public class MissionPostServiceImpl implements MissionPostService {
             }
         }else if (!missionPost.getUser().getUserId().equals(userId)){
         return "작성자가 일치하지않습니다.";} return "삭제를 실패했습니다.";
-<<<<<<< HEAD
-    }
-=======
     }*/
->>>>>>> develop_hm
 }
