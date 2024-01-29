@@ -37,12 +37,12 @@ public class NoticeController {
         Optional<NoticeDTO> noticeDTO =noticeService.findNoticeMessageByUserIdAndNoticeStatus(userId);
         return noticeDTO;
     }
-/*테스트 목적으로 생성한 메서드 =>실제로는 사용x
+
     //자라어스 생성 시 스케줄링 테스트 용도
     @PostMapping("/scheduling")
     public void scheduling (@RequestParam Long jaraUsId){
         scheduleService.jaraUsScheduling(jaraUsRepository.findByJaraUsId(jaraUsId));
-    }*/
+    }
 
     //캘린더
     @GetMapping("calendar")

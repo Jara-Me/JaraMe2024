@@ -168,7 +168,11 @@ public class NoticeServiceImpl implements NoticeService {
                 calendarMissionHistoryDTO.setJaraUsId(one.getJaraUs().getJaraUsId());
                 calendarMissionHistoryDTO.setJaraUsName(one.getJaraUs().getJaraUsName());
                 calendarMissionHistoryDTO.setMissionName(one.getJaraUs().getMissionName());
-                calendarMissionHistoryDTO.setMissionPostId(one.getMissionPost().getMissionPostId());
+                log.info("here?????");
+                if (one.getMissionPost() != null){
+                    calendarMissionHistoryDTO.setMissionPostId(Optional.of(one.getMissionPost().getMissionPostId()));
+
+                }
                 calendarMissionHistoryDTO.setMissionResult(one.isMissionResult());
                 log.info("one-here2");
                 calenderMissionHistoryDTOs.add(calendarMissionHistoryDTO);

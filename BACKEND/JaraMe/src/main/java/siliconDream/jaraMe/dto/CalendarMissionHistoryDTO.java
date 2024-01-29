@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 
 @Getter
@@ -17,7 +18,7 @@ public class CalendarMissionHistoryDTO {
     private Long jaraUsId;
     private String jaraUsName;
     private String missionName;
-    private Long missionPostId;
+    private Optional<Long> missionPostId;
     private boolean missionResult;
 
 }
