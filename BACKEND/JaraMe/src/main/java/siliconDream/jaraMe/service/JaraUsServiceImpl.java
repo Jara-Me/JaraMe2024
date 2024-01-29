@@ -183,7 +183,7 @@ public class JaraUsServiceImpl implements JaraUsService {
                                .collect(Collectors.toList());
     }
 
-    //DTO변환메소드 (JaraUs엔티티 인스턴스를 JaraUsDTO 객체로 변환하는 작업 수행)
+    //DTO변환메소드 (JaraUs엔티티 인스턴스를 JaraUsDTO 객체로 변환하는 작업 수행) 
      private JaraUsDTO convertToDTO(JaraUs jaraUs) {
         JaraUsDTO jaraUsDTO = new JaraUsDTO();
         jaraUsDTO.setAdminUserId(jaraUs.getAdministrator() != null ? jaraUs.getAdministrator().getUserId() : null);
