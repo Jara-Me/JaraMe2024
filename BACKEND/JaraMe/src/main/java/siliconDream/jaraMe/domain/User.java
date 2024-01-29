@@ -60,14 +60,15 @@ public class User {
     @OneToMany(mappedBy="user")
     @JsonIgnore
     private List<JoinUsers> joinUsers;
+    
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ToDoList> toDoList;
 /*
     @OneToMany(mappedBy="userId")
     @JsonIgnore
     private List<MissionHistory> missionHistory;
 
-    @OneToMany(mappedBy="userId")
-    @JsonIgnore
-    private List<ToDoList> toDoList;
 */
 
     //TODO: getter and setter
@@ -80,6 +81,10 @@ public class User {
 
 
 
+
+     public String getProfileImage() {
+        return profileImage;
+    }
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }
@@ -168,6 +173,13 @@ public class User {
     public void setJoinUsers(List<JoinUsers> joinUsers) {
         this.joinUsers = joinUsers;
     }
+    public List<ToDoList> getToDoList() {
+        return toDoList;
+    }
+
+    public void setToDoList(List<ToDoList> toDoList) {
+        this.toDoList = toDoList;
+    }
 
 /*
     public List<MissionHistory> getMissionHistory() {
@@ -178,13 +190,6 @@ public class User {
         this.missionHistory = missionHistory;
     }
 
-    public List<ToDoList> getToDoList() {
-        return toDoList;
-    }
-
-    public void setToDoList(List<ToDoList> toDoList) {
-        this.toDoList = toDoList;
-    }
 */
 
 }
