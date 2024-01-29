@@ -169,15 +169,6 @@ public class User {
         this.joinUsers = joinUsers;
     }
 
-    // 프로필 이미지 설정 메서드
-    public void setUserProfileImage(String userProfileImage) {
-        this.profileImage = userProfileImage;
-    }
-
-    // 프로필 이미지 가져오는 메서드
-    public String getUserProfileImage() {
-        return profileImage;
-    }
 /*
     public List<MissionHistory> getMissionHistory() {
         return missionHistory;
