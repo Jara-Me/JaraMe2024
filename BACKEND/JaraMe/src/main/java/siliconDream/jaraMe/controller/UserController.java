@@ -95,5 +95,42 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No active session found");
         }
     }
+     //프로필 이미지 업데이트
+    @PostMapping("/updateProfileImage")
+    public ResponseEntity<?> updateProfileImage(@RequestParam("userId") Long userId,
+                                                @RequestParam("image") MultipartFile image) {
+        try {
+            String imageUrl = userService.updateProfileImage(userId, image);
+            return ResponseEntity.ok().body("Profile image updated successfully. New Image URL: " + imageUrl);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating profile image");
+        }
+    }
+
+    //회원탈퇴
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.ok().body("User successfully deleted");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in deleting user");
+        }
+    }
+
+    //닉네임 변경
+    @PostMapping("/changeNickname")
+    public ResponseEntity<?> changeNickname(@RequestBody UserDto userDto) {
+        try {
+            boolean success = userService.changeNickname(userDto.getUserid(), userDto.getNickname(), userDto.getPassword());
+            if (success) {
+                return ResponseEntity.ok().body("Nickname changed successfully");
+            } else {
+                return ResponseEntity.badRequest().body("Nickname is already in use");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error changing nickname");
+        }
+    }
 
 }
