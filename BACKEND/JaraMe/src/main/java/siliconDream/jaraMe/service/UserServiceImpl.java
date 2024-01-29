@@ -93,8 +93,10 @@ public class UserServiceImpl implements UserService {
         }
         return user; // 성공적인 로그인
     }
+
+
     @Override
-    public User findUserByEmail(String email){
+    public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -108,7 +110,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public int getPassTicket(Long userId){
+    public int getPassTicket(Long userId) {
         return userRepository.findPassTicketByUserId(userId);
     }
 }

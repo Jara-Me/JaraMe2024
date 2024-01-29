@@ -45,11 +45,10 @@ public interface MissionHistoryRepository extends JpaRepository<MissionHistory, 
             "GROUP BY mh.missionDate")
     Optional<List<Object[]>> findMissionDateByUser_UserIdAndMissionResult(Long userId, boolean missionResult);
 
-    @Query("SELECT MissionHistory " +
-            "FROM MissionHistory mh " +
-            "LEFT JOIN mh.user mhu  " +
+    @Query("SELECT mh FROM MissionHistory mh " +
+            "LEFT JOIN mh.user mhu " +
             "WHERE mhu.userId = :userId AND mh.missionDate = :missionDate")
-    List<MissionHistory> findByUser_USerIdAndMissionDate(Long userId, LocalDate missionDate);
+    List<MissionHistory> findByUser_UserIdAndMissionDate(@Param("userId") Long userId, @Param("missionDate") LocalDate missionDate);
 
     @Transactional
     @Modifying

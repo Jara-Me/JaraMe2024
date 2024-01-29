@@ -24,7 +24,7 @@ public class MissionHistory {
     private User user;
 
     @JoinColumn(name="jaraUs")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private JaraUs jaraUs;
 
     @JoinColumn(name="missionPost")

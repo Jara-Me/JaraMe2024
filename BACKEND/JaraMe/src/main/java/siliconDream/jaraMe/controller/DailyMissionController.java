@@ -22,7 +22,7 @@ public class DailyMissionController {
 
     //오늘의 미션 조회 => 테스트완료 / 예외처리 전
     @GetMapping("/get")
-    public Optional<List<DailyMissionDTO>> getDailyMission(@SessionAttribute(name = "userId", required = true) Long userId){
+    public Optional<List<DailyMissionDTO>> getDailyMission(@RequestParam Long userId){
         Optional<List<DailyMissionDTO>> dailyMissionDTOList = dailyMissionService.getDailyMission(userId, LocalDate.now());
         return dailyMissionDTOList;
     }
