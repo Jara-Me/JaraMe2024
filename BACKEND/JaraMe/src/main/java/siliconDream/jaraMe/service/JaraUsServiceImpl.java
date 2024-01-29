@@ -172,8 +172,34 @@ public class JaraUsServiceImpl implements JaraUsService {
     //미션완주일이 어제인 그룹 찾아내기
     public List<JaraUs> findEndDateYesterDay() {
         return jaraUsRepository.findEndDateYesterDay(LocalDate.now().minusDays(1));
+    }
 
+    //검색기능
+     @Override
+    public List<JaraUsDTO> searchJaraUs(String keyword) {
+        return jaraUsRepository.searchByKeyword(keyword)
+                               .stream()
+                               .map(jaraUs -> convertToDTO(jaraUs))
+                               .collect(Collectors.toList());
+    }
 
+    //DTO변환메소드 (JaraUs엔티티 인스턴스를 JaraUsDTO 객체로 변환하는 작업 수행)
+     private JaraUsDTO convertToDTO(JaraUs jaraUs) {
+        JaraUsDTO jaraUsDTO = new JaraUsDTO();
+        jaraUsDTO.setAdminUserId(jaraUs.getAdministrator() != null ? jaraUs.getAdministrator().getUserId() : null);
+        jaraUsDTO.setJaraUsId(jaraUs.getJaraUsId());
+        jaraUsDTO.setJaraUsName(jaraUs.getJaraUsName());
+        jaraUsDTO.setMissionName(jaraUs.getMissionName());
+        jaraUsDTO.setExplanation(jaraUs.getExplanation());
+        jaraUsDTO.setRule(jaraUs.getRule());
+        jaraUsDTO.setJaraUsProfileImage(jaraUs.getJaraUsProfileImage());
+        jaraUsDTO.setMaxMember(jaraUs.getMaxMember());
+        jaraUsDTO.setDisplay(jaraUs.isDisplay());
+        jaraUsDTO.setStartDate(jaraUs.getStartDate());
+        jaraUsDTO.setEndDate(jaraUs.getEndDate());
+        Set<Recurrence> recurrenceSet = jaraUs.getRecurrence();// JaraUs 엔티티 객체에서 Recurrence 집합을 가져옴.
+        jaraUsDTO.setRecurrence(recurrenceSet);
+        return jaraUsDTO;
     }
 
 
