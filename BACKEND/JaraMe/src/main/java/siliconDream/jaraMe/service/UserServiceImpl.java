@@ -147,6 +147,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean changeNickname(Long userId, String newNickname, String password) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        if (userRepository.findByNickname(newNickname).isPresent()) {
+            return false; // 닉네임 중복
+        }
+
+        user.setNickname(newNickname);
+        userRepository.save(user);
+        return true; // 닉네임 변경 성공
+    }
+
+    @Override
     public boolean isUserIdAvailable(Long userId) {
         return !userRepository.existsById(userId);
     }
