@@ -152,6 +152,8 @@ public class JaraUsServiceImpl implements JaraUsService {
         jaraUs.setMissionName(jaraUsDTO.getMissionName());
         jaraUs.setRecurrence(jaraUsDTO.getRecurrence());
 
+
+
         LocalDate startDate = jaraUsDTO.getStartDate();
         if (startDate != null && startDate.isBefore(LocalDate.now().plusDays(1))) {
             throw new IllegalArgumentException("Start date must be at least one day ahead of today.");
@@ -164,6 +166,8 @@ public class JaraUsServiceImpl implements JaraUsService {
         // Save the updated JaraUs entity
         return jaraUsRepository.save(jaraUs);
     }
+
+
 
     //미션완주일이 어제인 그룹 찾아내기
     public List<JaraUs> findEndDateYesterDay() {

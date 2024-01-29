@@ -1,5 +1,7 @@
 package siliconDream.jaraMe.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import siliconDream.jaraMe.domain.Reaction;
 import siliconDream.jaraMe.dto.MissionReactionDTO;
@@ -25,7 +27,7 @@ public class ReactionServiceImpl implements ReactionService {
         this.reactionRepository = reactionRepository;
     }
 
-    public String addReaction(MissionReactionDTO missionReactionDTO, Long userId) {
+    public ResponseEntity<String> addReaction(MissionReactionDTO missionReactionDTO, Long userId) {
         //TODO: 예외처리 : 존재하는 리액션 타입이 맞는지?
 
         Optional<Reaction> reactionOptional=reactionRepository.findReactionByMissionPost_MissionPostIdAndUser_UserId(missionReactionDTO.getMissionPostId(), userId);
@@ -36,11 +38,11 @@ public class ReactionServiceImpl implements ReactionService {
             reaction.setReactionType(missionReactionDTO.getReactionType());
 
             reactionRepository.save(reaction);
-            return String.format("%s를 누르셨습니다!",missionReactionDTO.getReactionType());
+            return ResponseEntity.status(HttpStatus.OK).body(String.format("%s를 누르셨습니다!",missionReactionDTO.getReactionType()));
         }else if (reactionOptional.isPresent()){
-            return String.format("이미 %s를 누르셨습니다.",reactionOptional.get().getReactionType());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( String.format("이미 %s를 누르셨습니다.",reactionOptional.get().getReactionType()));
         }
-    return "리액션을 누를 수 없습니다.";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("리액션을 누를 수 없습니다.");
 
     }
 

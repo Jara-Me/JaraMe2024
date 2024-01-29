@@ -1,10 +1,14 @@
 package siliconDream.jaraMe.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 public class DailyMission {
 
@@ -34,60 +38,5 @@ public class DailyMission {
     @JoinColumn(name = "jaraUs")
     private JaraUs jaraUs;
 
-    //TODO: getter and setter
-    public Long getDailyMissionId() {
-        return dailyMissionId;
-    }
 
-    public void setDailyMissionId(Long dailyMissionId) {
-        this.dailyMissionId = dailyMissionId;
-    }
-
-    public boolean isDailyMissionResult() {
-        return dailyMissionResult;
-    }
-
-    public void setDailyMissionResult(boolean dailyMissionResult) {
-        this.dailyMissionResult = dailyMissionResult;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public JaraUs getJaraUs() {
-        return jaraUs;
-    }
-
-    public void setJaraUs(JaraUs jaraUs) {
-        this.jaraUs = jaraUs;
-    }
-
-    public LocalDateTime getDoneDateTime() {
-        return doneDateTime;
-    }
-
-    public void setDoneDateTime(LocalDateTime doneDateTime) {
-        this.doneDateTime = doneDateTime;
-    }
-
-    public LocalDate getScheduleDate() {
-        return scheduleDate;
-    }
-
-    public void setScheduleDate(LocalDate scheduleDate) {
-        this.scheduleDate = scheduleDate;
-    }
-
-    public MissionPost getMissionPost() {
-        return missionPost;
-    }
-
-    public void setMissionPost(MissionPost missionPost) {
-        this.missionPost = missionPost;
-    }
 }

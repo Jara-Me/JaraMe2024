@@ -42,6 +42,10 @@ public class MissionPost {
     private JaraUs jaraUs;
 
 
+    @OneToOne
+    @JoinColumn(name = "missionHistory")
+    @JsonIgnore
+    private MissionHistory missionHistory;
 
     @OneToMany(mappedBy = "missionPost", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

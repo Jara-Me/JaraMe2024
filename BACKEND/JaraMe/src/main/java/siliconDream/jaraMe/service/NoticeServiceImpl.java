@@ -7,6 +7,8 @@ import siliconDream.jaraMe.domain.*;
 import siliconDream.jaraMe.dto.*;
 import siliconDream.jaraMe.repository.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +52,9 @@ public class NoticeServiceImpl implements NoticeService {
             List<ReactionNoticeDTO> reactionNoticeDTOs = new ArrayList<>();
             //개별 미션 인증글에 달린 리액션통계
             for (Long oneMissionPostId : missionPostIds.get()) {
-                int smile=0;
-                int good=0;
-                int like=0;
+                int smile = 0;
+                int good = 0;
+                int like = 0;
                 log.info("oneMissionPostId:{}", oneMissionPostId); //ok
                 Optional<List<Object[]>> reactionCountDTOs = reactionRepository.findByMissionPost_MissionPostId(oneMissionPostId);
                 if (reactionCountDTOs.isPresent()) {
@@ -60,16 +62,15 @@ public class NoticeServiceImpl implements NoticeService {
                         for (int i = 0; i < 3; i++) {
                             if (object[0].equals("smile")) {
                                 smile = ((Number) object[1]).intValue();
-                            }
-                            else if (object[0].equals("like")) {
+                            } else if (object[0].equals("like")) {
                                 like = ((Number) object[1]).intValue();
-                            }else if (object[0].equals("good")) {
+                            } else if (object[0].equals("good")) {
                                 good = ((Number) object[1]).intValue();
                             }
 
 
+                        }
                     }
-                }
 
                     ReactionNoticeDTO reactionNoticeDTO = new ReactionNoticeDTO(oneMissionPostId,
                             missionPostRepository.findByMissionPostId(oneMissionPostId).getTextTitle(),
@@ -140,11 +141,85 @@ public class NoticeServiceImpl implements NoticeService {
         return Optional.of(noticeDTO);
 
     }
-/*
-    public ReactionNoticeDTO findTotalNewReactionNumberByUserId(Long userId){
-        ReactionNoticeDTO reactionNoticeDTO = new ReactionNoticeDTO();
-        return reactionNoticeDTO;
-    }
-*/
 
+    /*
+        public ReactionNoticeDTO findTotalNewReactionNumberByUserId(Long userId){
+            ReactionNoticeDTO reactionNoticeDTO = new ReactionNoticeDTO();
+            return reactionNoticeDTO;
+        }
+    */
+    public Optional<CalendarDTO> getCalendar(LocalDate selectedDate, Long userId) {
+        log.info("test");
+        CalendarDTO calendarDTO = new CalendarDTO();
+        //예외처리 : 아예 없을 수도 있으니까 Optional로 수정하기
+        log.info("selectedDate:{}",selectedDate);
+        log.info("userId:{}",userId);
+        List<CalendarMissionHistoryDTO> calenderMissionHistoryDTOs = new ArrayList<>();
+        log.info("one-herezzzzzzzz");
+        List<MissionHistory> missionHistoryList = missionHistoryRepository.findByUser_UserIdAndMissionDate(userId, selectedDate);
+        log.info("missionHistoryList:{}",missionHistoryList);
+        //미션인증글이 있는 경우.
+        if (missionHistoryList.size()!=0) {
+            log.info("here");
+            for (MissionHistory one : missionHistoryList) {
+                CalendarMissionHistoryDTO calendarMissionHistoryDTO = new CalendarMissionHistoryDTO();
+                log.info("one-here");
+                calendarMissionHistoryDTO.setMissionDate(one.getMissionDate());
+                calendarMissionHistoryDTO.setJaraUsId(one.getJaraUs().getJaraUsId());
+                calendarMissionHistoryDTO.setJaraUsName(one.getJaraUs().getJaraUsName());
+                calendarMissionHistoryDTO.setMissionName(one.getJaraUs().getMissionName());
+                log.info("here?????");
+                if (one.getMissionPost() != null){
+                    calendarMissionHistoryDTO.setMissionPostId(Optional.of(one.getMissionPost().getMissionPostId()));
+
+                }
+                calendarMissionHistoryDTO.setMissionResult(one.isMissionResult());
+                log.info("one-here2");
+                calenderMissionHistoryDTOs.add(calendarMissionHistoryDTO);
+            }log.info("one-here3");
+            calendarDTO.setCalendarMissionHistoryDTOs(Optional.of(calenderMissionHistoryDTOs));
+        }log.info("one-here4");
+
+        List<CalendarPointDTO> calendarPointDTOs = new ArrayList<>();
+/*        LocalDateTime startDate = LocalDate.of(2022, 1, 1).atStartOfDay();
+        LocalDateTime endDate = LocalDate.of(2022, 1, 1).atTime(23, 59, 59);
+*/
+        LocalDateTime startTime = selectedDate.atTime(00,00,00);
+        LocalDateTime endTime = selectedDate.atTime(23,59,59);
+        List<PointHistory> pointHistoryList = pointHistoryRepository.findByUser_UserIdAndBetween(userId, startTime, endTime);
+        log.info("here5");
+        //포인트 적립/차감 기록이 있는 경우.
+        if (pointHistoryList.size()!=0) {
+            for (PointHistory one : pointHistoryList) {
+                CalendarPointDTO calendarPointDTO = new CalendarPointDTO();
+                String taskName = "";
+                log.info("one-here6");
+                calendarPointDTO.setChangeAmount(one.getChangeAmount());
+                calendarPointDTO.setPlusOrMinus(one.isPlusOrMinus());
+                log.info("one-here7");
+
+                /*
+                pointHistory.setTask(String.format("dailyMission (%s)", taskNumber));
+                pointHistory.setTask(String.format("missionComplete {}",jaraUsId));
+                pointHistory.setTask("checkIn");
+                pointHistory.setTask("passTicket");
+                */
+                if (one.getTask().contains("checkIn")) {
+                    taskName = "출석체크";
+                }else if (one.getTask().contains("passTicket")){
+                    taskName="패스권 구매";
+                }else if (one.getTask().contains("dailyMission")){
+                    taskName="오늘의 미션 완료";
+                }else if (one.getTask().contains("missionComplete")){
+                    taskName="미션 완주";
+                }
+                calendarPointDTO.setTask(taskName);
+                log.info("one-here8");
+                calendarPointDTOs.add(calendarPointDTO);
+            }log.info("one-here9");
+            calendarDTO.setCalendarPointDTOs(Optional.of(calendarPointDTOs));
+        }log.info("one-here9");
+
+        return Optional.of(calendarDTO);
+    }
 }

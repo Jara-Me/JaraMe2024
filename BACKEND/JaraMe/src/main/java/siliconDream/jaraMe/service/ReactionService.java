@@ -1,9 +1,13 @@
 package siliconDream.jaraMe.service;
 
+import org.springframework.http.ResponseEntity;
+
 import siliconDream.jaraMe.dto.MissionReactionDTO;
 
 public interface ReactionService {
 
-    String addReaction(MissionReactionDTO missionReactionDTO, Long userId);
+
+    ResponseEntity<String> addReaction(MissionReactionDTO missionReactionDTO, Long userId);
+
     String deleteReaction(MissionReactionDTO missionReactionDTO, Long userId);
 }

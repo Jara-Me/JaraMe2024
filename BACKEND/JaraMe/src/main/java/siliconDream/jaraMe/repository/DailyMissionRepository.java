@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import siliconDream.jaraMe.domain.DailyMission;
+import siliconDream.jaraMe.domain.MissionHistory;
 import siliconDream.jaraMe.domain.MissionPost;
 import siliconDream.jaraMe.dto.DailyMissionDTO;
 
@@ -60,5 +61,12 @@ public interface DailyMissionRepository extends JpaRepository<DailyMission, Long
     Optional<Long> findMissionPostIdByUser_UserIdAndScheduleDateAndDailyMissionResult(Long userId, LocalDate todayDate, boolean dailyMissionResult);
 
 
-    List<Long> findMissionPostIdsByUser_UserId(Long userId); //TODO: missionPostId 컬럼 추가하기
+    List<Long> findMissionPostIdsByUser_UserId(Long userId);
+
+    @Query("SELECT DailyMission dm " +
+            "FROM DailyMission dm " +
+            "LEFT JOIN dm.missionPost dmm " +
+            "WHERE dmm.missionPostId = :missionPostId")
+    DailyMission findDailyMissionByMissionPost_MissionPostId(Long missionPostId);
+
 }

@@ -1,6 +1,8 @@
 package siliconDream.jaraMe.controller;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+import siliconDream.jaraMe.dto.CalendarDTO;
 import siliconDream.jaraMe.dto.NoticeDTO;
 import siliconDream.jaraMe.repository.JaraUsRepository;
 import siliconDream.jaraMe.service.JaraUsService;
@@ -8,6 +10,7 @@ import siliconDream.jaraMe.service.MissionHistoryService;
 import siliconDream.jaraMe.service.NoticeService;
 import siliconDream.jaraMe.service.ScheduleService;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
@@ -30,7 +33,7 @@ public class NoticeController {
 
     //미션완주,리액션통계
     @GetMapping("/get")
-    public Optional<NoticeDTO> missionFinishNotice(@RequestParam Long userId){
+    public Optional<NoticeDTO> missionFinishNotice(@RequestParam Long userId ){
         Optional<NoticeDTO> noticeDTO =noticeService.findNoticeMessageByUserIdAndNoticeStatus(userId);
         return noticeDTO;
     }
@@ -39,5 +42,12 @@ public class NoticeController {
     @PostMapping("/scheduling")
     public void scheduling (@RequestParam Long jaraUsId){
         scheduleService.jaraUsScheduling(jaraUsRepository.findByJaraUsId(jaraUsId));
+    }
+
+    //캘린더
+    @GetMapping("calendar")
+    public Optional<CalendarDTO> calendar(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate, @RequestParam  Long userId){
+        Optional<CalendarDTO> calendarDTO = noticeService.getCalendar(selectedDate,userId);
+        return calendarDTO;
     }
 }

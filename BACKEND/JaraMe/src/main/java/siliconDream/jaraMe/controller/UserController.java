@@ -45,6 +45,7 @@ public class UserController {
         }
     }
 
+<<<<<<< HEAD
     // 중복 이메일 확인을 위한 엔드포인트
     @GetMapping("emailCheck")
     public ResponseEntity<Boolean> emailCheck(@RequestParam String email) {
@@ -60,41 +61,39 @@ public class UserController {
         return "user/login";
     }
 
+=======
+>>>>>>> e53b2f3cc0426862d36a95848f3a4c6369638dfd
     // 로그인 처리
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public ModelAndView login(@RequestParam("email") String email, @RequestParam("password") String password, HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView();
-        User user = userService.findUserByEmail(email);
+    public ResponseEntity<?> login(@RequestBody UserDto userDto, HttpServletRequest request) {
+        LoginResponse response = userService.login(userDto.getEmail(), userDto.getPassword());
 
-        if (user == null) {
-            mav.addObject("loginError", "회원가입을 해주세요."); // 이메일이 존재하지 않음
-            mav.setViewName("login");
-        } else if (!user.getPassword().equals(password)) {
-            mav.addObject("loginError", "이메일 또는 비밀번호를 다시 확인해주세요."); // 비밀번호 불일치
-            mav.setViewName("login");
+        if (!response.isSuccess()) {
+            // 로그인 실패 시 오류 응답 반환
+            return ResponseEntity.badRequest().body(response);
         } else {
-            // 로그인 성공 처리
-            request.getSession().setAttribute("loggedInUser", user);
-            mav.setViewName("redirect:/growth-mong"); // '성장몽 페이지'로 리디렉션
+            // 로그인 성공 시 세션에 사용자 정보 저장
+            HttpSession session = request.getSession(); // 세션 가져오기 또는 생성하기
+            session.setAttribute("user", response.getUser()); // 세션에 사용자 정보 저장
+
+            // 성공 응답 반환
+            return ResponseEntity.ok(response);
         }
-        return mav;
     }
 
 
     // 로그아웃 처리
-    @RequestMapping("logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // 현재 세션 가져오기, 새 세션은 생성하지 않음
+
         if (session != null) {
-            User loggedInUser = (User) session.getAttribute("loggedInUser");
-            if (loggedInUser != null) {
-                // 필요한 사용자 상태 업데이트
-                loggedInUser.setCheckIn(false); // 사용자 상태 업데이트
-                userService.saveUser(loggedInUser); // 데이터베이스에 저장
-            }
-            session.invalidate();
+            session.invalidate(); // 세션 무효화
+            return ResponseEntity.ok().body("Logged out successfully");
+        } else {
+            // 활성 세션이 없는 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No active session found");
         }
-        return "redirect:/login";
     }
 
 }

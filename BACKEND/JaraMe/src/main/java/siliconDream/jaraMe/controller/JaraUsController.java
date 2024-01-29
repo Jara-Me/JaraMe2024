@@ -1,6 +1,10 @@
 package siliconDream.jaraMe.controller;
 
+<<<<<<< HEAD
 
+=======
+import jakarta.validation.Valid;
+>>>>>>> e53b2f3cc0426862d36a95848f3a4c6369638dfd
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,6 +45,7 @@ public class JaraUsController {
         model.addAttribute("jaraUsDTO", new JaraUsDTO());
         return "jaraUs/form";
     }
+<<<<<<< HEAD
 
     @PostMapping("/create-jaraUs")
     public String createNewJaraUs(@ModelAttribute JaraUsDTO jaraUsDTO) {
@@ -51,3 +56,6 @@ public class JaraUsController {
         return "redirect:/jaraUs/details/" + createdJaraUsId;
     }
  }
+=======
+}
+>>>>>>> e53b2f3cc0426862d36a95848f3a4c6369638dfd

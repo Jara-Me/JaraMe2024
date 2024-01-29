@@ -14,14 +14,15 @@ import java.util.Optional;
 
 public interface MissionPostService {
     //미션 인증글 작성
-    String missionPost(MissionPostDTO missionPostDTO, Long userId);
+    boolean missionPost(MissionPostDTO missionPostDTO, Long userId);
 
     //미션 인증글 조회
     GetMissionPostDTO getMissionPostDetails(Long missionPostId,Long userId);
     GetMissionPostDTO makeGetMissionPostDTO(Optional<MissionPost> missionPostOptional, Optional<String> reactionTypeOptional, Optional<List<CommentDTO>> commentOptional);
 
 
-    String dailyMissionUpdate(Long userId,Long jaraUsId, Long missionPostId);
+
+    void dailyMissionUpdate(Long userId,Long jaraUsId, Long missionPostId);
     void  dailyMissionFinish(Long userId);
 
     //Optional<DailyMissionDTO> getDailyMission(Long userId, LocalDateTime todayDate);
@@ -29,5 +30,7 @@ public interface MissionPostService {
 
     String updateMissionPost(Long missionPostId, MissionPostDTO missionPostDTO, Long userId, LocalDate todayDate);
 
-    String deleteMissionPost(Long missionPostId,Long userId);
+
+    //String deleteMissionPost(Long missionPostId,Long userId); 보류
+
     }
