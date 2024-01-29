@@ -15,6 +15,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static siliconDream.jaraMe.service.ScheduleService.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ public class JaraUsServiceImpl implements JaraUsService {
     private final JaraUsRepository jaraUsRepository;
     private final ScheduleRepository scheduleRepository;
     private final UserService userService;
+    private final ScheduleService scheduleService;
 
     @Override
     public JaraUs createNewJaraUs(JaraUsDTO jaraUsDTO) {
@@ -33,13 +36,19 @@ public class JaraUsServiceImpl implements JaraUsService {
         jaraUs.setMissionName(jaraUsDTO.getMissionName());
         jaraUs.setAdminUserId(administrator);
         jaraUs.setRecurrence(jaraUsDTO.getRecurrence());
+
         LocalDate startDate = jaraUsDTO.getStartDate();
         if (startDate != null && startDate.isBefore(LocalDate.now().plusDays(1))) {
             throw new IllegalArgumentException("시작일은 적어도 내일 이후여야 합니다.");
         }
         LocalDate endDate = jaraUsDTO.getEndDate();
 
-        return jaraUsRepository.save(jaraUs);
+        JaraUs savedJaraUs = jaraUsRepository.save(jaraUs); // JaraUs 레코드 저장
+
+        // 스케줄링 작업 실행
+        scheduleService.jaraUsScheduling(savedJaraUs);
+
+        return savedJaraUs;
     }
 
 
@@ -108,7 +117,6 @@ public class JaraUsServiceImpl implements JaraUsService {
             jaraUs.setAdminUserId(newAdminUser);
         }
 
-        // Perform edit logic...
         jaraUs.setJaraUsName(jaraUsDTO.getJaraUsName());
         jaraUs.setMissionName(jaraUsDTO.getMissionName());
         jaraUs.setRecurrence(jaraUsDTO.getRecurrence());

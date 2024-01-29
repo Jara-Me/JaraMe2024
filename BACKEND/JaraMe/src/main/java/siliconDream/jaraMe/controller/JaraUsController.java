@@ -1,15 +1,15 @@
 package siliconDream.jaraMe.controller;
 
- import jakarta.validation.Valid;
- import lombok.RequiredArgsConstructor;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
- import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import siliconDream.jaraMe.domain.JaraUs;
 import siliconDream.jaraMe.domain.User;
@@ -40,5 +40,14 @@ public class JaraUsController {
         model.addAttribute("participant", participant);
         model.addAttribute("jaraUsDTO", new JaraUsDTO());
         return "jaraUs/form";
+    }
+
+    @PostMapping("/create-jaraUs")
+    public String createNewJaraUs(@ModelAttribute JaraUsDTO jaraUsDTO) {
+        JaraUs createdJaraUs = jaraUsService.createNewJaraUs(jaraUsDTO);
+
+        Long createdJaraUsId = createdJaraUs.getJaraUsId();
+
+        return "redirect:/jaraUs/details/" + createdJaraUsId;
     }
  }

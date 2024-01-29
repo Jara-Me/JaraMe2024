@@ -2,69 +2,57 @@ package siliconDream.jaraMe.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-//import jakarta.validation.Valid;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.UserDto;
 import siliconDream.jaraMe.service.UserService;
 
-@Controller
-@RequestMapping("/user")
+@RestController
+@RequestMapping("user")
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    // 회원가입 페이지 이동
-    @RequestMapping("signup")
-    public String create() {
-        return "user/signup";
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    // signup 시 email 중복확인 버튼 구현
-    @RequestMapping("emailCheck")
-    @ResponseBody
-    public boolean emailCheck(@RequestParam("email") String email) {
-        // DB에 가서 email 중복값이 있는지 조회
-        String check = userService.emailCheck(email);
-        return check != null;
-    }
-
-    @RequestMapping(value = "signup", method = RequestMethod.POST)
-    public ModelAndView createPost(@Valid UserDto userDto, BindingResult bindingResult) {
-        ModelAndView mav = new ModelAndView();
-
-        // 기본적인 비밀번호 확인 유효성 검증
+    // 회원 가입을 위한 엔드포인트
+    @PostMapping("signup")
+    public ResponseEntity<String> createUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult) {
+        // 비밀번호 확인 유효성 검사
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-            bindingResult.rejectValue("confirmPassword", "error.confirmPassword", "비밀번호 확인이 일치하지 않습니다");
+            return ResponseEntity.badRequest().body("비밀번호 확인이 일치하지 않습니다.");
         }
 
         if (bindingResult.hasErrors()) {
-            // 유효성 검증 오류가 있을 경우 회원가입 페이지로 이동
-            mav.addObject("message", "fault");
-            mav.setViewName("user/signup");
+            // 유효성 검사 오류가 있는 경우, 잘못된 요청 응답을 반환
+            return ResponseEntity.badRequest().body("유효성 검사 오류");
         } else {
-            boolean tf = userService.create(userDto);
-            System.out.println(tf);
+            boolean isSuccess = userService.create(userDto);
 
-            if (!tf) {
-                mav.addObject("message", "fault");
-                mav.setViewName("user/signup");
+            if (!isSuccess) {
+                // 사용자 생성에 문제가 있는 경우, 잘못된 요청 응답을 반환
+                return ResponseEntity.badRequest().body("사용자 생성에 실패했습니다.");
             } else {
-                mav.addObject("message", "success");
-                mav.setViewName("main/main");
+                // 사용자 생성이 성공한 경우, 성공 응답을 반환
+                return ResponseEntity.ok("사용자가 성공적으로 생성되었습니다.");
             }
         }
-        return mav;
     }
+
+    // 중복 이메일 확인을 위한 엔드포인트
+    @GetMapping("emailCheck")
+    public ResponseEntity<Boolean> emailCheck(@RequestParam String email) {
+        // 중복된 이메일 값이 있는지 확인
+        String check = userService.emailCheck(email);
+        return ResponseEntity.ok(check != null);
+    }
+
 
     // 로그인 페이지 이동
     @RequestMapping("login")
