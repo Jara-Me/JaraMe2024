@@ -86,7 +86,7 @@ public class MissionPostServiceImpl implements MissionPostService {
             return false;
         }else {return false;}
 
-*/
+*/      //예외처리 : 해당 유저가 없는데 저장하려는 경우 에러처리하기
 
     }
 

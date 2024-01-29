@@ -3,9 +3,9 @@ package siliconDream.jaraMe.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//커밋 전 취소 import org.springframework.security.authentication.BadCredentialsException;
+//커밋 전 취소 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//커밋 전 취소 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.UserDto;
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         //수정한 부분
         return userRepository.findByUserId(userId);
     }
-
+/*커밋 전 취소
     @Override
     public User login(String email, String password) {
         User user = userRepository.findByEmail(email);
@@ -93,6 +93,8 @@ public class UserServiceImpl implements UserService {
         }
         return user; // 성공적인 로그인
     }
+
+ */
     @Override
     public User findUserByEmail(String email){
         return userRepository.findByEmail(email);
