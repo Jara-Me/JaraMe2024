@@ -83,31 +83,72 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUserId(userId);
     }
 
-    @Override
-    public User login(String email, String password) {
+     @Override
+    public LoginResponse login(String email, String password) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new UsernameNotFoundException("회원가입을 해주세요."); // 이메일이 존재하지 않음
+            return new LoginResponse(false, "USER_NOT_FOUND", null);
         } else if (!user.getPassword().equals(password)) {
-            throw new BadCredentialsException("이메일 또는 비밀번호를 다시 확인해주세요."); // 비밀번호 불일치
+            return new LoginResponse(false, "INVALID_PASSWORD", null);
         }
-        return user; // 성공적인 로그인
+        return new LoginResponse(true, null, user);
     }
-
-
     @Override
-    public User findUserByEmail(String email) {
+    public User findUserByEmail(String email){
         return userRepository.findByEmail(email);
     }
 
     @Override
     public void deleteUser(Long userId) {
-
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
     }
 
     @Override
-    public void updateProfileImage(Long userId, String profileImagePath) {
+    public String updateProfileImage(Long userId, MultipartFile image) throws IOException{
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        String imageUrl = uploadImage(image); // 이미지 업로드 로직
+        user.setProfileImage(imageUrl);
+        userRepository.save(user);
+
+        return imageUrl;
+    }
+
+    private String uploadImage(MultipartFile image) throws IOException {
+        // 이미지 파일 이름 생성
+        String fileName = generateUniqueFileName(image.getOriginalFilename());
+
+        // 이미지를 저장할 경로 설정
+        Path imagePath = Paths.get("uploads/images", fileName);
+
+        // 이미지 파일을 지정된 경로에 저장
+        Files.copy(image.getInputStream(), imagePath);
+
+        // 저장된 이미지의 경로 반환
+        return imagePath.toString();
+    }
+
+    private String generateUniqueFileName(String originalFilename) {
+        // 타임스탬프를 이용한 고유 식별자 생성
+        String timestamp = String.valueOf(Instant.now().toEpochMilli());
+
+        // 원본 파일의 확장자를 유지하기 위한 처리
+        String extension = "";
+        int extensionIndex = originalFilename.lastIndexOf('.');
+        if (extensionIndex > 0) {
+            extension = originalFilename.substring(extensionIndex); // 파일 확장자 포함
+        }
+
+        // 고유한 파일 이름 생성
+        return timestamp + "_" + originalFilename + extension;
+    }
+
+    @Override
+    public boolean isUserIdAvailable(Long userId) {
+        return !userRepository.existsById(userId);
     }
 
     public int getPassTicket(Long userId) {
