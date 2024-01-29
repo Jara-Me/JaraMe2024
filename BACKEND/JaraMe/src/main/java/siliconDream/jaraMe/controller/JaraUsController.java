@@ -1,9 +1,9 @@
 package siliconDream.jaraMe.controller;
-/*커밋 전 취소
-//커밋 전 취소 import jakarta.validation.Valid;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-//커밋 전 취소 import org.springframework.security.core.Authentication;
-//커밋 전 취소 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -42,4 +42,3 @@ public class JaraUsController {
         return "jaraUs/form";
     }
 }
-*/
