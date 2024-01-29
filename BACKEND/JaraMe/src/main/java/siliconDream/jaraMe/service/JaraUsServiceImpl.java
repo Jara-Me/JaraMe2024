@@ -175,13 +175,15 @@ public class JaraUsServiceImpl implements JaraUsService {
     }
 
     //검색기능
-     @Override
+    @Override
     public List<JaraUsDTO> searchJaraUs(String keyword) {
-        return jaraUsRepository.searchByKeyword(keyword)
-                               .stream()
-                               .map(jaraUs -> convertToDTO(jaraUs))
-                               .collect(Collectors.toList());
-    }
+    return jaraUsRepository.searchByKeyword(keyword)
+                           .stream()
+                           .map(jaraUs -> convertToDTO(jaraUs))
+                           .sorted(Comparator.comparing(JaraUsDTO::getJaraUsId)) //jarausid기준으로 오름차순 정렬
+                           .collect(Collectors.toList());
+}
+
 
     //DTO변환메소드 (JaraUs엔티티 인스턴스를 JaraUsDTO 객체로 변환하는 작업 수행) 
      private JaraUsDTO convertToDTO(JaraUs jaraUs) {
