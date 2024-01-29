@@ -25,6 +25,7 @@ import siliconDream.jaraMe.service.UserService;
 @RequiredArgsConstructor
 public class JaraUsController {
 
+    @Autowired
     private final JaraUsService jaraUsService;
     private final UserService userService;
 
@@ -54,6 +55,13 @@ public class JaraUsController {
         Long createdJaraUsId = createdJaraUs.getJaraUsId();
 
         return "redirect:/jaraUs/details/" + createdJaraUsId;
+    }
+
+     // 검색 기능 추가
+    @GetMapping("/search")
+    public ResponseEntity<List<JaraUsDTO>> searchJaraUs(@RequestParam String keyword) {
+        List<JaraUsDTO> searchResults = jaraUsService.searchJaraUs(keyword);
+        return ResponseEntity.ok(searchResults);
     }
  }
 =======
