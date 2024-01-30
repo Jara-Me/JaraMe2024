@@ -1,8 +1,11 @@
 package siliconDream.jaraMe.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -31,8 +34,8 @@ public interface UserService {
     // 프로필 사진 업로드 및 수정
     String updateProfileImage(Long userId, MultipartFile profileImagePath) throws IOException;
 
-    //userId 중복 확인
-    boolean isUserIdAvailable(Long userId);
+    //닉네임 변경 메소드
+    boolean changeNickname(Long userId, String newNickname, String password);
 
 
     int getPassTicket(Long userId);

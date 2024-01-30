@@ -60,14 +60,15 @@ public class User {
     @OneToMany(mappedBy="user")
     @JsonIgnore
     private List<JoinUsers> joinUsers;
+    
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ToDoList> toDoList;
 /*
     @OneToMany(mappedBy="userId")
     @JsonIgnore
     private List<MissionHistory> missionHistory;
 
-    @OneToMany(mappedBy="userId")
-    @JsonIgnore
-    private List<ToDoList> toDoList;
 */
 
     //TODO: getter and setter
@@ -80,6 +81,10 @@ public class User {
 
 
 
+
+     public String getProfileImage() {
+        return profileImage;
+    }
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }
@@ -168,16 +173,14 @@ public class User {
     public void setJoinUsers(List<JoinUsers> joinUsers) {
         this.joinUsers = joinUsers;
     }
-
-    // 프로필 이미지 설정 메서드
-    public void setUserProfileImage(String userProfileImage) {
-        this.profileImage = userProfileImage;
+    public List<ToDoList> getToDoList() {
+        return toDoList;
     }
 
-    // 프로필 이미지 가져오는 메서드
-    public String getUserProfileImage() {
-        return profileImage;
+    public void setToDoList(List<ToDoList> toDoList) {
+        this.toDoList = toDoList;
     }
+
 /*
     public List<MissionHistory> getMissionHistory() {
         return missionHistory;
@@ -187,13 +190,6 @@ public class User {
         this.missionHistory = missionHistory;
     }
 
-    public List<ToDoList> getToDoList() {
-        return toDoList;
-    }
-
-    public void setToDoList(List<ToDoList> toDoList) {
-        this.toDoList = toDoList;
-    }
 */
 
 }

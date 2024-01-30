@@ -3,14 +3,20 @@ package siliconDream.jaraMe.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
 import siliconDream.jaraMe.service.UserService;
 
+
+@Slf4j
 @RestController
 @RequestMapping("user")
 public class UserController {
@@ -45,7 +51,6 @@ public class UserController {
         }
     }
 
-<<<<<<< HEAD
     // 중복 이메일 확인을 위한 엔드포인트
     @GetMapping("emailCheck")
     public ResponseEntity<Boolean> emailCheck(@RequestParam String email) {
@@ -55,14 +60,6 @@ public class UserController {
     }
 
 
-    // 로그인 페이지 이동
-    @RequestMapping("login")
-    public String loginPage() {
-        return "user/login";
-    }
-
-=======
->>>>>>> e53b2f3cc0426862d36a95848f3a4c6369638dfd
     // 로그인 처리
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseEntity<?> login(@RequestBody UserDto userDto, HttpServletRequest request) {
@@ -76,11 +73,13 @@ public class UserController {
             HttpSession session = request.getSession(); // 세션 가져오기 또는 생성하기
             session.setAttribute("user", response.getUser()); // 세션에 사용자 정보 저장
 
+            log.info("session.getId:{}", session.getId());
+
+
             // 성공 응답 반환
             return ResponseEntity.ok(response);
         }
     }
-
 
     // 로그아웃 처리
     @PostMapping("/logout")
@@ -93,6 +92,44 @@ public class UserController {
         } else {
             // 활성 세션이 없는 경우
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No active session found");
+        }
+    }
+
+    //프로필 이미지 업데이트
+    @PostMapping("/updateProfileImage")
+    public ResponseEntity<?> updateProfileImage(@RequestParam("userId") Long userId,
+                                                @RequestParam("image") MultipartFile image) {
+        try {
+            String imageUrl = userService.updateProfileImage(userId, image);
+            return ResponseEntity.ok().body("Profile image updated successfully. New Image URL: " + imageUrl);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating profile image");
+        }
+    }
+
+    //회원탈퇴
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.ok().body("User successfully deleted");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in deleting user");
+        }
+    }
+
+    //닉네임 변경
+    @PostMapping("/changeNickname")
+    public ResponseEntity<?> changeNickname(@RequestBody UserDto userDto) {
+        try {
+            boolean success = userService.changeNickname(userDto.getUserid(), userDto.getNickname(), userDto.getPassword());
+            if (success) {
+                return ResponseEntity.ok().body("Nickname changed successfully");
+            } else {
+                return ResponseEntity.badRequest().body("Nickname is already in use");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error changing nickname");
         }
     }
 

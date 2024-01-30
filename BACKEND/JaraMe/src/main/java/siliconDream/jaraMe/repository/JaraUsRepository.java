@@ -25,4 +25,8 @@ public interface JaraUsRepository extends JpaRepository<JaraUs, Long> {
 
     JaraUs findByJaraUsId(Long jaraUsId);
 
+    @Query("SELECT j FROM JaraUs j WHERE lower(j.jaraUsName) LIKE lower(concat('%', :keyword, '%')) OR lower(j.missionName) LIKE lower(concat('%', :keyword, '%'))")
+    List<JaraUs> searchByKeyword(@Param("keyword") String keyword);
+
+
 }

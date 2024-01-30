@@ -23,6 +23,9 @@ public interface JaraUsService {
 
     List<JaraUs> findExpiredJaraUs();
 
+    // 검색 기능 추가
+    List<JaraUsDTO> searchJaraUs(String keyword);
+
 
 
 

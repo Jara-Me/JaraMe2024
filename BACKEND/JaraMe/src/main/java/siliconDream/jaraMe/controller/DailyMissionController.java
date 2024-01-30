@@ -1,8 +1,11 @@
 package siliconDream.jaraMe.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.DailyMissionDTO;
 import siliconDream.jaraMe.service.DailyMissionService;
 
@@ -22,7 +25,14 @@ public class DailyMissionController {
 
     //오늘의 미션 조회 => 테스트완료 / 예외처리 전
     @GetMapping("/get")
-    public Optional<List<DailyMissionDTO>> getDailyMission(@RequestParam Long userId){
+    public Optional<List<DailyMissionDTO>> getDailyMission(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long userId;
+        if (session == null){//todo: 로직 추가하기
+        }
+        User user = (User) session.getAttribute("user");
+        // log.info("log:userId:{}", user.getUserId());
+        userId = user.getUserId();
         Optional<List<DailyMissionDTO>> dailyMissionDTOList = dailyMissionService.getDailyMission(userId, LocalDate.now());
         return dailyMissionDTOList;
     }
