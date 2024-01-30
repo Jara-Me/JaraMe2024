@@ -3,6 +3,7 @@ package siliconDream.jaraMe.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,8 @@ import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
 import siliconDream.jaraMe.service.UserService;
 
+
+@Slf4j
 @RestController
 @RequestMapping("user")
 public class UserController {
@@ -70,11 +73,13 @@ public class UserController {
             HttpSession session = request.getSession(); // 세션 가져오기 또는 생성하기
             session.setAttribute("user", response.getUser()); // 세션에 사용자 정보 저장
 
+            log.info("session.getId:{}", session.getId());
+
+
             // 성공 응답 반환
             return ResponseEntity.ok(response);
         }
     }
-
 
     // 로그아웃 처리
     @PostMapping("/logout")
@@ -89,7 +94,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No active session found");
         }
     }
-     //프로필 이미지 업데이트
+
+    //프로필 이미지 업데이트
     @PostMapping("/updateProfileImage")
     public ResponseEntity<?> updateProfileImage(@RequestParam("userId") Long userId,
                                                 @RequestParam("image") MultipartFile image) {
