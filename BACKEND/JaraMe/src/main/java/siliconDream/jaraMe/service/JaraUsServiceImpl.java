@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import siliconDream.jaraMe.domain.JaraUs;
 import siliconDream.jaraMe.domain.JoinUsers;
+import siliconDream.jaraMe.domain.Recurrence;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.JaraUsDTO;
 import siliconDream.jaraMe.repository.JaraUsRepository;
@@ -13,6 +14,7 @@ import siliconDream.jaraMe.repository.ScheduleRepository;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static siliconDream.jaraMe.service.ScheduleService.*;

@@ -3,11 +3,14 @@ package siliconDream.jaraMe.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
 import siliconDream.jaraMe.service.UserService;
 
@@ -45,7 +48,6 @@ public class UserController {
         }
     }
 
-<<<<<<< HEAD
     // 중복 이메일 확인을 위한 엔드포인트
     @GetMapping("emailCheck")
     public ResponseEntity<Boolean> emailCheck(@RequestParam String email) {
@@ -55,14 +57,6 @@ public class UserController {
     }
 
 
-    // 로그인 페이지 이동
-    @RequestMapping("login")
-    public String loginPage() {
-        return "user/login";
-    }
-
-=======
->>>>>>> e53b2f3cc0426862d36a95848f3a4c6369638dfd
     // 로그인 처리
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseEntity<?> login(@RequestBody UserDto userDto, HttpServletRequest request) {

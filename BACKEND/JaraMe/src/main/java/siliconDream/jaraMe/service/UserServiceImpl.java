@@ -7,16 +7,22 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
 import siliconDream.jaraMe.repository.UserRepository;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -83,7 +89,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUserId(userId);
     }
 
-     @Override
+    @Override
     public LoginResponse login(String email, String password) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
@@ -162,11 +168,6 @@ public class UserServiceImpl implements UserService {
         user.setNickname(newNickname);
         userRepository.save(user);
         return true; // 닉네임 변경 성공
-    }
-
-    @Override
-    public boolean isUserIdAvailable(Long userId) {
-        return !userRepository.existsById(userId);
     }
 
     public int getPassTicket(Long userId) {

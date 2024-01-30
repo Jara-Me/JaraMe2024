@@ -1,8 +1,11 @@
 package siliconDream.jaraMe.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {

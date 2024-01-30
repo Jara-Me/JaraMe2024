@@ -1,25 +1,22 @@
 package siliconDream.jaraMe.controller;
 
-<<<<<<< HEAD
 
-=======
-import jakarta.validation.Valid;
->>>>>>> e53b2f3cc0426862d36a95848f3a4c6369638dfd
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import siliconDream.jaraMe.domain.JaraUs;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.JaraUsDTO;
 import siliconDream.jaraMe.service.JaraUsService;
 import siliconDream.jaraMe.service.UserService;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -46,7 +43,7 @@ public class JaraUsController {
         model.addAttribute("jaraUsDTO", new JaraUsDTO());
         return "jaraUs/form";
     }
-<<<<<<< HEAD
+
 
     @PostMapping("/create-jaraUs")
     public String createNewJaraUs(@ModelAttribute JaraUsDTO jaraUsDTO) {
@@ -64,6 +61,3 @@ public class JaraUsController {
         return ResponseEntity.ok(searchResults);
     }
  }
-=======
-}
->>>>>>> e53b2f3cc0426862d36a95848f3a4c6369638dfd
