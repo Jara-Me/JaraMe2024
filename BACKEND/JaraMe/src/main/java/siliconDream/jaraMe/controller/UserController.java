@@ -133,4 +133,11 @@ public class UserController {
         }
     }
 
+    //프로필 정보 반환 (패스권, 포인트, 자라어스 개수)
+    @GetMapping("/profile/info/{userId}")
+    public ResponseEntity<UserProfileInfoDTO> getUserProfileInfo(@PathVariable Long userId) {
+        UserProfileInfoDTO userInfo = userService.getUserProfileInfo(userId);
+        return ResponseEntity.ok(userInfo);
+    }
+
 }
