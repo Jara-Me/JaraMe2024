@@ -20,7 +20,7 @@ public class CommentController {
     @PostMapping("/add")
     //예외처리 : 공백만 아니면 될 것같음.
 
-    public ResponseEntity<String> addComment(@RequestBody MissionCommentDTO missionCommentDTO,@RequestParam Long userId) {
+    public ResponseEntity<String> addComment(@RequestBody MissionCommentDTO missionCommentDTO,@SessionAttribute(name="userId", required=true) Long userId) {
 
         boolean result = commentService.addComment(userId, missionCommentDTO);
 
@@ -34,7 +34,7 @@ public class CommentController {
     //미션 인증글 댓글 삭제
     @DeleteMapping("/delete")
     //예외처리 : 해당 미션 인증글에서 실제로 댓글 삭제되었는지 확인
-    public ResponseEntity<String> deleteComment(@RequestParam Long commentId,@RequestParam Long userId) {
+    public ResponseEntity<String> deleteComment(@RequestParam Long commentId,@SessionAttribute(name="userId", required=true) Long userId) {
 
         String resultMessage = commentService.deleteComment(commentId, userId);
         if (resultMessage.equals("댓글이 삭제되었습니다.")) {

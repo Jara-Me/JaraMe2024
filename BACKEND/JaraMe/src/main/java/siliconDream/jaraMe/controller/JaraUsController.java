@@ -1,6 +1,6 @@
 package siliconDream.jaraMe.controller;
 
-
+/*커밋 전 취소
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -61,3 +61,4 @@ public class JaraUsController {
         return ResponseEntity.ok(searchResults);
     }
  }
+*/

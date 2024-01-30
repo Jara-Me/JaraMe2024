@@ -2,10 +2,11 @@ package siliconDream.jaraMe.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-
+/*커밋 전 취소
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+*/
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import siliconDream.jaraMe.domain.User;

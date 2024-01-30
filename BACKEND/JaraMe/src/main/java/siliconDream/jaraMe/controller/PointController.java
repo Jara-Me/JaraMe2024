@@ -23,7 +23,7 @@ public class PointController {
 
     //출석체크 => 테스트 완료 / 예외처리 전
     @PostMapping("/checkIn") //@ResponseBody
-    public ResponseEntity<String> checkIn(@RequestParam Long userId, @RequestParam @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss") LocalDateTime dateTime) {
+    public ResponseEntity<String> checkIn(@SessionAttribute(name="userId", required=true) Long userId, @RequestParam @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss") LocalDateTime dateTime) {
         String resultMessage = pointService.checkIn(userId, dateTime);
         if (resultMessage.equals("출석체크되었습니다! (+2포인트)")) {
             return ResponseEntity.status(HttpStatus.OK).body(resultMessage);
@@ -34,7 +34,7 @@ public class PointController {
 
     //패스권 구매 => 테스트완료 / 예외처리 전
     @PostMapping("/passTicket")
-    public ResponseEntity<String> passTicket(@RequestParam Long userId ) {
+    public ResponseEntity<String> passTicket(@SessionAttribute(name="userId", required=true) Long userId ) {
 
         String resultMessage = pointService.passTicket(userId);
         if (resultMessage.equals("패스권 구입에 성공했습니다!(-60포인트)")) {

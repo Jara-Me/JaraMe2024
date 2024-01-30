@@ -33,7 +33,7 @@ public class NoticeController {
 
     //미션완주,리액션통계
     @GetMapping("/get")
-    public Optional<NoticeDTO> missionFinishNotice(@RequestParam Long userId ){
+    public Optional<NoticeDTO> missionFinishNotice(@SessionAttribute(name="userId", required=true) Long userId ){
         Optional<NoticeDTO> noticeDTO =noticeService.findNoticeMessageByUserIdAndNoticeStatus(userId);
         return noticeDTO;
     }

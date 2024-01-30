@@ -33,7 +33,7 @@ public class PassTicketController {
     // => 미션완주 로직에는 인증을 완료한 경우만 필터링해서 얻어오도록 하고,
     // 여기서는 인증을 완료하지않은 경우만 통계를 내서 전달  (groupBy missionDate로 통계내면 될 듯)
     @GetMapping("/get")
-    public GetPassTicketDTO getPassTicketAmount(@RequestParam Long userId) {
+    public GetPassTicketDTO getPassTicketAmount(@SessionAttribute(name="userId", required=true) Long userId) {
         return passTicketService.getPassTicket(userId);
     }
 
@@ -41,7 +41,7 @@ public class PassTicketController {
     //TODO: missionHistory 테이블 레코드를 업데이트 하면 됨 => missionPostId는 null가능하도록 수정하기.
     //
     @PostMapping("/use")
-    public ResponseEntity<String> usePassTicket(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate,@RequestParam Long userId) {
+    public ResponseEntity<String> usePassTicket(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate,@SessionAttribute(name="userId", required=true) Long userId) {
         boolean result = passTicketService.usePassTicket(userId, selectedDate);
         String resultMessage = (String.format("%s에 패스권이 사용되었습니다.", selectedDate.toString()));
 

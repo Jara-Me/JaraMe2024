@@ -14,7 +14,7 @@ public class ToDoListController {
     private ToDoListService toDoListService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createTesk(@RequestParam Long userId, @RequestParam String teskName) {
+    public ResponseEntity<?> createTesk(@SessionAttribute(name="userId", required=true) Long userId, @RequestParam String teskName) {
         ToDoList toDoList = toDoListService.createTesk(userId, teskName);
         return ResponseEntity.ok().body(toDoList);
     }
