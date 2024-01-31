@@ -27,6 +27,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
     @Override
     public boolean create(UserDto userDto) {
         if (!isPasswordConfirmed(userDto)) {
@@ -63,6 +66,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String findUserEmailByEmail(String email) {
+        return userRepository.findEmailByEmail(email);
+    }
+    @Override
     public String emailCheck(String email) {
         return userRepository.findEmailByEmail(email);
     }
@@ -85,7 +92,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByUserId(Long userId) {
-        // Implement the logic to find a user by username
         //수정한 부분
         return userRepository.findByUserId(userId);
     }

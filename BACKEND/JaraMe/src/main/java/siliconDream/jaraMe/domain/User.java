@@ -80,9 +80,7 @@ public class User {
     }
 
 
-
-
-     public String getProfileImage() {
+    public String getProfileImage() {
         return profileImage;
     }
     public void setProfileImage(String profileImage) {

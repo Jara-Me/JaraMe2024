@@ -13,7 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
+import siliconDream.jaraMe.repository.UserRepository;
 import siliconDream.jaraMe.service.UserService;
+
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -22,41 +25,44 @@ import siliconDream.jaraMe.service.UserService;
 public class UserController {
 
     private final UserService userService;
+    private UserRepository userRepository;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     // 회원 가입을 위한 엔드포인트
-    @PostMapping("signup")
+    @PostMapping("/signup")
     public ResponseEntity<String> createUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult) {
-        // 비밀번호 확인 유효성 검사
+        // 이메일 중복 확인 (JpaRepository 사용)
+        String emailCheckResult = userService.emailCheck(userDto.getEmail());
+        if (userDto.getEmail() != null && emailCheckResult != null) {
+            return ResponseEntity.badRequest().body("이미 존재하는 이메일입니다. 다른 이메일을 사용해주세요.");
+        }
+
+        // 비밀번호 확인 검증
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
             return ResponseEntity.badRequest().body("비밀번호 확인이 일치하지 않습니다.");
         }
 
         if (bindingResult.hasErrors()) {
-            // 유효성 검사 오류가 있는 경우, 잘못된 요청 응답을 반환
-            return ResponseEntity.badRequest().body("유효성 검사 오류");
+            // 만약 검증 오류가 있다면, 상세한 검증 오류 응답을 반환
+            String validationErrors = bindingResult.getFieldErrors()
+                    .stream()
+                    .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body("검증 오류가 발생했습니다: " + validationErrors);
         } else {
             boolean isSuccess = userService.create(userDto);
 
             if (!isSuccess) {
-                // 사용자 생성에 문제가 있는 경우, 잘못된 요청 응답을 반환
-                return ResponseEntity.badRequest().body("사용자 생성에 실패했습니다.");
+                // 사용자 생성에 문제가 있는 경우, 일반적인 사용자 생성 오류 응답을 반환
+                return ResponseEntity.badRequest().body("사용자 생성에 실패했습니다. 다시 시도해주세요.");
             } else {
                 // 사용자 생성이 성공한 경우, 성공 응답을 반환
                 return ResponseEntity.ok("사용자가 성공적으로 생성되었습니다.");
             }
         }
-    }
-
-    // 중복 이메일 확인을 위한 엔드포인트
-    @GetMapping("emailCheck")
-    public ResponseEntity<Boolean> emailCheck(@RequestParam String email) {
-        // 중복된 이메일 값이 있는지 확인
-        String check = userService.emailCheck(email);
-        return ResponseEntity.ok(check != null);
     }
 
 

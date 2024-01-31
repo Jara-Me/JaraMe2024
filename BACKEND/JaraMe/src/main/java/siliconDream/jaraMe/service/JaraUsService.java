@@ -11,7 +11,8 @@ import java.util.Set;
 
 public interface JaraUsService {
 
-    JaraUs createNewJaraUs(JaraUsDTO jaraUsDTO);
+
+    JaraUs createNewJaraUs(JaraUsDTO jaraUsDTO, Long userId);
 
     void participateInJaraUs(Long jaraUsId, Long userId);
 

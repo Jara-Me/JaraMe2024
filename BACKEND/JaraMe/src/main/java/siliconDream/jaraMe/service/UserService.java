@@ -12,6 +12,8 @@ public interface UserService {
 
     boolean create(UserDto userDto);
 
+    String findUserEmailByEmail(String email);
+
     String emailCheck(String email);
 
     boolean isPasswordConfirmed(UserDto userDto);
