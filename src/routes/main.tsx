@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Routes, Route, BrowserRouter, Link, Router, useNavigate } from "react-router-dom";
+import axios from 'axios';
+
 import Mong from '../components/mong';
 import SearchContent from '../components/Search';
 import ProfileContent from '../components/Profile';
