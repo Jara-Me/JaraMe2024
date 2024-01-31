@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
+import siliconDream.jaraMe.dto.UserProfileInfoDTO;
+import siliconDream.jaraMe.repository.JoinUsersRepository;
 import siliconDream.jaraMe.repository.UserRepository;
 
 import java.io.IOException;
@@ -22,10 +24,13 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
+    private JoinUsersRepository joinUsersRepository;
+
 
     @Override
     public boolean create(UserDto userDto) {
@@ -173,5 +178,18 @@ public class UserServiceImpl implements UserService {
 
     public int getPassTicket(Long userId) {
         return userRepository.findPassTicketByUserId(userId);
+    }
+    @Override
+    public int getPoints(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getPoint();
+    }
+
+    @Override
+    public int getParticipatingJaraUsCount(Long userId) {
+        return joinUsersRepository.findJaraUs_jaraUsIdsByUser_userId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .size();
     }
 }
