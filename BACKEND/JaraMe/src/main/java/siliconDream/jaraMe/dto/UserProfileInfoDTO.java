@@ -2,26 +2,30 @@ package siliconDream.jaraMe.dto;
 
 public class UserProfileInfoDTO {
     private int points;
-    private int passTickets;
+    private int passTicket;
     private int participatingJaraUsCount;
 
-    // 생성자
-    public UserProfileInfoDTO(int points, int passTickets, int participatingJaraUsCount) {
-        this.points = points;
-        this.passTickets = passTickets;
+    public int getParticipatingJaraUsCount() {
+        return participatingJaraUsCount;
+    }
+
+    public void setParticipatingJaraUsCount(int participatingJaraUsCount) {
         this.participatingJaraUsCount = participatingJaraUsCount;
     }
 
-    // Getter 메소드
+    public int getPassTicket() {
+        return passTicket;
+    }
+
+    public void setPassTicket(int passTicket) {
+        this.passTicket = passTicket;
+    }
+
     public int getPoints() {
         return points;
     }
 
-    public int getPassTickets() {
-        return passTickets;
-    }
-
-    public int getParticipatingJaraUsCount() {
-        return participatingJaraUsCount;
+    public void setPoints(int points) {
+        this.points = points;
     }
 }
