@@ -13,6 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
+import siliconDream.jaraMe.dto.UserProfileInfoDTO;
+import siliconDream.jaraMe.service.UserProfileService;
 import siliconDream.jaraMe.service.UserService;
 
 
@@ -131,6 +133,12 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error changing nickname");
         }
+    }
+
+    //프로필 정보 반환
+    @GetMapping("/{userId}/profile")
+    public UserProfileInfoDTO getUserProfile(@PathVariable Long userId) {
+        return userProfileService.getUserProfileInfo(userId);
     }
 
 
