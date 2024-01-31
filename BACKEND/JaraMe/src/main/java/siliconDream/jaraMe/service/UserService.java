@@ -40,5 +40,12 @@ public interface UserService {
     boolean changeNickname(Long userId, String newNickname, String password);
 
 
+    //사용자 패스 티켓
     int getPassTicket(Long userId);
+
+    // 사용자의 보유 포인트 가져오기
+    int getPoints(Long userId);
+
+    // 사용자가 참여 중인 JaraUs 개수 가져오기
+    int getParticipatingJaraUsCount(Long userId);
 }
