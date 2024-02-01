@@ -42,4 +42,12 @@ public class ToDoListServiceImpl implements ToDoListService {
         toDoList.setTeskStatus(!toDoList.isTeskStatus()); // 현재 상태를 반전시킴
         toDoListRepository.save(toDoList);
     }
+    @Override
+    public boolean hasIncompleteTasks(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        // 현재 날짜에 해당하는 미완료 투두리스트 항목을 찾기.
+        List<ToDoList> incompleteTasks = toDoListRepository.findByUserAndTeskStatus(user, false);
+        return !incompleteTasks.isEmpty(); // 미완료 항목이 있다면 true, 아니면 false 반환
+    }
 }
