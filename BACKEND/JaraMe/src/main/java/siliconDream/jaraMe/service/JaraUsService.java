@@ -24,6 +24,8 @@ public interface JaraUsService {
     // 검색 기능 추가
     List<JaraUsDTO> searchJaraUs(String keyword);
 
+    boolean hasIncompleteMissions(Long userId);
+
 
 
 
