@@ -17,7 +17,6 @@ public class User {
     @Column(nullable = false,unique = true)
     private Long userId;
 
-    @Getter
     @Column(nullable = true)
     private String profileImage;
 
@@ -30,9 +29,6 @@ public class User {
 
     @Column(nullable = false)
     private String email;
-
-    @Column(nullable=true)
-    private LocalDate birthDate;
 
     @Column(columnDefinition = "boolean default false") //기본값 false로 설정
     private boolean checkIn;
@@ -106,14 +102,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
     }
 
     public boolean isCheckIn() {

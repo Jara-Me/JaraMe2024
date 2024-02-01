@@ -1,7 +1,9 @@
 package siliconDream.jaraMe.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,14 +15,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import siliconDream.jaraMe.domain.JaraUs;
+import siliconDream.jaraMe.domain.JoinUsers;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.JaraUsDTO;
 import siliconDream.jaraMe.service.JaraUsService;
 import siliconDream.jaraMe.service.UserService;
 
+import java.time.LocalDate;
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/jaraus")
 @RequiredArgsConstructor
 public class JaraUsController {
 
@@ -48,8 +53,8 @@ public class JaraUsController {
     }
 
 */
-    @PostMapping("create-jaraUs")
-    public ResponseEntity<?> createNewJaraUs(@ModelAttribute JaraUsDTO jaraUsDTO, HttpServletRequest request) {
+    @PostMapping("/create")
+    public ResponseEntity<?> createNewJaraUs(@RequestBody @Valid JaraUsDTO jaraUsDTO, HttpServletRequest request) {
         Long currentUserId = getCurrentUserIdFromRequest(request);
 
         if (currentUserId == null) {
@@ -59,6 +64,10 @@ public class JaraUsController {
         }
 
         try {
+            if (jaraUsDTO.getRecurrence() == null || jaraUsDTO.getRecurrence().isEmpty()) {
+                throw new IllegalArgumentException("반복 주기 설정 필요");
+            }
+            jaraUsDTO.setJaraUsProfileImage("your_image_url_or_base64_data");
             JaraUs createdNewJaraUs = jaraUsService.createNewJaraUs(jaraUsDTO, currentUserId);
 
             Long createdJaraUsId = createdNewJaraUs.getJaraUsId();
@@ -86,6 +95,27 @@ public class JaraUsController {
 
         return null; // 사용자 정보를 사용할 수 없는 경우 null 반환
     }
+
+    @PostMapping("/participate")
+    public ResponseEntity<?> participateInJaraUs(@RequestBody @Valid JaraUsDTO jaraUsDTO, HttpServletRequest request) {
+        Long currentUserId = getCurrentUserIdFromRequest(request);
+
+        if (currentUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 인증되지 않음");
+        }
+
+        try {
+            jaraUsService.participateInJaraUs(jaraUsDTO, currentUserId);
+
+            // Return success response
+            return ResponseEntity.ok("자라어스 가입 성공");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+
 
      // 검색 기능 추가
     @GetMapping("/search")

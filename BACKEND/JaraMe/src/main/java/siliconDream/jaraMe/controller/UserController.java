@@ -9,16 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import siliconDream.jaraMe.domain.User;
+//import org.springframework.web.servlet.ModelAndView;
+//import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
-<<<<<<< HEAD
+
 import siliconDream.jaraMe.repository.UserRepository;
-=======
-import siliconDream.jaraMe.dto.UserProfileInfoDTO;
-import siliconDream.jaraMe.service.UserProfileService;
->>>>>>> b183d479fc4d2044583a5be1b95790986227db3a
+
+//import siliconDream.jaraMe.dto.UserProfileInfoDTO;
+//import siliconDream.jaraMe.service.UserProfileService;
 import siliconDream.jaraMe.service.UserService;
 
 import java.util.stream.Collectors;
@@ -145,10 +144,11 @@ public class UserController {
     }
 
     //프로필 정보 반환
+    /*
     @GetMapping("/{userId}/profile")
     public UserProfileInfoDTO getUserProfile(@PathVariable Long userId) {
         return userProfileService.getUserProfileInfo(userId);
     }
-
+*/
 
 }

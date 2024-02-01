@@ -3,6 +3,7 @@ package siliconDream.jaraMe.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,6 @@ import java.util.Set;
 @Entity
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@DynamicInsert
 @Table
 public class JaraUs {
 
@@ -30,7 +30,12 @@ public class JaraUs {
     private String jaraUsProfileImage;
     private int maxMember;
     private boolean display;
+
+    @NotNull
+    @Column(nullable = false, unique = true)
     private LocalDate startDate;
+    @NotNull
+    @Column(nullable = false, unique = true)
     private LocalDate endDate;
 
 

@@ -1,6 +1,7 @@
 package siliconDream.jaraMe.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,19 @@ public class JaraUsServiceImpl implements JaraUsService {
     @Override
     public JaraUs createNewJaraUs(JaraUsDTO jaraUsDTO, Long userId) {
         User administrator = userService.findUserByUserId(userId);
+
+        String jaraUsProfileImage = (jaraUsDTO.getJaraUsProfileImage() != null) ? jaraUsDTO.getJaraUsProfileImage() : "default_image_url";
+        LocalDate startDate = jaraUsDTO.getStartDate();
+        LocalDate endDate = jaraUsDTO.getEndDate();
+
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("StartDate and EndDate cannot be null.");
+        }
+
+        if (startDate.isBefore(LocalDate.now().plusDays(1))) {
+            throw new IllegalArgumentException("시작일은 적어도 내일 이후여야 합니다.");
+        }
+
         JaraUs jaraUs = new JaraUs();
         jaraUs.setJaraUsName(jaraUsDTO.getJaraUsName());
         jaraUs.setMissionName(jaraUsDTO.getMissionName());
@@ -38,11 +52,7 @@ public class JaraUsServiceImpl implements JaraUsService {
         jaraUs.setRecurrence(jaraUsDTO.getRecurrence());
         jaraUs.setStartDate(jaraUsDTO.getStartDate());
         jaraUs.setEndDate(jaraUsDTO.getEndDate());
-
-        LocalDate startDate = jaraUsDTO.getStartDate();
-        if (startDate != null && startDate.isBefore(LocalDate.now().plusDays(1))) {
-            throw new IllegalArgumentException("시작일은 적어도 내일 이후여야 합니다.");
-        }
+        jaraUs.setJaraUsProfileImage(jaraUsProfileImage);
 
         JaraUs savedJaraUs = jaraUsRepository.save(jaraUs); // JaraUs 레코드 저장
 
@@ -54,19 +64,21 @@ public class JaraUsServiceImpl implements JaraUsService {
 
 
     @Override
-    public void participateInJaraUs(Long jaraUsId, Long userId) {
-        JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
-                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+    public void participateInJaraUs(@Valid JaraUsDTO jaraUsDTO, Long userId) {
+        JaraUs jaraUs = jaraUsRepository.findById(jaraUsDTO.getJaraUsId())
+                .orElseThrow(() -> new EntityNotFoundException("nojaraus"));
 
         User participant = userService.findUserByUserId(userId);
 
-        if (jaraUs.getJoinUsers().size() >= jaraUs.getMaxMember()) {
-            throw new IllegalStateException("Maximum number of participants reached for JaraUs");
+        if (jaraUs.getJoinUsers().stream().anyMatch(joinUser -> joinUser.getUser().equals(participant))) {
+            throw new IllegalStateException("already participate in");
         }
 
-        if (jaraUs.getJoinUsers().stream().anyMatch(joinUser -> joinUser.getUser().equals(participant))) {
-            throw new IllegalStateException("User is already a participant in JaraUs");
+        if (jaraUs.getJoinUsers().size() >= jaraUs.getMaxMember()) {
+            throw new IllegalStateException("max member");
         }
+
+
 
         JoinUsers joinUsers = new JoinUsers();
         joinUsers.setUser(participant);

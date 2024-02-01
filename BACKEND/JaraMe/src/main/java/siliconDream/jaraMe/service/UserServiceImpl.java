@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -57,11 +56,6 @@ public class UserServiceImpl implements UserService {
         user.setNickname(userDto.getNickname());
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
-        String birthDateString = userDto.getBirthDate();
-        LocalDate birthDate = LocalDate.parse(birthDateString);
-        user.setBirthDate(birthDate);
-
-        // Set other fields as needed
         user.setCheckIn(false); // Assuming a new user is not checked in by default
         user.setPoint(0);
         user.setPassTicket(0);

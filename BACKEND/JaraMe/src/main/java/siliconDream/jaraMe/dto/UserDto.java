@@ -8,7 +8,6 @@ public class UserDto {
     private String password;
     private String confirmPassword;
     private String email;
-    private String birthDate;
     private String profileImage;
     private List<String> interests;
 
@@ -23,7 +22,6 @@ public class UserDto {
         this.password = password;
         this.confirmPassword = confirmPassword;
         this.email = email;
-        this.birthDate = birthDate;
         this.interests = interests;
     }
 
@@ -69,14 +67,6 @@ public class UserDto {
         this.email = email;
     }
 
-    public String getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public String getProfileImage() {
         return profileImage;
     }
@@ -101,7 +91,6 @@ public class UserDto {
                 ", password='" + password + '\'' +
                 ", confirmPassword='" + confirmPassword + '\'' +
                 ", email='" + email + '\'' +
-                ", dateOfBirth='" + birthDate + '\'' +
                 ", interests=" + interests +
                 '}';
     }
