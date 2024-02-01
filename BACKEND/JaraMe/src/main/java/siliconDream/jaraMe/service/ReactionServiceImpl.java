@@ -3,7 +3,9 @@ package siliconDream.jaraMe.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import siliconDream.jaraMe.domain.MissionPost;
 import siliconDream.jaraMe.domain.Reaction;
+import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.MissionReactionDTO;
 import siliconDream.jaraMe.repository.MissionPostRepository;
 import siliconDream.jaraMe.repository.ReactionRepository;
@@ -17,14 +19,17 @@ public class ReactionServiceImpl implements ReactionService {
     private final UserRepository userRepository;
     private final MissionPostRepository missionPostRepository;
     private final ReactionRepository reactionRepository;
+    private final NotificationService notificationService;
 
     public ReactionServiceImpl(UserRepository userRepository,
                                MissionPostRepository missionPostRepository,
-                               ReactionRepository reactionRepository) {
+                               ReactionRepository reactionRepository,
+                               NotificationService notificationService) {
 
         this.userRepository = userRepository;
         this.missionPostRepository = missionPostRepository;
         this.reactionRepository = reactionRepository;
+        this.notificationService = notificationService;
     }
 
     public ResponseEntity<String> addReaction(MissionReactionDTO missionReactionDTO, Long userId) {
@@ -38,6 +43,14 @@ public class ReactionServiceImpl implements ReactionService {
             reaction.setReactionType(missionReactionDTO.getReactionType());
 
             reactionRepository.save(reaction);
+            // 알림 메시지 생성 및 발송
+            User reactingUser = userRepository.findByUserId(userId);
+            MissionPost post = missionPostRepository.findByMissionPostId(missionReactionDTO.getMissionPostId());
+            String notificationMessage = String.format("%s님이 당신의 게시물에 %s를 보냈습니다.",
+                    reactingUser.getNickname(),
+                    missionReactionDTO.getReactionType());
+            notificationService.createNotification(post.getUser().getUserId(), notificationMessage);
+
             return ResponseEntity.status(HttpStatus.OK).body(String.format("%s를 누르셨습니다!",missionReactionDTO.getReactionType()));
         }else if (reactionOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( String.format("이미 %s를 누르셨습니다.",reactionOptional.get().getReactionType()));
