@@ -9,8 +9,11 @@ import siliconDream.jaraMe.domain.JaraUs;
 import siliconDream.jaraMe.domain.JoinUsers;
 import siliconDream.jaraMe.domain.Recurrence;
 import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.dto.DailyMissionDTO;
 import siliconDream.jaraMe.dto.JaraUsDTO;
 import siliconDream.jaraMe.repository.JaraUsRepository;
+import siliconDream.jaraMe.repository.DailyMissionRepository;
+import siliconDream.jaraMe.repository.JoinUsersRepository;
 import siliconDream.jaraMe.repository.ScheduleRepository;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -28,6 +31,8 @@ public class JaraUsServiceImpl implements JaraUsService {
     private final ScheduleRepository scheduleRepository;
     private final UserService userService;
     private final ScheduleService scheduleService;
+    private final JoinUsersRepository joinUsersRepository;
+    private final DailyMissionRepository dailyMissionRepository;
 
     @Override
     public JaraUs createNewJaraUs(JaraUsDTO jaraUsDTO, Long userId) {
@@ -216,9 +221,24 @@ public class JaraUsServiceImpl implements JaraUsService {
         jaraUsDTO.setRecurrence(recurrenceSet);
         return jaraUsDTO;
     }
+    
+    public boolean hasIncompleteMissions(Long userId) {
+        // 사용자가 참여하고 있는 모든 자라어스의 ID를 가져온다.
+        List<Long> jaraUsIds = joinUsersRepository.findJaraUs_jaraUsIdsByUser_userId(userId)
+                .orElseThrow(() -> new RuntimeException("No JaraUs found for the user"));
 
+        for (Long jaraUsId : jaraUsIds) {
+            // 각 자라어스에 대한 오늘의 미션 완료 여부를 확인
+            List<DailyMissionDTO> dailyMissions = dailyMissionRepository
+                    .findDailyMissionDTOByScheduleDateAndUser_UserId(LocalDate.now(), userId);
 
+            for (DailyMissionDTO mission : dailyMissions) {
+                if (!mission.isDailyMissionResult() && mission.getJaraUsName().equals(jaraUsRepository.findById(jaraUsId).get().getJaraUsName())) {
+                    return true; // 미완료 미션이 있다면 true 반환
+                }
+            }
+        }
 
-
-
+        return false; // 모든 자라어스의 미션을 완료했다면 false 반환
+    }
 }
