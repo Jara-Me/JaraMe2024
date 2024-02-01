@@ -16,13 +16,16 @@ public class PointServiceImpl implements PointService {
     private final PointRepository pointRepository;
     private final UserRepository userRepository;
     private final PointHistoryRepository pointHistoryRepository;
+    private final NotificationService notificationService;
 
     public PointServiceImpl(PointRepository pointRepository,
                             UserRepository userRepository,
-                            PointHistoryRepository pointHistoryRepository) {
+                            PointHistoryRepository pointHistoryRepository,
+                            NotificationService notificationService) {
         this.pointRepository = pointRepository;
         this.userRepository = userRepository;
         this.pointHistoryRepository = pointHistoryRepository;
+        this.notificationService = notificationService;
     }
 
     //출석체크
@@ -48,6 +51,9 @@ public class PointServiceImpl implements PointService {
 
                     pointRepository.updateCheckIn(userId);
                     resultMessage = "출석체크되었습니다! (+2포인트)"; //출석체크 성공
+                    // 알림 메시지 생성 및 발송
+                    notificationService.createNotification(userId, "출석체크되었습니다! (+2포인트)");
+
 
                 } else if (pointRepository.findByUserId(userId).get().isCheckIn() == true) {
                     resultMessage = "오늘 이미 출석체크를 하셨습니다!";
@@ -84,6 +90,8 @@ public class PointServiceImpl implements PointService {
             //dao 통해 passTicket은 +1, point는 -60
             pointRepository.updatePassTicket(userId);
 
+            // 알림 메시지 생성 및 발송
+            notificationService.createNotification(userId, "패스권을 구입했습니다 (-60포인트)");
 
 
         } else if (point < 60) {
@@ -107,6 +115,11 @@ public class PointServiceImpl implements PointService {
 
         pointHistoryRepository.save(pointHistory);
         updatedPoint = pointRepository.plusPoint(userId, changeAmount);
+
+        // 알림 메시지 생성 및 발송
+        String notificationMessage = String.format("자라어스 미션 완료로 %d포인트가 적립되었습니다.", changeAmount);
+        notificationService.createNotification(userId, notificationMessage);
+
 
 
         return updatedPoint;
