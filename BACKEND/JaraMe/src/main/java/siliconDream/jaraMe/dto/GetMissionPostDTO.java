@@ -1,12 +1,15 @@
 package siliconDream.jaraMe.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+@Getter
+@Setter
 public class GetMissionPostDTO {
 
 /*
@@ -41,6 +44,9 @@ public class GetMissionPostDTO {
 
     private LocalDateTime postDateTime;
 
+    private boolean display;
+    private boolean anonymous;
+
     private String nickname;
 
     private String profileImage;
@@ -49,7 +55,7 @@ public class GetMissionPostDTO {
 
     //TODO: 리액션
     private String reactionType; //수정 (조회 요청한 유저가 눌럿던 리액션만 반환 )
-
+/*
     //TODO: getter and setter
 
     public Long getMissionPostId() {
@@ -129,7 +135,7 @@ public class GetMissionPostDTO {
 //        private Long reactionSmile=0L;
 
 
-
+*/
 
 
 

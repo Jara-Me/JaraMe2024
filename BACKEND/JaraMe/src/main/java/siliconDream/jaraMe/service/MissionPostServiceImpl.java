@@ -171,6 +171,8 @@ public class MissionPostServiceImpl implements MissionPostService {
             getMissionPostDTO.setPostDateTime(missionPost.getPostDateTime());
             getMissionPostDTO.setNickname(missionPost.getUser().getNickname());
             getMissionPostDTO.setProfileImage(missionPost.getUser().getProfileImage());
+            getMissionPostDTO.setDisplay(missionPost.isDisplay());
+            getMissionPostDTO.setAnonymous(missionPost.isAnonymous());
         });
 
         reactionTypeOptional.ifPresent(getMissionPostDTO::setReactionType);
