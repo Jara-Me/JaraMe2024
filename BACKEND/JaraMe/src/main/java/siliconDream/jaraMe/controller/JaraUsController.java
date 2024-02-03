@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class JaraUsController {
     public void jaraUsDTOInitBinder(WebDataBinder webDataBinder) {
     }
 
-    /*
+/*
     @GetMapping("/new-jaraUs")
     public String newJaraUsForm(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -51,8 +52,8 @@ public class JaraUsController {
         model.addAttribute("jaraUsDTO", new JaraUsDTO());
         return "jaraUs/form";
     }
-
 */
+
     @PostMapping("/create")
     public ResponseEntity<?> createNewJaraUs(@RequestBody @Valid JaraUsDTO jaraUsDTO, HttpServletRequest request) {
         Long currentUserId = getCurrentUserIdFromRequest(request);
@@ -114,10 +115,79 @@ public class JaraUsController {
         }
     }
 
+    @PostMapping("/withdraw/{jaraUsId}/{userId}")
+    public ResponseEntity<?> withdrawFromJaraUs(
+            @PathVariable Long jaraUsId,
+            @PathVariable Long userId
+    ) {
+        try {
+            jaraUsService.withdrawFromJaraUs(jaraUsId, userId);
+            return ResponseEntity.ok("자라어스에서 탈퇴 성공");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("자라어스를 찾을 수 없음");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
+    @PostMapping("/edit-admin/{jaraUsId}/{adminUserId}")
+    public ResponseEntity<?> editJaraUsByAdmin(
+            @PathVariable Long jaraUsId,
+            @PathVariable Long adminUserId,
+            @RequestBody JaraUsDTO jaraUsDTO
+    ) {
+        try {
+            jaraUsService.editJaraUsByAdmin(jaraUsId, adminUserId, jaraUsDTO);
+            return ResponseEntity.ok("관리자에 의해 자라어스 수정 성공");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("자라어스를 찾을 수 없음");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 
+    @GetMapping("/expired")
+    public ResponseEntity<List<JaraUs>> findExpiredJaraUs() {
+        List<JaraUs> expiredJaraUs = jaraUsService.findExpiredJaraUs();
+        return ResponseEntity.ok(expiredJaraUs);
+    }
 
-     // 검색 기능 추가
+    @PostMapping("/edit-information/{userId}")
+    public ResponseEntity<?> editJaraUsInformation(
+            @PathVariable Long userId,
+            @RequestBody JaraUsDTO jaraUsDTO
+    ) {
+        try {
+            JaraUs editedJaraUs = jaraUsService.editJaraUsInformation(userId, jaraUsDTO);
+            return ResponseEntity.ok("자라어스 정보 수정 성공");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("자라어스를 찾을 수 없음");
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    @GetMapping("/information/{jaraUsId}")
+    public ResponseEntity<?> getJaraUsInformation(@PathVariable Long jaraUsId) {
+        try {
+            JaraUs jaraUsInfo = jaraUsService.findByjaraUsId(jaraUsId);
+            JaraUsDTO jaraUsDTO = jaraUsService.convertToDTO(jaraUsInfo);
+            return ResponseEntity.ok(jaraUsDTO);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("JaraUs를 찾을 수 없음");
+        }
+    }
+
+    @GetMapping("/my-groups/{userId}")
+    public ResponseEntity<?> getMyGroups(@PathVariable Long userId) {
+        try {
+            List<JaraUsDTO> myGroups = jaraUsService.getJaraUsListForUser(userId);
+            return ResponseEntity.ok(myGroups);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 그룹을 찾을 수 없음");
+        }
+    }
+
+        // 검색 기능 추가
     @GetMapping("/search")
     public ResponseEntity<List<JaraUsDTO>> searchJaraUs(@RequestParam String keyword) {
         List<JaraUsDTO> searchResults = jaraUsService.searchJaraUs(keyword);

@@ -20,6 +20,7 @@ import siliconDream.jaraMe.service.MissionPostService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -91,6 +92,32 @@ public class MissionPostController {
 
     }
 
+    @GetMapping("/All/{jaraUsId}")
+    public ResponseEntity<List<MissionPostDTO>> getAllMissionPostsForJaraUs(@PathVariable Long jaraUsId) {
+        List<MissionPostDTO> missionPosts = missionPostService.getAllMissionPostsForJaraUs(jaraUsId);
+
+        // 미션 포스트가 비어있는지 확인하고 적절히 처리, 예를 들어 404를 반환
+        if (missionPosts.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(missionPosts);
+    }
+
+    @GetMapping("/my/{jaraUsId}/{userId}")
+    public ResponseEntity<List<MissionPostDTO>> getMyMissionPostsForJaraUs(
+            @PathVariable Long jaraUsId,
+            @PathVariable Long userId
+    ) {
+        List<MissionPostDTO> myMissionPosts = missionPostService.getMyMissionPostsForJaraUs(jaraUsId, userId);
+
+        // Check if the list is empty and handle it appropriately, e.g., return 404
+        if (myMissionPosts.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(myMissionPosts);
+    }
 
 
     //미션 인증글 수정 => 테스트완료, 예외처리 전

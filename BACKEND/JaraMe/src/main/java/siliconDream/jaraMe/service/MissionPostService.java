@@ -30,6 +30,10 @@ public interface MissionPostService {
 
     String updateMissionPost(Long missionPostId, MissionPostDTO missionPostDTO, Long userId, LocalDate todayDate);
 
+    List<MissionPostDTO> getAllMissionPostsForJaraUs(Long jaraUsId);
+
+    List<MissionPostDTO> getMyMissionPostsForJaraUs(Long jaraUsId, Long userId);
+
 
     //String deleteMissionPost(Long missionPostId,Long userId); 보류
 

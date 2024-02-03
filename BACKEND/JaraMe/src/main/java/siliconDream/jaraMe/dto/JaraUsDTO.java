@@ -42,4 +42,6 @@ public class JaraUsDTO {
     private LocalDate endDate;
     private Set<Recurrence> recurrence;
 
+
+
 }

@@ -27,10 +27,13 @@ public interface JaraUsService {
     boolean hasIncompleteMissions(Long userId);
 
 
-
+    JaraUsDTO convertToDTO(JaraUs jaraUs);
 
     /////////////////////////////////////////추가
     List<JaraUs> findEndDateYesterDay();
 
 
+    JaraUs findByjaraUsId(Long jaraUsId);
+
+    List<JaraUsDTO> getJaraUsListForUser(Long userId);
 }

@@ -185,6 +185,23 @@ public class JaraUsServiceImpl implements JaraUsService {
         return jaraUsRepository.save(jaraUs);
     }
 
+    @Override
+    public JaraUs findByjaraUsId(Long jaraUsId) {
+        return jaraUsRepository.findByjaraUsId(jaraUsId)
+                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+    }
+
+    public List<JaraUsDTO> getJaraUsListForUser(Long userId) {
+        List<JaraUs> jaraUsList = jaraUsRepository.findAllByJoinUsers_UserId(userId);
+        return convertToJaraUsDTOList(jaraUsList);
+    }
+
+    private List<JaraUsDTO> convertToJaraUsDTOList(List<JaraUs> jaraUsList) {
+        return jaraUsList.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
 
 
     //미션완주일이 어제인 그룹 찾아내기
@@ -204,7 +221,7 @@ public class JaraUsServiceImpl implements JaraUsService {
 
 
     //DTO변환메소드 (JaraUs엔티티 인스턴스를 JaraUsDTO 객체로 변환하는 작업 수행) 
-     private JaraUsDTO convertToDTO(JaraUs jaraUs) {
+    public JaraUsDTO convertToDTO(JaraUs jaraUs) {
         JaraUsDTO jaraUsDTO = new JaraUsDTO();
         jaraUsDTO.setAdminUserId(jaraUs.getAdministrator() != null ? jaraUs.getAdministrator().getUserId() : null);
         jaraUsDTO.setJaraUsId(jaraUs.getJaraUsId());
