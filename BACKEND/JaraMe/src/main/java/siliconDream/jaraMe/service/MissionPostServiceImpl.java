@@ -59,8 +59,10 @@ public class MissionPostServiceImpl implements MissionPostService {
     //TODO: 만약 오늘 해당 미션에 대해 인증글을 하나 올렸다면 못올리도록 하기
     //TODO: 작성에 대한 규칙?
     public boolean missionPost(MissionPostDTO missionPostDTO, Long userId) {
-
-
+        //제목이나 내용이 공백인지?
+        if (missionPostDTO.getTextTitle().isBlank() || missionPostDTO.getTextContent().isBlank()){
+            return false;
+        }
         MissionPost missionPost = new MissionPost();
         missionPost.setAnonymous(missionPostDTO.isAnonymous());
         missionPost.setDisplay(missionPostDTO.isDisplay());
@@ -73,7 +75,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         Long jaraUsId = missionPostDTO.getJaraUsId();
         missionPost.setJaraUs(jaraUsRepository.findByJaraUsId(jaraUsId));
 
-        //TODO: 저장 => 여길 Optional로 바꿔서 isPresent로 성공/실패여부 반영하기
+
         MissionPost savedMissionPost = missionPostRepository.save(missionPost);
         return true;
         /*if (savedMissionPost) {
@@ -143,7 +145,7 @@ public class MissionPostServiceImpl implements MissionPostService {
     }
 
     //미션 인증글 조회
-    //TODO: 해당 missionId가 없다면?
+    //TODO: 해당 missionPostId가 없다면?
     //TODO: 비공개된 게시글이거나 삭제된 게시글이라면 ?
     public GetMissionPostDTO getMissionPostDetails(Long missionPostId, Long userId) {
         //레코드 찾기
