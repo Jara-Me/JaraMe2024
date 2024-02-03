@@ -49,6 +49,7 @@ public class NoticeServiceImpl implements NoticeService {
         log.info("missionPostIds:{}", missionPostIds.get()); //ok
         //해당 유저가 올린 미션 인증글들이 존재한다면,
         if (missionPostIds.isPresent()) {
+
             List<ReactionNoticeDTO> reactionNoticeDTOs = new ArrayList<>();
             //개별 미션 인증글에 달린 리액션통계
             for (Long oneMissionPostId : missionPostIds.get()) {
@@ -56,8 +57,12 @@ public class NoticeServiceImpl implements NoticeService {
                 int good = 0;
                 int like = 0;
                 log.info("oneMissionPostId:{}", oneMissionPostId); //ok
+
                 Optional<List<Object[]>> reactionCountDTOs = reactionRepository.findByMissionPost_MissionPostId(oneMissionPostId);
-                if (reactionCountDTOs.isPresent()) {
+                log.info("reactionCountDTOs:{}",reactionCountDTOs.get());
+
+
+                if (!reactionCountDTOs.get().isEmpty()) {
                     for (Object[] object : reactionCountDTOs.get()) {
                         for (int i = 0; i < 3; i++) {
                             if (object[0].equals("smile")) {

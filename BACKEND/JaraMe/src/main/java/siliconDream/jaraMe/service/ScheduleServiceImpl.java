@@ -40,7 +40,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         //List<LocalDate> realDates = new ArrayList<>();
         LocalDate nowDate = startDate;
 
-        while (nowDate.isBefore(endDate)) {
+        while (nowDate.isBefore(endDate.plusDays(1))) {
             log.info("while-nowDate:{}",nowDate);
                 for (Recurrence recurrence : recurrenceSet) {
                  if (DayOfWeek.valueOf(recurrence.getValue()).equals(nowDate.getDayOfWeek())) {

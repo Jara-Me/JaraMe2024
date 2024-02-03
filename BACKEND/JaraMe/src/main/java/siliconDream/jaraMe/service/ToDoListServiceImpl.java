@@ -8,6 +8,7 @@ import siliconDream.jaraMe.repository.ToDoListRepository;
 import siliconDream.jaraMe.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class ToDoListServiceImpl implements ToDoListService {
