@@ -10,28 +10,39 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.domain.JaraUs;
 import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
+import siliconDream.jaraMe.dto.UserProfileInfoDTO;
 import siliconDream.jaraMe.repository.JoinUsersRepository;
+import siliconDream.jaraMe.repository.JaraUsRepository;
+import siliconDream.jaraMe.repository.ScheduleRepository;
 import siliconDream.jaraMe.repository.UserRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.util.List;
-
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     private JoinUsersRepository joinUsersRepository;
+    private ScheduleRepository scheduleRepository;
+    private JaraUsRepository jaraUsRepository;
 
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, JoinUsersRepository joinUsersRepository,
+                           JaraUsRepository jaraUsRepository, ScheduleRepository scheduleRepository) {
         this.userRepository = userRepository;
+        this.joinUsersRepository = joinUsersRepository;
+        this.jaraUsRepository = jaraUsRepository;
+        this.scheduleRepository = scheduleRepository;
     }
     @Override
     public boolean create(UserDto userDto) {
@@ -117,16 +128,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        userRepository.delete(user);
+        try {
+            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+            // 해당 User가 관리자로 있는 JaraUs 엔티티들 조회
+            Set<JaraUs> administeredJaraUses = user.getAdministeredJaraUses();
+            if (administeredJaraUses != null && !administeredJaraUses.isEmpty()) {
+                for (JaraUs jaraUs : administeredJaraUses) {
+                    // 각 JaraUs의 관리자 정보를 null로 설정하거나 새로운 관리자를 지정
+                    jaraUs.setAdministrator(null); // null로 설정
+                    jaraUsRepository.save(jaraUs); // 변경 사항 저장
+                }
+            }
+
+            // User 엔티티 삭제
+            userRepository.delete(user);
+        } catch (Exception e) {
+            // 로깅 라이브러리를 사용하여 예외 로그를 출력
+            throw new RuntimeException("Error deleting user: " + e.getMessage());
+        }
     }
 
     @Override
     public String updateProfileImage(Long userId, MultipartFile image) throws IOException{
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+         // 파일 형식 검사
+        String contentType = image.getContentType();
+        if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
+            throw new RuntimeException("Invalid image format. Only JPG and PNG are allowed.");
+        }
 
         String imageUrl = uploadImage(image); // 이미지 업로드 로직
         user.setProfileImage(imageUrl);
@@ -136,16 +169,18 @@ public class UserServiceImpl implements UserService {
     }
 
     private String uploadImage(MultipartFile image) throws IOException {
-        // 이미지 파일 이름 생성
+        String uploadDir = "uploads/images";
+        Path uploadPath = Paths.get(uploadDir);
+
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        // 이미지 파일 이름 생성 및 저장 로직
         String fileName = generateUniqueFileName(image.getOriginalFilename());
+        Path imagePath = uploadPath.resolve(fileName);
+        Files.copy(image.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
 
-        // 이미지를 저장할 경로 설정
-        Path imagePath = Paths.get("uploads/images", fileName);
-
-        // 이미지 파일을 지정된 경로에 저장
-        Files.copy(image.getInputStream(), imagePath);
-
-        // 저장된 이미지의 경로 반환
         return imagePath.toString();
     }
 
@@ -158,10 +193,11 @@ public class UserServiceImpl implements UserService {
         int extensionIndex = originalFilename.lastIndexOf('.');
         if (extensionIndex > 0) {
             extension = originalFilename.substring(extensionIndex); // 파일 확장자 포함
+            originalFilename = originalFilename.substring(0, extensionIndex);  // 확장자를 제외한 파일 이름만 추출
         }
 
         // 고유한 파일 이름 생성
-        return timestamp + "_" + originalFilename + extension;
+        return originalFilename + "_" + timestamp + extension;
     }
 
     @Override
