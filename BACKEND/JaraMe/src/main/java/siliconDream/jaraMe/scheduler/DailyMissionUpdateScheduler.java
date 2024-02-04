@@ -46,7 +46,7 @@ public class DailyMissionUpdateScheduler {
     }
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "30 06 3 * * *")
     public void transferDailyMission() {
         log.info("start  ?");
         //모든 유저
@@ -54,19 +54,31 @@ public class DailyMissionUpdateScheduler {
         for (User user : allUsers) {
             //데일리미션테이블에 레코드가 있는 경우 => 미션기록테이블에 복사 후 전체 삭제
             List<DailyMission> doneDailyMission = dailyMissionRepository.findByUser_UserId(user.getUserId());
-            log.info("doneDateMission:{}",doneDailyMission);
-            if (doneDailyMission.size()!=0) {
-                log.info("doneDailyMission.size:{}",doneDailyMission.size());
+            log.info("doneDateMission:{}", doneDailyMission);
+            //데일리미션테이블에 레코드가 있는 경우
+            if (doneDailyMission.size() != 0) {
+                log.info("doneDailyMission.size:{}", doneDailyMission.size());
                 for (DailyMission one : doneDailyMission) {
                     log.info("one");
                     //미션기록테이블에 저장
+                    DailyMissionRecordDTO dailyMissionRecordDTO = new DailyMissionRecordDTO();
 
                     log.info("one.isDailyMissionResult:{}", one.isDailyMissionResult());
-                    DailyMissionRecordDTO dailyMissionRecordDTO = new DailyMissionRecordDTO();
-                    dailyMissionRecordDTO.setMissionDate(one.getDoneDateTime().toLocalDate());
-                    dailyMissionRecordDTO.setJaraUs(one.getJaraUs());
-                    dailyMissionRecordDTO.setUser(user);
-                    dailyMissionRecordDTO.setMissionResult(one.isDailyMissionResult());
+
+                    //미션인증을 하지않은 경우
+                    if (!one.isDailyMissionResult()) {
+                        dailyMissionRecordDTO.setMissionDate(one.getScheduleDate());
+                        dailyMissionRecordDTO.setJaraUs(one.getJaraUs());
+                        dailyMissionRecordDTO.setUser(user);
+                        dailyMissionRecordDTO.setMissionResult(one.isDailyMissionResult());
+                    }
+                    else if (one.isDailyMissionResult()) { //미션인증을 한 경우
+                        dailyMissionRecordDTO.setMissionDate(one.getScheduleDate());
+                        dailyMissionRecordDTO.setJaraUs(one.getJaraUs());
+                        dailyMissionRecordDTO.setUser(user);
+                        dailyMissionRecordDTO.setMissionResult(one.isDailyMissionResult());
+                        dailyMissionRecordDTO.setMissionPost(one.getMissionPost());
+                    }
 
                     log.info("set");
                     missionHistoryRepository.saveDailyMissionRecord(dailyMissionRecordDTO);

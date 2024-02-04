@@ -8,6 +8,8 @@ import siliconDream.jaraMe.domain.MissionPost;
 import siliconDream.jaraMe.domain.User;
 
 import java.time.LocalDate;
+import java.util.Optional;
+
 @Getter
 @Setter
 public class DailyMissionRecordDTO {
