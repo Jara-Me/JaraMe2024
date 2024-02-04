@@ -48,9 +48,10 @@ public interface MissionPostRepository extends JpaRepository<MissionPost, Long> 
             "WHERE mpu.userId = :userId")
     Optional<List<Long>> findMissionPostIdByUser_UserId(Long userId);
 
-    //List<MissionPost> findAllByJaraUsId(Long jaraUsId);
+    List<MissionPost> findAllByJaraUs_JaraUsIdAndUser_UserId(Long jaraUsId, Long userId);
 
-   //List<MissionPost> findAllByJaraUsIdUserId(Long jaraUsId, Long userId);
+    List<MissionPost> findByJaraUs_JaraUsId(Long jaraUsId);
+
 /* 
     void delete(MissionPost missionPost);*/
 }
