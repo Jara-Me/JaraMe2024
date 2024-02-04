@@ -2,8 +2,10 @@ package siliconDream.jaraMe.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,7 +19,7 @@ import siliconDream.jaraMe.dto.UserDto;
 import siliconDream.jaraMe.repository.UserRepository;
 
 //import siliconDream.jaraMe.dto.UserProfileInfoDTO;
-//import siliconDream.jaraMe.service.UserProfileService;
+import siliconDream.jaraMe.service.UserProfileService;
 import siliconDream.jaraMe.service.UserService;
 
 import java.util.stream.Collectors;
@@ -29,10 +31,13 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+    @Autowired
     private UserRepository userRepository;
+    private UserProfileService userProfileService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     // 회원 가입을 위한 엔드포인트
@@ -94,8 +99,9 @@ public class UserController {
         } else {
             // 로그인 성공 시 세션에 사용자 정보 저장
             HttpSession session = request.getSession(); // 세션 가져오기 또는 생성하기
-            session.setAttribute("user", response.getUser()); // 세션에 사용자 정보 저장
+            session.setAttribute("userId", response.getUser().getUserId()); // 세션에 사용자 정보 저장
 
+            //로그 확인용
             log.info("session.getId:{}", session.getId());
 
 
@@ -118,7 +124,7 @@ public class UserController {
         }
     }
 
-    //프로필 이미지 업데이트
+     //프로필 이미지 업데이트
     @PostMapping("/updateProfileImage")
     public ResponseEntity<?> updateProfileImage(@RequestParam("userId") Long userId,
                                                 @RequestParam("image") MultipartFile image) {
@@ -131,15 +137,25 @@ public class UserController {
     }
 
     //회원탈퇴
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
-        try {
-            userService.deleteUser(userId);
-            return ResponseEntity.ok().body("User successfully deleted");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in deleting user");
+    @DeleteMapping("/delete")
+    @Transactional
+    public ResponseEntity<?> deleteUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // 현재 세션 가져오기, 없으면 null 반환
+        if (session == null || session.getAttribute("userId") == null) {
+            // 세션 자체가 없거나 세션에 userId가 없는 경우
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not logged in or session expired.");
         }
+
+        Long userId = (Long) session.getAttribute("userId"); // 세션에서 userId 가져오기
+        userRepository.findById(userId).ifPresent(user -> {
+            userRepository.delete(user); // 사용자 삭제
+            session.invalidate(); // 세션 무효화
+        });
+
+        return ResponseEntity.ok().body("User successfully deleted");
     }
+
+
 
     //닉네임 변경
     @PostMapping("/changeNickname")
@@ -155,13 +171,5 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error changing nickname");
         }
     }
-
-    //프로필 정보 반환
-    /*
-    @GetMapping("/{userId}/profile")
-    public UserProfileInfoDTO getUserProfile(@PathVariable Long userId) {
-        return userProfileService.getUserProfileInfo(userId);
-    }
-*/
 
 }
