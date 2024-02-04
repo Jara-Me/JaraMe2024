@@ -19,7 +19,7 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    // 특정 사용자의 알림 조회
+    // 사용자가 보지 않은 알림 조회
     @GetMapping("/{userId}")
     public ResponseEntity<List<NotificationDTO>> getUserNotifications(@PathVariable Long userId) {
         List<NotificationDTO> notifications = notificationService.getUserNotifications(userId);
@@ -27,7 +27,7 @@ public class NotificationController {
     }
 
     // 특정 알림을 읽음 상태로 업데이트
-    @PostMapping("/mark-as-read/{notificationId}")
+    @PostMapping("/read/{notificationId}")
     public ResponseEntity<String> markNotificationAsRead(@PathVariable Long notificationId) {
         boolean updated = notificationService.markAsRead(notificationId);
         if (updated) {
