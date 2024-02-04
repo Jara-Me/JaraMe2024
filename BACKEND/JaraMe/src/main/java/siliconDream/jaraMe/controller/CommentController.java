@@ -55,7 +55,7 @@ public class CommentController {
         if (resultMessage.equals("댓글이 삭제되었습니다.")) {
             return ResponseEntity.status(HttpStatus.OK).body(resultMessage);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 삭제가 실패했습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resultMessage);
         }
 
 
