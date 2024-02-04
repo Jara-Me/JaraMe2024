@@ -29,7 +29,7 @@ public class JaraUs {
     private String rule;
     private String jaraUsProfileImage;
     private int maxMember;
-    private boolean display;
+    private String display;
 
     @NotNull
     @Column(nullable = false, unique = true)
@@ -114,11 +114,11 @@ public class JaraUs {
         this.maxMember = maxMember;
     }
 
-    public boolean isDisplay() {
+    public String getDisplay() {
         return display;
     }
 
-    public void setDisplay(boolean display) {
+    public void setDisplay(String display) {
         this.display = display;
     }
 

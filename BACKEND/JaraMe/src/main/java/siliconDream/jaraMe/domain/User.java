@@ -53,7 +53,7 @@ public class User {
 
 
     //FK
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<JoinUsers> joinUsers;
     

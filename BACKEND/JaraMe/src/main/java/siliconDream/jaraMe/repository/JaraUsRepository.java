@@ -10,6 +10,7 @@ import siliconDream.jaraMe.dto.sampleDTO;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface JaraUsRepository extends JpaRepository<JaraUs, Long> {
@@ -29,4 +30,7 @@ public interface JaraUsRepository extends JpaRepository<JaraUs, Long> {
     List<JaraUs> searchByKeyword(@Param("keyword") String keyword);
 
 
+    Optional<JaraUs> findByjaraUsId(Long jaraUsId);
+
+    //List<JaraUs> findAllByJoinUsers_UserId(Long userId);
 }

@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.LoginResponse;
 import siliconDream.jaraMe.dto.UserDto;
-import siliconDream.jaraMe.dto.UserProfileInfoDTO;
 import siliconDream.jaraMe.repository.JoinUsersRepository;
 import siliconDream.jaraMe.repository.UserRepository;
 
@@ -41,12 +40,12 @@ public class UserServiceImpl implements UserService {
         }
 
         // Check for email duplication using JpaRepository
-        if (userRepository.findEmailByEmail(userDto.getEmail()) != null) {
+        if (emailCheck(userDto.getEmail())) {
             return false; // Duplicate email
         }
 
         // Check for nickname duplication using JpaRepository
-        if (userRepository.findNicknameByNickname(userDto.getNickname()) != null) {
+        if (nicknameCheck(userDto.getNickname())) {
             return false; // Duplicate nickname
         }
 
@@ -64,14 +63,20 @@ public class UserServiceImpl implements UserService {
         return true; // Successful registration
     }
 
+    public boolean emailCheck(String email) {
+        return userRepository.findEmailByEmail(email) != null;
+    }
+
+    public boolean nicknameCheck(String nickname) {
+        return userRepository.findNicknameByNickname(nickname) != null;
+    }
     @Override
     public String findUserEmailByEmail(String email) {
         return userRepository.findEmailByEmail(email);
     }
-    @Override
-    public String emailCheck(String email) {
-        return userRepository.findEmailByEmail(email);
-    }
+
+
+
 
     @Override
     public boolean isPasswordConfirmed(UserDto userDto) {

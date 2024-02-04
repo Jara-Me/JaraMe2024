@@ -23,10 +23,9 @@ public class MissionPostDTO {
     String textTitle;
     String textContent;
     String imageContent;
-
-
-
-
+    private Long missionPostId;
+    private String profileImage;
+    private String nickname;
 
 
     //TODO:Getter and Setter
@@ -72,4 +71,31 @@ public class MissionPostDTO {
     }
 
 
+    public void setMissionPostId(Long missionPostId) {
+        this.missionPostId = missionPostId;
+    }
+
+    public void setTextTitle(String textTitle) {
+        this.textTitle = textTitle;
+    }
+
+    public void setTextContent(String textContent) {
+        this.textContent = textContent;
+    }
+
+    public void setImageContent(String imageContent) {
+        this.imageContent = imageContent;
+    }
+
+    public void setPostDateTime(LocalDateTime postDateTime) {
+        this.postDateTime = postDateTime;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 }

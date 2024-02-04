@@ -36,13 +36,26 @@ public class UserController {
     }
 
     // 회원 가입을 위한 엔드포인트
+
+    @PostMapping("/checkNicknameDuplicate")
+    public ResponseEntity<String> checkNicknameDuplicate(@RequestParam ("nickname") String nickname) {
+        boolean isNicknameDuplicate = userService.nicknameCheck(nickname);
+        if (isNicknameDuplicate) {
+            return ResponseEntity.badRequest().body("닉네임 중복");
+        }
+        return ResponseEntity.ok("닉네임 사용 가능");
+    }
+
+    @PostMapping("/checkEmailDuplicate")
+    public ResponseEntity<String> checkEmailDuplicate(@RequestParam("email") String email) {
+        boolean isEmailDuplicate = userService.emailCheck(email);
+        if (isEmailDuplicate) {
+            return ResponseEntity.badRequest().body("이메일 중복");
+        }
+        return ResponseEntity.ok("이메일 사용 가능");
+    }
     @PostMapping("/signup")
     public ResponseEntity<String> createUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult) {
-        // 이메일 중복 확인 (JpaRepository 사용)
-        String emailCheckResult = userService.emailCheck(userDto.getEmail());
-        if (userDto.getEmail() != null && emailCheckResult != null) {
-            return ResponseEntity.badRequest().body("이미 존재하는 이메일입니다. 다른 이메일을 사용해주세요.");
-        }
 
         // 비밀번호 확인 검증
         if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {

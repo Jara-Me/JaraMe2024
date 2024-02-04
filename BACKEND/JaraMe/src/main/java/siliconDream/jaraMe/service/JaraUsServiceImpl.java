@@ -43,7 +43,7 @@ public class JaraUsServiceImpl implements JaraUsService {
         LocalDate endDate = jaraUsDTO.getEndDate();
 
         if (startDate == null || endDate == null) {
-            throw new IllegalArgumentException("StartDate and EndDate cannot be null.");
+            throw new IllegalArgumentException("시작일과 종료일을 채워주세요.");
         }
 
         if (startDate.isBefore(LocalDate.now().plusDays(1))) {
@@ -58,6 +58,8 @@ public class JaraUsServiceImpl implements JaraUsService {
         jaraUs.setStartDate(jaraUsDTO.getStartDate());
         jaraUs.setEndDate(jaraUsDTO.getEndDate());
         jaraUs.setJaraUsProfileImage(jaraUsProfileImage);
+        jaraUs.setMaxMember(jaraUsDTO.getMaxMember());
+        jaraUs.setDisplay("public");
 
         JaraUs savedJaraUs = jaraUsRepository.save(jaraUs); // JaraUs 레코드 저장
 
@@ -71,16 +73,16 @@ public class JaraUsServiceImpl implements JaraUsService {
     @Override
     public void participateInJaraUs(@Valid JaraUsDTO jaraUsDTO, Long userId) {
         JaraUs jaraUs = jaraUsRepository.findById(jaraUsDTO.getJaraUsId())
-                .orElseThrow(() -> new EntityNotFoundException("nojaraus"));
+                .orElseThrow(() -> new EntityNotFoundException("자라어스를 찾을 수 없음"));
 
         User participant = userService.findUserByUserId(userId);
 
         if (jaraUs.getJoinUsers().stream().anyMatch(joinUser -> joinUser.getUser().equals(participant))) {
-            throw new IllegalStateException("already participate in");
+            throw new IllegalStateException("이미 가입된 사용자");
         }
 
         if (jaraUs.getJoinUsers().size() >= jaraUs.getMaxMember()) {
-            throw new IllegalStateException("max member");
+            throw new IllegalStateException("인원 초과");
         }
 
 
@@ -96,17 +98,20 @@ public class JaraUsServiceImpl implements JaraUsService {
     }
 
     @Override
-    public void withdrawFromJaraUs(Long jaraUsId, Long userId) {
+    public void withdrawFromJaraUs(Long jaraUsId, Long currentUserId) {
         JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
-                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+                .orElseThrow(() -> new EntityNotFoundException("가입되어있지 않음"));
 
-        User withdrawingUser = userService.findUserByUserId(userId);
-
-        if (jaraUs.getAdminUserId().equals(withdrawingUser.getUserId())) {
-            throw new IllegalStateException("Administrator cannot withdraw without handing over the role.");
+        if (jaraUs.getAdminUserId().equals(currentUserId)) {
+            throw new IllegalStateException("관리자는 탈퇴할 수 없음. 관리자를 넘겨주세요.");
         }
 
-        jaraUs.getJoinUsers().removeIf(joinUser -> joinUser.getUser().equals(withdrawingUser));
+        JoinUsers joinUserToRemove = jaraUs.getJoinUsers().stream()
+                .filter(joinUser -> joinUser.getUser().getUserId().equals(currentUserId))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("가입되어있지 않음"));
+
+        jaraUs.getJoinUsers().remove(joinUserToRemove);
 
         jaraUsRepository.save(jaraUs);
     }
@@ -115,12 +120,12 @@ public class JaraUsServiceImpl implements JaraUsService {
     @Override
     public void editJaraUsByAdmin(Long jaraUsId, Long adminUserId, JaraUsDTO jaraUsDTO) {
         JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
-                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+                .orElseThrow(() -> new EntityNotFoundException("자라어스를 찾을 수 없음."));
 
         User adminUser = userService.findUserByUserId(adminUserId);
 
         if (!jaraUs.getAdminUserId().equals(adminUser.getUserId())) {
-            throw new IllegalStateException("You are not the administrator of this JaraUs.");
+            throw new IllegalStateException("자라어스의 관리자가 아닙니다.");
         }
 
         // Get the list of joinUsers sorted by signup date
@@ -129,16 +134,11 @@ public class JaraUsServiceImpl implements JaraUsService {
                 .collect(Collectors.toList());
 
         if (!sortedJoinUsers.isEmpty()) {
-            JoinUsers nextAdmin = sortedJoinUsers.get(0);
+            JoinUsers nextAdmin = sortedJoinUsers.get(1);
             User newAdminUser = nextAdmin.getUser();
 
             jaraUs.setAdminUserId(newAdminUser);
         }
-
-        jaraUs.setJaraUsName(jaraUsDTO.getJaraUsName());
-        jaraUs.setMissionName(jaraUsDTO.getMissionName());
-        jaraUs.setRecurrence(jaraUsDTO.getRecurrence());
-        jaraUs.setEndDate(jaraUsDTO.getEndDate());
 
         jaraUsRepository.save(jaraUs);
     }
@@ -157,13 +157,13 @@ public class JaraUsServiceImpl implements JaraUsService {
     @Override
     public JaraUs editJaraUsInformation(Long userId, JaraUsDTO jaraUsDTO) {
         JaraUs jaraUs = jaraUsRepository.findById(jaraUsDTO.getJaraUsId())
-                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+                .orElseThrow(() -> new EntityNotFoundException("자라어스를 찾을 수 없음"));
 
         User editorUser = userService.findUserByUserId(userId);
 
         // Check if the editor is the administrator of the JaraUs
-        if (!jaraUs.getAdminUserId().equals(editorUser)) {
-            throw new IllegalStateException("Only administrators can edit JaraUs information.");
+        if (!jaraUs.getAdminUserId().equals(editorUser.getUserId())) {
+            throw new IllegalStateException("관리자만 수정 가능");
         }
 
         jaraUs.setJaraUsName(jaraUsDTO.getJaraUsName());
@@ -174,7 +174,7 @@ public class JaraUsServiceImpl implements JaraUsService {
 
         LocalDate startDate = jaraUsDTO.getStartDate();
         if (startDate != null && startDate.isBefore(LocalDate.now().plusDays(1))) {
-            throw new IllegalArgumentException("Start date must be at least one day ahead of today.");
+            throw new IllegalArgumentException("시작일은 적어도 내일 이후여야 합니다.");
         }
         jaraUs.setStartDate(startDate);
 
@@ -185,6 +185,23 @@ public class JaraUsServiceImpl implements JaraUsService {
         return jaraUsRepository.save(jaraUs);
     }
 
+    @Override
+    public JaraUs findByjaraUsId(Long jaraUsId) {
+        return jaraUsRepository.findByjaraUsId(jaraUsId)
+                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+    }
+
+    /*public List<JaraUsDTO> getJaraUsListForUser(Long userId) {
+        List<JaraUs> jaraUsList = jaraUsRepository.findAllByJoinUsers_UserId(userId);
+        return convertToJaraUsDTOList(jaraUsList);
+    }
+
+    private List<JaraUsDTO> convertToJaraUsDTOList(List<JaraUs> jaraUsList) {
+        return jaraUsList.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+*/
 
 
     //미션완주일이 어제인 그룹 찾아내기
@@ -204,7 +221,7 @@ public class JaraUsServiceImpl implements JaraUsService {
 
 
     //DTO변환메소드 (JaraUs엔티티 인스턴스를 JaraUsDTO 객체로 변환하는 작업 수행) 
-     private JaraUsDTO convertToDTO(JaraUs jaraUs) {
+    public JaraUsDTO convertToDTO(JaraUs jaraUs) {
         JaraUsDTO jaraUsDTO = new JaraUsDTO();
         jaraUsDTO.setAdminUserId(jaraUs.getAdministrator() != null ? jaraUs.getAdministrator().getUserId() : null);
         jaraUsDTO.setJaraUsId(jaraUs.getJaraUsId());
@@ -214,7 +231,7 @@ public class JaraUsServiceImpl implements JaraUsService {
         jaraUsDTO.setRule(jaraUs.getRule());
         jaraUsDTO.setJaraUsProfileImage(jaraUs.getJaraUsProfileImage());
         jaraUsDTO.setMaxMember(jaraUs.getMaxMember());
-        jaraUsDTO.setDisplay(jaraUs.isDisplay());
+        jaraUsDTO.setDisplay(jaraUs.getDisplay());
         jaraUsDTO.setStartDate(jaraUs.getStartDate());
         jaraUsDTO.setEndDate(jaraUs.getEndDate());
         Set<Recurrence> recurrenceSet = jaraUs.getRecurrence();// JaraUs 엔티티 객체에서 Recurrence 집합을 가져옴.

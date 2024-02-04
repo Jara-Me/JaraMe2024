@@ -12,7 +12,7 @@ import java.util.Set;
 public class JaraUsDTO {
 
     public JaraUsDTO(Long adminUserId, Long jaraUsId, String jaraUsName, String missionName, String explanation, String rule,
-                    String jaraUsProfileImage, int maxMember, boolean display, LocalDate startDate,
+                    String jaraUsProfileImage, int maxMember, String display, LocalDate startDate,
                     LocalDate endDate, Set<Recurrence> recurrence) {
 
         this.adminUserId = adminUserId;
@@ -37,9 +37,11 @@ public class JaraUsDTO {
     private String rule;
     private String jaraUsProfileImage;
     private int maxMember;
-    private boolean display;
+    private String display;
     private LocalDate startDate;
     private LocalDate endDate;
     private Set<Recurrence> recurrence;
+
+
 
 }
