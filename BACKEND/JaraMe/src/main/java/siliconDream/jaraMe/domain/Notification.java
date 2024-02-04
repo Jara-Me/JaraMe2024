@@ -1,9 +1,6 @@
 package siliconDream.jaraMe.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -12,13 +9,15 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Long userId;
     private String message;
     private LocalDateTime createdDateTime;
     private boolean isRead;
 
-    // Constructor, getters, and setters
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user")
+    private User user;
+    
+// getters, and setters
 
     public Long getId() {
         return id;
@@ -26,14 +25,6 @@ public class Notification {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getMessage() {
@@ -58,6 +49,14 @@ public class Notification {
 
     public void setRead(boolean read) {
         isRead = read;
+    }
+    
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
 
