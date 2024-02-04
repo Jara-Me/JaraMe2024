@@ -3,7 +3,6 @@ package siliconDream.jaraMe.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
  */
 import org.springframework.web.bind.annotation.*;
-import siliconDream.jaraMe.domain.MissionPost;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.GetMissionPostDTO;
 import siliconDream.jaraMe.dto.MissionPostDTO;
 import siliconDream.jaraMe.service.MissionPostService;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -99,11 +95,12 @@ public class MissionPostController {
 
     }
 
-    /*@GetMapping("/All/{jaraUsId}")
-    public ResponseEntity<List<MissionPostDTO>> getAllMissionPostsForJaraUs(@PathVariable Long jaraUsId) {
-        List<MissionPostDTO> missionPosts = missionPostService.getAllMissionPostsForJaraUs(jaraUsId);
+    @GetMapping("/All-post")
+    public ResponseEntity<List<MissionPostDTO>> getAllMissionPostsForJaraUs(@RequestParam(name = "jaraUsId") Long jaraUsId) {
+        // Assuming you want to retrieve all mission posts without specifying a particular JaraUs
+        List<MissionPostDTO> missionPosts = missionPostService.getAllMissionPosts(jaraUsId);
 
-        // 미션 포스트가 비어있는지 확인하고 적절히 처리, 예를 들어 404를 반환
+        // Check if the mission post is empty and process appropriately, e.g. returning 404
         if (missionPosts.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -111,12 +108,18 @@ public class MissionPostController {
         return ResponseEntity.ok(missionPosts);
     }
 
-    @GetMapping("/my/{jaraUsId}/{userId}")
-    public ResponseEntity<List<MissionPostDTO>> getMyMissionPostsForJaraUs(
-            @PathVariable Long jaraUsId,
-            @PathVariable Long userId
-    ) {
-        List<MissionPostDTO> myMissionPosts = missionPostService.getMyMissionPostsForJaraUs(jaraUsId, userId);
+    @GetMapping("/my-post")
+    public ResponseEntity<?> getMyMissionPostsForJaraUs(@RequestParam Long jaraUsId, HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 검증 오류");
+        }
+
+        User user = (User) session.getAttribute("user");
+
+        List<MissionPostDTO> myMissionPosts = missionPostService.getMyMissionPostsForJaraUs(jaraUsId, user.getUserId());
+
 
         // Check if the list is empty and handle it appropriately, e.g., return 404
         if (myMissionPosts.isEmpty()) {
@@ -124,7 +127,7 @@ public class MissionPostController {
         }
 
         return ResponseEntity.ok(myMissionPosts);
-    }*/
+    }
 
 
     //미션 인증글 수정 => 테스트완료, 예외처리 전

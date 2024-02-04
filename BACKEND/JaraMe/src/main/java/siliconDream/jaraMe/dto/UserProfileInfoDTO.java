@@ -1,9 +1,37 @@
 package siliconDream.jaraMe.dto;
 
 public class UserProfileInfoDTO {
+    private Long userId;
+    private String nickname;
+    private String profileImage;
     private int points;
     private int passTicket;
     private int participatingJaraUsCount;
+
+    //Getters and Setters
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 
     public int getParticipatingJaraUsCount() {
         return participatingJaraUsCount;

@@ -286,7 +286,7 @@ public class MissionPostServiceImpl implements MissionPostService {
             boolean compare = compareMissionPost(missionPostDTO, missionPostId);
             log.info("compare");
             if (!compare) {
-                log.info("compare==false?:{}",compare);
+                log.info("compare==false?:{}", compare);
                 return "수정된 부분이 없습니다.";
             } else if (compare) {
 
@@ -308,14 +308,13 @@ public class MissionPostServiceImpl implements MissionPostService {
 
             return "오늘 등록한 미션 인증글만 수정 가능합니다.";
         }
-            return "수정에 실패했습니다.";
-        }
+        return "수정에 실패했습니다.";
+    }
 
 
-
-   /* public List<MissionPostDTO> getAllMissionPostsForJaraUs(Long jaraUsId) {
-        // jaraUsId에 대한 미션 포스트 검색 로직 구현
-        List<MissionPost> missionPosts = missionPostRepository.findAllByJaraUsId(jaraUsId);
+    @Override
+    public List<MissionPostDTO> getAllMissionPosts(Long jaraUsId) {
+        List<MissionPost> missionPosts = missionPostRepository.findByJaraUs_JaraUsId(jaraUsId);
         return convertToMissionPostDTOList(missionPosts);
     }
 
@@ -326,7 +325,7 @@ public class MissionPostServiceImpl implements MissionPostService {
     }
 
     public List<MissionPostDTO> getMyMissionPostsForJaraUs(Long jaraUsId, Long userId) {
-        List<MissionPost> myMissionPosts = missionPostRepository.findAllByJaraUsIdUserId(jaraUsId, userId);
+        List<MissionPost> myMissionPosts = missionPostRepository.findAllByJaraUs_JaraUsIdAndUser_UserId(jaraUsId, userId);
         return convertToMissionPostDTOList(myMissionPosts);
     }
 
@@ -342,7 +341,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         missionPostDTO.setProfileImage(missionPost.getUser().getProfileImage());
 
         return missionPostDTO;
-    }*/
+    }
 /*
     //미션인증글 삭제 => 보류
     //TODO : 예외처리 : 미션인증글이 삭제되면서 미션 기록, 오늘의 미션, 해당 미션인증글에 달린 댓글,리액션 모두 삭제돼야함.
