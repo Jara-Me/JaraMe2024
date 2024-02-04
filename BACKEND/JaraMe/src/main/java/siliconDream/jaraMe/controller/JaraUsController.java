@@ -216,15 +216,24 @@ public class JaraUsController {
         }
     }
 
-    /*@GetMapping("/my-groups/{userId}")
-    public ResponseEntity<?> getMyGroups(@PathVariable Long userId) {
+    @GetMapping("/my-groups")
+    public ResponseEntity<?> getMyGroups(HttpServletRequest request) {
+
+
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 검증 오류");
+        }
+
+        User user = (User) session.getAttribute("user");
+
         try {
-            List<JaraUsDTO> myGroups = jaraUsService.getJaraUsListForUser(userId);
+            List<JaraUsDTO> myGroups = jaraUsService.getJaraUsListForUser(user.getUserId());
             return ResponseEntity.ok(myGroups);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 그룹을 찾을 수 없음");
         }
-    }*/
+    }
 
         // 검색 기능 추가
     @GetMapping("/search")

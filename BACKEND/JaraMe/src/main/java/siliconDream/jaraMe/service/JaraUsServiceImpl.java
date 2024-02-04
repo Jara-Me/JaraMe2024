@@ -16,10 +16,7 @@ import siliconDream.jaraMe.repository.DailyMissionRepository;
 import siliconDream.jaraMe.repository.JoinUsersRepository;
 import siliconDream.jaraMe.repository.ScheduleRepository;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -228,17 +225,18 @@ public class JaraUsServiceImpl implements JaraUsService {
                 .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
     }
 
-    /*public List<JaraUsDTO> getJaraUsListForUser(Long userId) {
-        List<JaraUs> jaraUsList = jaraUsRepository.findAllByJoinUsers_UserId(userId);
-        return convertToJaraUsDTOList(jaraUsList);
-    }
+    @Override
+    public List<JaraUsDTO> getJaraUsListForUser(Long userId) {
+        List<Long> jaraUsIds = joinUsersRepository.findJaraUs_jaraUsIdsByUser_userId(userId)
+                .orElseThrow(() -> new RuntimeException("자라어스 없음"));
 
-    private List<JaraUsDTO> convertToJaraUsDTOList(List<JaraUs> jaraUsList) {
-        return jaraUsList.stream()
+        return jaraUsIds.stream()
+                .map(jaraUsRepository::findByjaraUsId)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-*/
 
 
     //미션완주일이 어제인 그룹 찾아내기
@@ -275,7 +273,7 @@ public class JaraUsServiceImpl implements JaraUsService {
         jaraUsDTO.setRecurrence(recurrenceSet);
         return jaraUsDTO;
     }
-    
+
     public boolean hasIncompleteMissions(Long userId) {
         // 사용자가 참여하고 있는 모든 자라어스의 ID를 가져온다.
         List<Long> jaraUsIds = joinUsersRepository.findJaraUs_jaraUsIdsByUser_userId(userId)
