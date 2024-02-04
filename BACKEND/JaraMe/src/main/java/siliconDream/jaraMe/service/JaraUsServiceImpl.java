@@ -16,6 +16,7 @@ import siliconDream.jaraMe.repository.DailyMissionRepository;
 import siliconDream.jaraMe.repository.JoinUsersRepository;
 import siliconDream.jaraMe.repository.ScheduleRepository;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -42,12 +43,24 @@ public class JaraUsServiceImpl implements JaraUsService {
         LocalDate startDate = jaraUsDTO.getStartDate();
         LocalDate endDate = jaraUsDTO.getEndDate();
 
+        if (jaraUsNameCheck(jaraUsDTO.getJaraUsName())) {
+            throw new IllegalArgumentException("자라어스 이름 중복");
+        }
+
         if (startDate == null || endDate == null) {
             throw new IllegalArgumentException("시작일과 종료일을 채워주세요.");
         }
 
         if (startDate.isBefore(LocalDate.now().plusDays(1))) {
             throw new IllegalArgumentException("시작일은 적어도 내일 이후여야 합니다.");
+        }
+
+        if ((jaraUsDTO.getJaraUsName() == null) || (jaraUsDTO.getMissionName() == null) ||
+                (jaraUsDTO.getRecurrence() == null) || (jaraUsDTO.getStartDate() == null) ||
+                (jaraUsDTO.getEndDate() == null) || (jaraUsDTO.getInterest() == null) ||
+                (jaraUsDTO.getMaxMember() == null) || (jaraUsDTO.getDisplay() == null) ||
+                (jaraUsDTO.getRule() == null)) {
+            throw new IllegalArgumentException("필수 필드를 채워주세요.");
         }
 
         JaraUs jaraUs = new JaraUs();
@@ -60,15 +73,37 @@ public class JaraUsServiceImpl implements JaraUsService {
         jaraUs.setJaraUsProfileImage(jaraUsProfileImage);
         jaraUs.setMaxMember(jaraUsDTO.getMaxMember());
         jaraUs.setDisplay("public");
+        jaraUs.setExplanation(jaraUsDTO.getExplanation());
+        jaraUs.setRule(jaraUsDTO.getRule());
+        // List<String>를 String으로 대체
+        String allowedInterests = "study,health,hobby";
+        String userInterest = jaraUsDTO.getInterest();
+
+        // 사용자의 관심사가 유효한지 확인
+        if (userInterest == null || userInterest.isEmpty() || !Arrays.asList(allowedInterests.split(",")).contains(userInterest)) {
+            throw new IllegalArgumentException("study, health, hobby 중에서 1개를 선택하세요.");
+        }
+
+        // jaraUs에 userInterest 저장
+        jaraUs.setInterest(userInterest);
 
         JaraUs savedJaraUs = jaraUsRepository.save(jaraUs); // JaraUs 레코드 저장
+
+        JoinUsers joinUsers = new JoinUsers();
+        joinUsers.setUser(administrator);
+        joinUsers.setJaraUs(jaraUs);
+        joinUsers.setSignUpDate(LocalDate.now());
+
+        jaraUs.getJoinUsers().add(joinUsers);
 
         // 스케줄링 작업 실행
         scheduleService.jaraUsScheduling(savedJaraUs);
 
         return savedJaraUs;
     }
-
+    public boolean jaraUsNameCheck(String jaraUsName) {
+        return jaraUsRepository.findJaraUsNameByJaraUsName(jaraUsName) != null;
+    }
 
     @Override
     public void participateInJaraUs(@Valid JaraUsDTO jaraUsDTO, Long userId) {
@@ -113,6 +148,8 @@ public class JaraUsServiceImpl implements JaraUsService {
 
         jaraUs.getJoinUsers().remove(joinUserToRemove);
 
+        jaraUs.setJoinUsers(jaraUs.getJoinUsers());
+
         jaraUsRepository.save(jaraUs);
     }
 
@@ -148,7 +185,7 @@ public class JaraUsServiceImpl implements JaraUsService {
         List<JaraUs> allJaraUs = jaraUsRepository.findAll();
 
         List<JaraUs> expiredJaraUs = allJaraUs.stream()
-                .filter(jaraUs -> jaraUs.getStartDate() == null && jaraUs.getEndDate() == null)
+                .filter(jaraUs -> jaraUs.getEndDate().isBefore(LocalDate.now()))
                 .collect(Collectors.toList());
 
         return expiredJaraUs;

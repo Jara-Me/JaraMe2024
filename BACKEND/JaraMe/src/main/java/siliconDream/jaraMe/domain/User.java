@@ -30,6 +30,9 @@ public class User {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private String interest;
+
     @Column(columnDefinition = "boolean default false") //기본값 false로 설정
     private boolean checkIn;
 
@@ -102,6 +105,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getInterest() {
+        return interest;
+    }
+
+    public void setInterest(String interest) {
+        this.interest = interest;
     }
 
     public boolean isCheckIn() {

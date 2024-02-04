@@ -81,18 +81,10 @@ public class JaraUsController {
 
             Long createdJaraUsId = createdNewJaraUs.getJaraUsId();
 
-            log.info("JaraUs has been created. ID: {}", createdJaraUsId);
+            log.info("자라어스 ID: {}", createdJaraUsId);
             return ResponseEntity.ok(Map.of(
                     "message", "자라어스 생성 성공",
-                    "jaraUsId", createdJaraUsId,
-                    "jaraUsName", createdNewJaraUs.getJaraUsName(),
-                    "missionName", createdNewJaraUs.getMissionName(),
-                    "jaraUsProfileImage", createdNewJaraUs.getJaraUsProfileImage(),
-                    "maxMember", createdNewJaraUs.getMaxMember(),
-                    "display", createdNewJaraUs.isDisplay(),
-                    "startDate", createdNewJaraUs.getStartDate().toString(),
-                    "endDate", createdNewJaraUs.getEndDate().toString(),
-                    "recurrence", createdNewJaraUs.getRecurrence()
+                    "jaraUsId", createdJaraUsId
             ));
         } catch (IllegalArgumentException e) {
             log.error("올바르지 않은 입력: {}", e.getMessage());
@@ -100,6 +92,14 @@ public class JaraUsController {
         }
     }
 
+    @PostMapping("/checkJaraUsNameDuplicate")
+    public ResponseEntity<String> checkJaraUsNameDuplicate(@RequestParam("jaraUsName") String jaraUsName) {
+        boolean isJaraUsNameDuplicate = jaraUsService.jaraUsNameCheck(jaraUsName);
+        if (isJaraUsNameDuplicate) {
+            return ResponseEntity.badRequest().body("자라어스 이름 중복");
+        }
+        return ResponseEntity.ok("사용 가능한 이름");
+    }
     @PostMapping("/participate")
     public ResponseEntity<?> participateInJaraUs(@RequestBody @Valid JaraUsDTO jaraUsDTO, HttpServletRequest request) {
         HttpSession session = request.getSession(false);

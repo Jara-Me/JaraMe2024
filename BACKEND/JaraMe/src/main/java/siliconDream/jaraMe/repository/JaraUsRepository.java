@@ -32,5 +32,8 @@ public interface JaraUsRepository extends JpaRepository<JaraUs, Long> {
 
     Optional<JaraUs> findByjaraUsId(Long jaraUsId);
 
+    @Query("SELECT j.jaraUsName FROM JaraUs j WHERE j.jaraUsName = :jaraUsName")
+    String findJaraUsNameByJaraUsName(@Param("jaraUsName") String jaraUsName);
+
     //List<JaraUs> findAllByJoinUsers_UserId(Long userId);
 }
