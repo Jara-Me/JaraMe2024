@@ -72,23 +72,30 @@ public class MissionPostController {
 
     //미션 인증글 조회 =>테스트 완료 / 예외처리 전
     @GetMapping("/get")
-    public GetMissionPostDTO getMissionPost(@RequestParam Long missionPostId, HttpServletRequest request) {
+    public ResponseEntity<?> getMissionPost(@RequestParam Long missionPostId, HttpServletRequest request) {
 
         HttpSession session = request.getSession(false);
     log.info("session.getId:{}", session);
 
         Long userId;
         if (session == null) {
-            GetMissionPostDTO getMissionPostDTO2 = new GetMissionPostDTO(); //수정예정
-            return getMissionPostDTO2;
+           // GetMissionPostDTO getMissionPostDTO2 = new GetMissionPostDTO(); //수정예정
+           // return getMissionPostDTO2;
+            //ResponseEntity.status(HttpStatus.BAD_REQUEST).body("미션 인증글 등록에 실패했습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         User user = (User) session.getAttribute("user");
         log.info("log:userId:{}", user.getUserId());
         userId = user.getUserId();
-        GetMissionPostDTO getMissionPostDTO = missionPostService.getMissionPostDetails(missionPostId, userId);
-        return getMissionPostDTO;
 
+        boolean exist = missionPostService.existMissionPost(missionPostId);
+        if (exist){
+            GetMissionPostDTO getMissionPostDTO = missionPostService.getMissionPostDetails(missionPostId, userId);
+            return ResponseEntity.ok(getMissionPostDTO);
+        } else {
+            return ResponseEntity.badRequest().body("해당하는 게시글이 존재하지 않습니다.");
+        }
 
     }
 

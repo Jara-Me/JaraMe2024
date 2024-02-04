@@ -78,13 +78,14 @@ public class MissionPostServiceImpl implements MissionPostService {
 
 
         MissionPost savedMissionPost = missionPostRepository.save(missionPost);
+        Long savedMissionPostId = savedMissionPost.getMissionPostId();
+
+        dailyMissionUpdate(userId, jaraUsId, savedMissionPostId);
         return true;
         /*if (savedMissionPost) {
 
             //TODO: dailyMission테이블에도 missionPostId 저장하기
-            Long savedMissionPostId = savedMissionPost.get().getMissionPostId();
-            dailyMissionUpdate(userId, jaraUsId, savedMissionPostId);
-            return true;
+
         } else if (savedMissionPost.isEmpty()) {
             return false;
         }else {return false;}
@@ -144,11 +145,21 @@ public class MissionPostServiceImpl implements MissionPostService {
         //포인트 지급에 대한 return string 해야할 것같음! 수정 예정
 
     }
+    public boolean existMissionPost(Long missionPostId) {
+        Optional<MissionPost> missionPostOptional = missionPostRepository.findMissionPostByMissionPostId(missionPostId); //댓글,리액션까지 전달.
+        if (missionPostOptional.isEmpty()){
+            return false;
+        }
+        return true;
+    }
+
 
     //미션 인증글 조회
     //TODO: 해당 missionPostId가 없다면?
     //TODO: 비공개된 게시글이거나 삭제된 게시글이라면 ?
     public GetMissionPostDTO getMissionPostDetails(Long missionPostId, Long userId) {
+
+
         //레코드 찾기
         //missionPostRepository.findByMissionPostId(missionPostId); //인증글 레코드만 전달받을 수 있음.
         Optional<MissionPost> missionPostOptional = missionPostRepository.findMissionPostByMissionPostId(missionPostId); //댓글,리액션까지 전달.

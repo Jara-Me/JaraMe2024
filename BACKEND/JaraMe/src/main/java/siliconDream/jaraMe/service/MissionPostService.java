@@ -19,7 +19,7 @@ public interface MissionPostService {
     //미션 인증글 조회
     GetMissionPostDTO getMissionPostDetails(Long missionPostId,Long userId);
     GetMissionPostDTO makeGetMissionPostDTO(Optional<MissionPost> missionPostOptional, Optional<String> reactionTypeOptional, Optional<List<CommentDTO>> commentOptional);
-
+    boolean existMissionPost(Long missionPostId);
 
 
     void dailyMissionUpdate(Long userId,Long jaraUsId, Long missionPostId);

@@ -53,10 +53,10 @@ public class DailyMissionUpdateScheduler {
         List<User> allUsers = userService.getAllUsers();
         for (User user : allUsers) {
             //데일리미션테이블에 레코드가 있는 경우 => 미션기록테이블에 복사 후 전체 삭제
-            List<DailyMission> doneDailyMission = dailyMissionRepository.findAll();
-            log.info("delete! ");
-            if (!doneDailyMission.isEmpty()) {
-                log.info("isEmpty? ");
+            List<DailyMission> doneDailyMission = dailyMissionRepository.findByUser_UserId(user.getUserId());
+            log.info("doneDateMission:{}",doneDailyMission);
+            if (doneDailyMission.size()!=0) {
+                log.info("doneDailyMission.size:{}",doneDailyMission.size());
                 for (DailyMission one : doneDailyMission) {
                     log.info("one");
                     //미션기록테이블에 저장
