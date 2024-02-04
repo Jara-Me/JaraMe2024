@@ -28,7 +28,8 @@ public class JaraUs {
     private String explanation;
     private String rule;
     private String jaraUsProfileImage;
-    private int maxMember;
+    private String interest;
+    private Integer maxMember;
     private String display;
 
     @NotNull
@@ -106,11 +107,11 @@ public class JaraUs {
         this.jaraUsProfileImage = jaraUsProfileImage;
     }
 
-    public int getMaxMember() {
+    public Integer getMaxMember() {
         return maxMember;
     }
 
-    public void setMaxMember(int maxMember) {
+    public void setMaxMember(Integer maxMember) {
         this.maxMember = maxMember;
     }
 
@@ -151,5 +152,13 @@ public class JaraUs {
 
     public void setJoinUsers(Set<JoinUsers> joinUsers) {
         this.joinUsers = joinUsers;
+    }
+
+    public String getInterest() {
+        return interest;
+    }
+
+    public void setInterest(String interest) {
+        this.interest = interest;
     }
 }

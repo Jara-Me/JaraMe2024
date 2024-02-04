@@ -12,7 +12,7 @@ import java.util.Set;
 public class JaraUsDTO {
 
     public JaraUsDTO(Long adminUserId, Long jaraUsId, String jaraUsName, String missionName, String explanation, String rule,
-                    String jaraUsProfileImage, int maxMember, String display, LocalDate startDate,
+                    String jaraUsProfileImage, String interest, Integer maxMember, String display, LocalDate startDate,
                     LocalDate endDate, Set<Recurrence> recurrence) {
 
         this.adminUserId = adminUserId;
@@ -23,6 +23,7 @@ public class JaraUsDTO {
         this.rule = rule;
         this.jaraUsProfileImage = jaraUsProfileImage;
         this.maxMember = maxMember;
+        this.interest = interest;
         this.display = display;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -36,12 +37,19 @@ public class JaraUsDTO {
     private String explanation;
     private String rule;
     private String jaraUsProfileImage;
-    private int maxMember;
+    private String interest;
+    private Integer maxMember;
     private String display;
     private LocalDate startDate;
     private LocalDate endDate;
     private Set<Recurrence> recurrence;
 
 
+    public String getInterest() {
+        return interest;
+    }
+    public void setInterest(String interest) {
+        this.interest = interest;
+    }
 
 }

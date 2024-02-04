@@ -55,7 +55,8 @@ public class UserServiceImpl implements UserService {
         user.setNickname(userDto.getNickname());
         user.setPassword(userDto.getPassword());
         user.setEmail(userDto.getEmail());
-        user.setCheckIn(false); // Assuming a new user is not checked in by default
+        user.setInterest(userDto.getInterest());
+        user.setCheckIn(false);
         user.setPoint(0);
         user.setPassTicket(0);
 
