@@ -24,6 +24,7 @@ public interface MissionPostService {
 
     void dailyMissionUpdate(Long userId,Long jaraUsId, Long missionPostId);
     void  dailyMissionFinish(Long userId);
+    boolean compareMissionPost(MissionPostDTO missionPostDTO, Long missionPostId);
 
     //Optional<DailyMissionDTO> getDailyMission(Long userId, LocalDateTime todayDate);
     int missionParticipationRate(Long userId, Long jaraUsId);

@@ -139,6 +139,8 @@ public class MissionPostController {
         User user = (User) session.getAttribute("user");
         log.info("log:userId:{}", user.getUserId());
         userId = user.getUserId();
+
+
         String resultMessage = missionPostService.updateMissionPost(missionPostId, missionPostDTO, userId, LocalDate.now());
 
         //수행결과에 따라 (수정되거나 수정되지않은) 미션 인증글 조회 결과 반환

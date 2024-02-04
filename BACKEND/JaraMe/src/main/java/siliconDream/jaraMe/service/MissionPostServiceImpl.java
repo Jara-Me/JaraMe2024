@@ -61,7 +61,7 @@ public class MissionPostServiceImpl implements MissionPostService {
     //TODO: 작성에 대한 규칙?
     public boolean missionPost(MissionPostDTO missionPostDTO, Long userId) {
         //제목이나 내용이 공백인지?
-        if (missionPostDTO.getTextTitle().isBlank() || missionPostDTO.getTextContent().isBlank()){
+        if (missionPostDTO.getTextTitle().isBlank() || missionPostDTO.getTextContent().isBlank()) {
             return false;
         }
         MissionPost missionPost = new MissionPost();
@@ -145,9 +145,10 @@ public class MissionPostServiceImpl implements MissionPostService {
         //포인트 지급에 대한 return string 해야할 것같음! 수정 예정
 
     }
+
     public boolean existMissionPost(Long missionPostId) {
         Optional<MissionPost> missionPostOptional = missionPostRepository.findMissionPostByMissionPostId(missionPostId); //댓글,리액션까지 전달.
-        if (missionPostOptional.isEmpty()){
+        if (missionPostOptional.isEmpty()) {
             return false;
         }
         return true;
@@ -248,30 +249,69 @@ public class MissionPostServiceImpl implements MissionPostService {
         return result;
     }
 
+    public boolean compareMissionPost(MissionPostDTO missionPostDTO, Long missionPostId) {
+        boolean result;
+        Optional<MissionPost> missionPost = missionPostRepository.findMissionPostByMissionPostId(missionPostId);
+        boolean anonymous = missionPost.get().isAnonymous() == missionPostDTO.isAnonymous();
+        boolean display = missionPost.get().isDisplay() == missionPostDTO.isDisplay();
+
+        boolean textTitle = missionPost.get().getTextTitle().equals(missionPostDTO.getTextTitle());
+        boolean textContent = missionPost.get().getTextContent().equals(missionPostDTO.getTextContent());
+        boolean imageContent = missionPost.get().getImageContent().equals(missionPostDTO.getImageContent());
+        log.info("anonymous:{}", anonymous);
+        log.info("display:{}", display);
+        log.info("textTitle:{}", textTitle);
+        log.info("textTitle-기존{}", missionPost.get().getTextTitle());
+        log.info("textTitle-입력{}", missionPostDTO.getTextTitle());
+        log.info("textContent:{}", textContent);
+        log.info("imageContent:{}", imageContent);
+
+        //수정된 부분이 없으면 false 반환
+        if (anonymous && display && textTitle && textContent && imageContent) {
+            log.info("all result");
+            return false;
+        } else {
+            log.info("??");
+            return true;
+        }
+    }
+
+
     //미션인증글 수정
-//TODO: 오늘=> 내용과 공개/익명 정보 모두 수정 가능
-//TODO: 오늘이 아닌 경우 => 공개/익명 정보만 수정 가능
     public String updateMissionPost(Long missionPostId, MissionPostDTO missionPostDTO, Long userId, LocalDate todayDate) {
+
         MissionPost missionPost = missionPostRepository.findByMissionPostId(missionPostId);
         if ((missionPost.getPostDateTime().toLocalDate()).equals(todayDate)) {
 
-            //dto에서 값을 꺼내서 전달 (수정할 값)
-            boolean display = missionPostDTO.isDisplay();
-            boolean anonymous = missionPostDTO.isAnonymous();
+            boolean compare = compareMissionPost(missionPostDTO, missionPostId);
+            log.info("compare");
+            if (!compare) {
+                log.info("compare==false?:{}",compare);
+                return "수정된 부분이 없습니다.";
+            } else if (compare) {
 
-            //인증 게시글 본문 (제목,내용,첨부이미지)
-            String textTitle = missionPostDTO.getTextTitle();
-            String textContent = missionPostDTO.getTextContent();
-            String imageContent = missionPostDTO.getImageContent();
+                //dto에서 값을 꺼내서 전달 (수정할 값)
+                boolean display = missionPostDTO.isDisplay();
+                boolean anonymous = missionPostDTO.isAnonymous();
 
-            missionPostRepository.updateMissionPostByMissionPostId(missionPostId, display, anonymous, textTitle, textContent, imageContent);
-            return "수정되었습니다.";
+                //인증 게시글 본문 (제목,내용,첨부이미지)
+                String textTitle = missionPostDTO.getTextTitle();
+                String textContent = missionPostDTO.getTextContent();
+                String imageContent = missionPostDTO.getImageContent();
+
+                missionPostRepository.updateMissionPostByMissionPostId(missionPostId, display, anonymous, textTitle, textContent, imageContent);
+                return "미션 인증글이 수정되었습니다.";
+            }
         } else if (!(missionPost.getPostDateTime().toLocalDate()).equals(todayDate)) { //해당 유저가 작성한 글은 맞지만 오늘 미션이 아니라면
+            log.info("todayDate:{}", todayDate);
+            log.info("(missionPost.getPostDateTime().toLocalDate()):{}", missionPost.getPostDateTime().toLocalDate());
+
             return "오늘 등록한 미션 인증글만 수정 가능합니다.";
-        } else {
+        }
             return "수정에 실패했습니다.";
         }
-    }
+
+
 
    /* public List<MissionPostDTO> getAllMissionPostsForJaraUs(Long jaraUsId) {
         // jaraUsId에 대한 미션 포스트 검색 로직 구현
