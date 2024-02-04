@@ -2,7 +2,9 @@ package siliconDream.jaraMe.service;
 
 import org.springframework.stereotype.Service;
 import siliconDream.jaraMe.domain.PointHistory;
+import siliconDream.jaraMe.domain.JaraUs;
 import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.repository.JaraUsRepository;
 import siliconDream.jaraMe.repository.PointHistoryRepository;
 import siliconDream.jaraMe.repository.PointRepository;
 import siliconDream.jaraMe.repository.UserRepository;
@@ -17,15 +19,18 @@ public class PointServiceImpl implements PointService {
     private final UserRepository userRepository;
     private final PointHistoryRepository pointHistoryRepository;
     private final NotificationService notificationService;
+    private JaraUsRepository jaraUsRepository;
 
     public PointServiceImpl(PointRepository pointRepository,
                             UserRepository userRepository,
                             PointHistoryRepository pointHistoryRepository,
-                            NotificationService notificationService) {
+                            NotificationService notificationService,
+                            JaraUsRepository jaraUsRepository) {
         this.pointRepository = pointRepository;
         this.userRepository = userRepository;
         this.pointHistoryRepository = pointHistoryRepository;
         this.notificationService = notificationService;
+        this.jaraUsRepository = jaraUsRepository;
     }
 
     //출석체크
@@ -116,8 +121,9 @@ public class PointServiceImpl implements PointService {
         pointHistoryRepository.save(pointHistory);
         updatedPoint = pointRepository.plusPoint(userId, changeAmount);
 
-        // 알림 메시지 생성 및 발송
-        String notificationMessage = String.format("자라어스 미션 완료로 %d포인트가 적립되었습니다.", changeAmount);
+        // 알림 메시지 수정
+        String jaraUsName = jaraUs.getJaraUsName(); // JaraUs 미션 이름
+        String notificationMessage = String.format("'%s' 미션 완료로 %d포인트가 적립되었습니다.", jaraUsName, changeAmount);
         notificationService.createNotification(userId, notificationMessage);
 
 
