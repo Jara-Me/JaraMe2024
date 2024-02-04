@@ -161,4 +161,13 @@ public class JaraUs {
     public void setInterest(String interest) {
         this.interest = interest;
     }
+    
+    public User getAdministrator() {
+        return administrator;
+    }
+
+    public void setAdministrator(User administrator) {
+        this.administrator = administrator;
+    }
+}
 }
