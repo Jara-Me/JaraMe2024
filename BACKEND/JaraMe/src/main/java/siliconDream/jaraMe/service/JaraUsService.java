@@ -37,5 +37,7 @@ public interface JaraUsService {
 
     boolean jaraUsNameCheck(String jaraUsName);
 
+    List<JaraUsDTO> getJaraUsListForUser(Long userId);
+
     //List<JaraUsDTO> getJaraUsListForUser(Long userId);
 }
