@@ -13,7 +13,7 @@ public interface JaraUsService {
 
     void participateInJaraUs(@Valid JaraUsDTO jaraUsId, Long userId);
 
-    void withdrawFromJaraUs(Long jaraUsId, Long userId);
+    void withdrawFromJaraUs(Long jaraUsId, Long currentUserId);
 
     void editJaraUsByAdmin(Long jaraUsId, Long adminUserId, JaraUsDTO jaraUsDTO);
 
@@ -35,5 +35,5 @@ public interface JaraUsService {
 
     JaraUs findByjaraUsId(Long jaraUsId);
 
-    List<JaraUsDTO> getJaraUsListForUser(Long userId);
+    //List<JaraUsDTO> getJaraUsListForUser(Long userId);
 }

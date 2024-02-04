@@ -262,7 +262,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         }
     }
 
-    public List<MissionPostDTO> getAllMissionPostsForJaraUs(Long jaraUsId) {
+   /* public List<MissionPostDTO> getAllMissionPostsForJaraUs(Long jaraUsId) {
         // jaraUsId에 대한 미션 포스트 검색 로직 구현
         List<MissionPost> missionPosts = missionPostRepository.findAllByJaraUsId(jaraUsId);
         return convertToMissionPostDTOList(missionPosts);
@@ -291,7 +291,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         missionPostDTO.setProfileImage(missionPost.getUser().getProfileImage());
 
         return missionPostDTO;
-    }
+    }*/
 /*
     //미션인증글 삭제 => 보류
     //TODO : 예외처리 : 미션인증글이 삭제되면서 미션 기록, 오늘의 미션, 해당 미션인증글에 달린 댓글,리액션 모두 삭제돼야함.

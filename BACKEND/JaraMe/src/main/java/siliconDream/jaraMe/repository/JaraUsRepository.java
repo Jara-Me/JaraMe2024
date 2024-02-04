@@ -32,5 +32,5 @@ public interface JaraUsRepository extends JpaRepository<JaraUs, Long> {
 
     Optional<JaraUs> findByjaraUsId(Long jaraUsId);
 
-    List<JaraUs> findAllByJoinUsers_UserId(Long userId);
+    //List<JaraUs> findAllByJoinUsers_UserId(Long userId);
 }

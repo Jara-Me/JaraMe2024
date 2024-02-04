@@ -10,7 +10,6 @@ import java.util.List;
 @Entity
 public class MissionPost {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)

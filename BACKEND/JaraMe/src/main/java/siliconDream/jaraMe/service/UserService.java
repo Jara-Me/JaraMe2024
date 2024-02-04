@@ -14,7 +14,7 @@ public interface UserService {
 
     String findUserEmailByEmail(String email);
 
-    String emailCheck(String email);
+    boolean emailCheck(String email);
 
     boolean isPasswordConfirmed(UserDto userDto);
 
@@ -48,4 +48,6 @@ public interface UserService {
 
     // 사용자가 참여 중인 JaraUs 개수 가져오기
     int getParticipatingJaraUsCount(Long userId);
+
+    boolean nicknameCheck(String nickname);
 }

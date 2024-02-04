@@ -92,7 +92,7 @@ public class MissionPostController {
 
     }
 
-    @GetMapping("/All/{jaraUsId}")
+    /*@GetMapping("/All/{jaraUsId}")
     public ResponseEntity<List<MissionPostDTO>> getAllMissionPostsForJaraUs(@PathVariable Long jaraUsId) {
         List<MissionPostDTO> missionPosts = missionPostService.getAllMissionPostsForJaraUs(jaraUsId);
 
@@ -117,7 +117,7 @@ public class MissionPostController {
         }
 
         return ResponseEntity.ok(myMissionPosts);
-    }
+    }*/
 
 
     //미션 인증글 수정 => 테스트완료, 예외처리 전
