@@ -60,13 +60,21 @@ public class ReactionServiceImpl implements ReactionService {
             reaction.setReactionType(missionReactionDTO.getReactionType());
 
             reactionRepository.save(reaction);
-            // 알림 메시지 생성 및 발송
+            
+            // 알림 메시지 생성 및 발송 로직 수정
             User reactingUser = userRepository.findByUserId(userId);
             MissionPost post = missionPostRepository.findByMissionPostId(missionReactionDTO.getMissionPostId());
-            String notificationMessage = String.format("%s님이 당신의 게시물에 %s를 보냈습니다.",
+            
+            // 게시물 제목 포함
+            String notificationMessage = String.format("%s님이 당신의 게시물 '%s'에 %s 반응을 보냈습니다.",
                     reactingUser.getNickname(),
+                    post.getTextTitle(), // 게시물 제목 포함
                     missionReactionDTO.getReactionType());
             notificationService.createNotification(post.getUser().getUserId(), notificationMessage);
+
+            // Reaction 객체의 notice 필드 업데이트
+            reaction.setNotice(true);
+            reactionRepository.save(reaction);
 
             return ResponseEntity.status(HttpStatus.OK).body(String.format("%s를 누르셨습니다!", missionReactionDTO.getReactionType()));
         } else if (reactionOptional.isPresent()) {
