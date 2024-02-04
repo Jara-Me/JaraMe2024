@@ -77,13 +77,14 @@ public class MissionPostServiceImpl implements MissionPostService {
 
 
         MissionPost savedMissionPost = missionPostRepository.save(missionPost);
+        Long savedMissionPostId = savedMissionPost.getMissionPostId();
+
+        dailyMissionUpdate(userId, jaraUsId, savedMissionPostId);
         return true;
         /*if (savedMissionPost) {
 
             //TODO: dailyMission테이블에도 missionPostId 저장하기
-            Long savedMissionPostId = savedMissionPost.get().getMissionPostId();
-            dailyMissionUpdate(userId, jaraUsId, savedMissionPostId);
-            return true;
+
         } else if (savedMissionPost.isEmpty()) {
             return false;
         }else {return false;}
