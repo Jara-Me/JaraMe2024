@@ -63,6 +63,14 @@ public class User {
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ToDoList> toDoList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Notification> notifications;
+
+    // User가 관리하는 JaraUs 목록
+    @OneToMany(mappedBy = "administrator", fetch = FetchType.LAZY)
+    private Set<JaraUs> administeredJaraUses = new HashSet<>();
 /*
     @OneToMany(mappedBy="userId")
     @JsonIgnore
@@ -177,7 +185,14 @@ public class User {
     public void setToDoList(List<ToDoList> toDoList) {
         this.toDoList = toDoList;
     }
+    
+    public Set<JaraUs> getAdministeredJaraUses() {
+        return administeredJaraUses;
+    }
 
+    public void setAdministeredJaraUses(Set<JaraUs> administeredJaraUses) {
+        this.administeredJaraUses = administeredJaraUses;
+    }
 /*
     public List<MissionHistory> getMissionHistory() {
         return missionHistory;
