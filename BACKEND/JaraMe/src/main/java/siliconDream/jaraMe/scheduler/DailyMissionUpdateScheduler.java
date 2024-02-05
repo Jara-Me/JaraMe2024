@@ -46,7 +46,7 @@ public class DailyMissionUpdateScheduler {
     }
 
     @Transactional
-    @Scheduled(cron = "30 59 8 * * *")
+    @Scheduled(cron = "30 11 9 * * *")
     public void transferDailyMission() {
         log.info("start  ?");
         //모든 유저
