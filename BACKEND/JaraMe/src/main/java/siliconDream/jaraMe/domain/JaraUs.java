@@ -21,7 +21,7 @@ public class JaraUs {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private Long jaraUsId;
     private String jaraUsName;
     private String missionName;
@@ -33,10 +33,10 @@ public class JaraUs {
     private String display;
 
     @NotNull
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private LocalDate startDate;
     @NotNull
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private LocalDate endDate;
 
 

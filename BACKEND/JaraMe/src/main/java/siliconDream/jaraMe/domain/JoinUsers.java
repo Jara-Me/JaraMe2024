@@ -3,7 +3,9 @@ package siliconDream.jaraMe.domain;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 
@@ -74,8 +76,6 @@ public class JoinUsers {
     public void setJaraUs(JaraUs jaraUs) {
         this.jaraUs = jaraUs;
     }
-
-
 }
 
 
