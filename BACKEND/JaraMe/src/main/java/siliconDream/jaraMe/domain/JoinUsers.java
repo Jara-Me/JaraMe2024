@@ -3,7 +3,9 @@ package siliconDream.jaraMe.domain;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 
@@ -24,6 +26,9 @@ public class JoinUsers {
 
     @Column(name = "signUpDate")
     private LocalDate signUpDate;
+
+    @OneToMany(mappedBy = "jaraUs", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<JoinUsers> joinUsers = new HashSet<>();
 
 
     @Override
@@ -75,6 +80,13 @@ public class JoinUsers {
         this.jaraUs = jaraUs;
     }
 
+    public Set<JoinUsers> getJoinUsers() {
+        return joinUsers;
+    }
+
+    public void setJoinUsers(Set<JoinUsers> joinUsers) {
+        this.joinUsers = joinUsers;
+    }
 
 }
 

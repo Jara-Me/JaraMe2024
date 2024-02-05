@@ -145,8 +145,6 @@ public class JaraUsServiceImpl implements JaraUsService {
 
         jaraUs.getJoinUsers().remove(joinUserToRemove);
 
-        jaraUs.setJoinUsers(jaraUs.getJoinUsers());
-
         jaraUsRepository.save(jaraUs);
     }
 
