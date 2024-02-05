@@ -109,6 +109,10 @@ public class PointServiceImpl implements PointService {
     public int pointPlus(Long userId, int changeAmount,Long jaraUsId) {
         int updatedPoint = 0;
         /**추가**/
+         // JaraUs 미션 정보 조회
+        JaraUs jaraUs = jaraUsRepository.findByjaraUsId(jaraUsId)
+                .orElseThrow(() -> new RuntimeException("JaraUs not found"));
+        
         PointHistory pointHistory = new PointHistory();
         pointHistory.setPoint(userRepository.findByUserId(userId).getPoint()+changeAmount);
         pointHistory.setChangeAmount(changeAmount);
