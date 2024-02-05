@@ -130,16 +130,16 @@ public class JaraUsServiceImpl implements JaraUsService {
     }
 
     @Override
-    public void withdrawFromJaraUs(Long jaraUsId, Long currentUserId) {
+    public void withdrawFromJaraUs(Long jaraUsId, Long userId) {
         JaraUs jaraUs = jaraUsRepository.findById(jaraUsId)
                 .orElseThrow(() -> new EntityNotFoundException("가입되어있지 않음"));
 
-        if (jaraUs.getAdminUserId().equals(currentUserId)) {
+        if (jaraUs.getAdminUserId().equals(userId)) {
             throw new IllegalStateException("관리자는 탈퇴할 수 없음. 관리자를 넘겨주세요.");
         }
 
         JoinUsers joinUserToRemove = jaraUs.getJoinUsers().stream()
-                .filter(joinUser -> joinUser.getUser().getUserId().equals(currentUserId))
+                .filter(joinUser -> joinUser.getUser().getUserId().equals(userId))
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("가입되어있지 않음"));
 
