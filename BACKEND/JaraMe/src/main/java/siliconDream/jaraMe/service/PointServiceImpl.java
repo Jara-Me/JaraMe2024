@@ -1,5 +1,6 @@
 package siliconDream.jaraMe.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import siliconDream.jaraMe.domain.PointHistory;
 import siliconDream.jaraMe.domain.JaraUs;
@@ -12,7 +13,7 @@ import siliconDream.jaraMe.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
-
+@Slf4j
 @Service
 public class PointServiceImpl implements PointService {
     private final PointRepository pointRepository;
@@ -38,10 +39,15 @@ public class PointServiceImpl implements PointService {
         //boolean checkInResult = false;
         String resultMessage = "";
         Optional<User> user = pointRepository.findByUserId(userId);
-        if (user.isPresent()) {
+
             if (dateTime.toLocalDate().equals(LocalDate.now())) { //오늘날짜가 맞는지
+                log.info("log test : dateTime.toLocalDate():{}",dateTime.toLocalDate());
+                log.info("log test : LocalDate.now():{}",LocalDate.now());
+
                 //오늘 출석체크한 적이 없는지
-                if (pointRepository.findByUserId(userId).get().isCheckIn() == false) {
+
+                User checkInUser= userRepository.findByUserId(userId);
+                if (checkInUser.isCheckIn() == false) {
                     /**추가**/
                     PointHistory pointHistory = new PointHistory();
                     pointHistory.setPoint(2+userRepository.findByUserId(userId).getPoint());
@@ -60,14 +66,16 @@ public class PointServiceImpl implements PointService {
                     notificationService.createNotification(userId, "출석체크되었습니다! (+2포인트)");
 
 
-                } else if (pointRepository.findByUserId(userId).get().isCheckIn() == true) {
+                } else if (checkInUser.isCheckIn()) {
                     resultMessage = "오늘 이미 출석체크를 하셨습니다!";
                 }
 
             } else if (!dateTime.toLocalDate().equals(LocalDate.now())) {
+                log.info("log test : dateTime.toLocalDate():{}",dateTime.toLocalDate());
+                log.info("log test : LocalDate.now():{}",LocalDate.now());
                 resultMessage = "출석체크는 요청 날짜가 잘못됐습니다";
             }
-        }
+
         return resultMessage;
     }
 

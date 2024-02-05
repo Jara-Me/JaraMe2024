@@ -25,11 +25,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-validation' //테스트 목적으로 주석처리함. (커밋 전에 취소하기)
 	//implementation 'org.springframework.boot:spring-boot-starter-security' //테스트 목적으로 주석처리함. (커밋 전에 취소하기)
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-	//runtimeOnly 'com.mysql:mysql-connector-j' //커밋 전에 취소하기! (원격서버 에러날 것같음 )
+	//runtimeOnly 'com.mysql:mysql-connector-j' (원격서버 테스트할 때 주석처리하기)
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
