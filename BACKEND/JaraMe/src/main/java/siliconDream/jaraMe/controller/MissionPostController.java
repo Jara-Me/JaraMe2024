@@ -111,16 +111,16 @@ public class MissionPostController {
     }
 
     @GetMapping("/my-post")
-    public ResponseEntity<?> getMyMissionPostsForJaraUs(@RequestParam Long jaraUsId, HttpServletRequest request) {
+    public ResponseEntity<?> getMyMissionPostsForJaraUs(@RequestParam (name = "jaraUsId") Long jaraUsId, @RequestParam(name = "userId") Long userId) {
 
-        HttpSession session = request.getSession(false);
+        /*HttpSession session = request.getSession(false);
         if (session == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 검증 오류");
         }
 
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");*/
 
-        List<MissionPostDTO> myMissionPosts = missionPostService.getMyMissionPostsForJaraUs(jaraUsId, user.getUserId());
+        List<MissionPostDTO> myMissionPosts = missionPostService.getMyMissionPostsForJaraUs(jaraUsId, userId);
 
 
         // Check if the list is empty and handle it appropriately, e.g., return 404
