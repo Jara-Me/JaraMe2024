@@ -3,6 +3,7 @@ package siliconDream.jaraMe.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import siliconDream.jaraMe.domain.Notification;
+import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.NotificationDTO;
 import siliconDream.jaraMe.repository.NotificationRepository;
 import siliconDream.jaraMe.repository.UserRepository;

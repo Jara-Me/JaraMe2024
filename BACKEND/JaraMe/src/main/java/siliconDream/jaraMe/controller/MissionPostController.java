@@ -18,6 +18,7 @@ import siliconDream.jaraMe.service.MissionPostService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -99,6 +100,10 @@ public class MissionPostController {
     public ResponseEntity<List<MissionPostDTO>> getAllMissionPostsForJaraUs(@RequestParam(name = "jaraUsId") Long jaraUsId) {
         // Assuming you want to retrieve all mission posts without specifying a particular JaraUs
         List<MissionPostDTO> missionPosts = missionPostService.getAllMissionPosts(jaraUsId);
+
+        missionPosts = missionPosts.stream()
+                .filter(MissionPostDTO::isDisplay)
+                .collect(Collectors.toList());
 
         // Check if the mission post is empty and process appropriately, e.g. returning 404
         if (missionPosts.isEmpty()) {
