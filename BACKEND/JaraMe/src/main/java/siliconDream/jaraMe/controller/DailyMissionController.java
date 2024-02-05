@@ -25,14 +25,18 @@ public class DailyMissionController {
 
     //오늘의 미션 조회 => 테스트완료 / 예외처리 전
     @GetMapping("/get")
-    public Optional<List<DailyMissionDTO>> getDailyMission(HttpServletRequest request) {
+    public Optional<List<DailyMissionDTO>> getDailyMission(@RequestParam Long userId) {
+
+        /*
         HttpSession session = request.getSession(false);
+
         Long userId;
         if (session == null){//todo: 로직 추가하기
         }
         User user = (User) session.getAttribute("user");
         // log.info("log:userId:{}", user.getUserId());
         userId = user.getUserId();
+        */
         Optional<List<DailyMissionDTO>> dailyMissionDTOList = dailyMissionService.getDailyMission(userId, LocalDate.now());
         return dailyMissionDTOList;
     }

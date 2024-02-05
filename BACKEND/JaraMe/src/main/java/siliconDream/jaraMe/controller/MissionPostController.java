@@ -34,17 +34,18 @@ public class MissionPostController {
     //미션 인증글 등록 =>테스트 완료 / 예외처리 전
     //TODO: 오늘 해당 유저가 해당 자라어스에 대한 미션인증글을 이미 작성했다면
     @PostMapping("/post")
-    public ResponseEntity<String> missionPost(@RequestBody MissionPostDTO missionPostDTO, HttpServletRequest request) {
+    public ResponseEntity<String> missionPost(@RequestBody MissionPostDTO missionPostDTO,@RequestParam Long userId) {
+
+        /*
         HttpSession session = request.getSession(false);
+
         Long userId;
-        if (session == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("미션 인증글 등록에 실패했습니다.");
-
+        if (session == null){//todo: 로직 추가하기
         }
-
-            User user = (User) session.getAttribute("user");
-            log.info("log:userId:{}", user.getUserId());
-            userId = user.getUserId();
+        User user = (User) session.getAttribute("user");
+        // log.info("log:userId:{}", user.getUserId());
+        userId = user.getUserId();
+        */
 
             boolean result = missionPostService.missionPost(missionPostDTO, userId);
             if (result) {
@@ -69,22 +70,18 @@ public class MissionPostController {
 
     //미션 인증글 조회 =>테스트 완료 / 예외처리 전
     @GetMapping("/get")
-    public ResponseEntity<?> getMissionPost(@RequestParam Long missionPostId, HttpServletRequest request) {
+    public ResponseEntity<?> getMissionPost(@RequestParam Long missionPostId, @RequestParam Long userId) {
 
+        /*
         HttpSession session = request.getSession(false);
-    log.info("session.getId:{}", session);
 
         Long userId;
-        if (session == null) {
-           // GetMissionPostDTO getMissionPostDTO2 = new GetMissionPostDTO(); //수정예정
-           // return getMissionPostDTO2;
-            //ResponseEntity.status(HttpStatus.BAD_REQUEST).body("미션 인증글 등록에 실패했습니다.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if (session == null){//todo: 로직 추가하기
         }
-
         User user = (User) session.getAttribute("user");
-        log.info("log:userId:{}", user.getUserId());
+        // log.info("log:userId:{}", user.getUserId());
         userId = user.getUserId();
+        */
 
         boolean exist = missionPostService.existMissionPost(missionPostId);
         if (exist){
@@ -139,16 +136,18 @@ public class MissionPostController {
     //TODO: 오늘=> 내용과 공개/익명 정보 모두 수정 가능
     //TODO: 오늘이 아닌 경우 => 공개/익명 정보만 수정 가능
     @PostMapping("/update")
-    public ResponseEntity<String> updateMissionPost(@RequestParam Long missionPostId, @RequestBody MissionPostDTO missionPostDTO,HttpServletRequest request) {
+    public ResponseEntity<String> updateMissionPost(@RequestParam Long missionPostId, @RequestBody MissionPostDTO missionPostDTO,@RequestParam Long userId) {
+
+        /*
         HttpSession session = request.getSession(false);
+
         Long userId;
         if (session == null){//todo: 로직 추가하기
-          }
+        }
         User user = (User) session.getAttribute("user");
-        log.info("log:userId:{}", user.getUserId());
+        // log.info("log:userId:{}", user.getUserId());
         userId = user.getUserId();
-
-
+        */
         String resultMessage = missionPostService.updateMissionPost(missionPostId, missionPostDTO, userId, LocalDate.now());
 
         //수행결과에 따라 (수정되거나 수정되지않은) 미션 인증글 조회 결과 반환

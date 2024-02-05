@@ -49,7 +49,7 @@ public interface DailyMissionRepository extends JpaRepository<DailyMission, Long
     @Transactional
     void deleteByUserUserId(Long userId);
 
-    @Query("SELECT new siliconDream.jaraMe.dto.DailyMissionDTO(dm.dailyMissionResult, dmj.jaraUsName, dmj.missionName) " +
+    @Query("SELECT new siliconDream.jaraMe.dto.DailyMissionDTO(dm.dailyMissionResult, dmj.jaraUsId, dmj.jaraUsName, dmj.missionName) " +
             "FROM DailyMission dm LEFT JOIN dm.jaraUs dmj WHERE dm.user.userId = :userId AND dm.scheduleDate = :scheduleDate")
     List<DailyMissionDTO> findDailyMissionDTOByScheduleDateAndUser_UserId( LocalDate scheduleDate,Long userId);
 
