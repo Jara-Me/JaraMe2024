@@ -170,4 +170,4 @@ public class JaraUs {
         this.administrator = administrator;
     }
 }
-}
+
