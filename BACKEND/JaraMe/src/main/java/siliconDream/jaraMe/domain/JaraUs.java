@@ -33,10 +33,10 @@ public class JaraUs {
     private String display;
 
     @NotNull
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private LocalDate startDate;
     @NotNull
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private LocalDate endDate;
 
 
