@@ -222,7 +222,7 @@ public class JaraUsServiceImpl implements JaraUsService {
     @Override
     public JaraUs findByjaraUsId(Long jaraUsId) {
         return jaraUsRepository.findByjaraUsId(jaraUsId)
-                .orElseThrow(() -> new EntityNotFoundException("JaraUs not found"));
+                .orElseThrow(() -> new EntityNotFoundException("자라어스 없음"));
     }
 
     @Override
@@ -269,6 +269,7 @@ public class JaraUsServiceImpl implements JaraUsService {
         jaraUsDTO.setDisplay(jaraUs.getDisplay());
         jaraUsDTO.setStartDate(jaraUs.getStartDate());
         jaraUsDTO.setEndDate(jaraUs.getEndDate());
+        jaraUsDTO.setInterest(jaraUs.getInterest());
         Set<Recurrence> recurrenceSet = jaraUs.getRecurrence();// JaraUs 엔티티 객체에서 Recurrence 집합을 가져옴.
         jaraUsDTO.setRecurrence(recurrenceSet);
         return jaraUsDTO;

@@ -4,10 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
+//import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
+//import lombok.NoArgsConstructor;
+//import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -170,4 +170,3 @@ public class JaraUs {
         this.administrator = administrator;
     }
 }
-

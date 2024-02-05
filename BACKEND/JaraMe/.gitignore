@@ -23,5 +23,5 @@ app.jar
 .classpath
 
 application-local.properties
-application-origin.properties
-application.properties
+#application-origin.properties
+#application.properties
