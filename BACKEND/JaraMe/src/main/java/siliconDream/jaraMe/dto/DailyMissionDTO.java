@@ -15,6 +15,7 @@ public class DailyMissionDTO {
 
 
     private boolean dailyMissionResult;
+    private Long jaraUsId;
     private String jaraUsName;
     private String missionName;
 

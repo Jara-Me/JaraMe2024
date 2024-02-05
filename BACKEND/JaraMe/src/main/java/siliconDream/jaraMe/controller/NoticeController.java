@@ -36,14 +36,18 @@ public class NoticeController {
 
     //미션완주,리액션통계
     @GetMapping("/get")
-    public Optional<NoticeDTO> missionFinishNotice(HttpServletRequest request) {
+    public Optional<NoticeDTO> missionFinishNotice(@RequestParam Long userId) {
+
+        /*
         HttpSession session = request.getSession(false);
+
         Long userId;
         if (session == null){//todo: 로직 추가하기
         }
         User user = (User) session.getAttribute("user");
         // log.info("log:userId:{}", user.getUserId());
         userId = user.getUserId();
+        */
         Optional<NoticeDTO> noticeDTO =noticeService.findNoticeMessageByUserIdAndNoticeStatus(userId);
         return noticeDTO;
     }
@@ -56,14 +60,18 @@ public class NoticeController {
 
     //캘린더
     @GetMapping("calendar")
-    public Optional<CalendarDTO> calendar(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate, HttpServletRequest request) {
+    public Optional<CalendarDTO> calendar(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate, @RequestParam Long userId) {
+
+        /*
         HttpSession session = request.getSession(false);
+
         Long userId;
         if (session == null){//todo: 로직 추가하기
         }
         User user = (User) session.getAttribute("user");
         // log.info("log:userId:{}", user.getUserId());
         userId = user.getUserId();
+        */
         Optional<CalendarDTO> calendarDTO = noticeService.getCalendar(selectedDate,userId);
         return calendarDTO;
     }
