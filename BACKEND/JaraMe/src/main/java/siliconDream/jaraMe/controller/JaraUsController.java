@@ -60,15 +60,15 @@ public class JaraUsController {
 */
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNewJaraUs(@RequestBody @Valid JaraUsDTO jaraUsDTO, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+    public ResponseEntity<?> createNewJaraUs(@RequestBody @Valid JaraUsDTO jaraUsDTO, @RequestParam("userId") Long userId) {
+        /*HttpSession session = request.getSession(false);
 
         if (session == null) {
             log.warn("사용자 검증 오류");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 검증 오류");
         }
 
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");*/
 
         try {
             if (jaraUsDTO.getRecurrence() == null || jaraUsDTO.getRecurrence().isEmpty()) {
@@ -76,8 +76,8 @@ public class JaraUsController {
             }
 
             jaraUsDTO.setJaraUsProfileImage("your_image_url_or_base64_data");
-            Long currentUserId = user.getUserId();
-            JaraUs createdNewJaraUs = jaraUsService.createNewJaraUs(jaraUsDTO, currentUserId);
+            //Long currentUserId = user.getUserId();
+            JaraUs createdNewJaraUs = jaraUsService.createNewJaraUs(jaraUsDTO, userId);
 
             Long createdJaraUsId = createdNewJaraUs.getJaraUsId();
 
@@ -101,19 +101,19 @@ public class JaraUsController {
         return ResponseEntity.ok("사용 가능한 이름");
     }
     @PostMapping("/participate")
-    public ResponseEntity<?> participateInJaraUs(@RequestBody @Valid JaraUsDTO jaraUsDTO, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+    public ResponseEntity<?> participateInJaraUs(@RequestBody @Valid JaraUsDTO jaraUsDTO, @RequestParam("userId") Long userId) {
+        /*HttpSession session = request.getSession(false);
 
         if (session == null) {
             log.warn("사용자 인증되지 않음");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 인증되지 않음");
         }
 
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");*/
 
         try {
-            Long currentUserId = user.getUserId();
-            jaraUsService.participateInJaraUs(jaraUsDTO, currentUserId);
+            //Long currentUserId = user.getUserId();
+            jaraUsService.participateInJaraUs(jaraUsDTO, userId);
             // 성공 응답 반환
             return ResponseEntity.ok("자라어스 가입 성공");
         } catch (IllegalStateException e) {
@@ -124,20 +124,20 @@ public class JaraUsController {
     }
 
     @PostMapping("/withdraw")
-    public ResponseEntity<?> withdrawFromJaraUs(@RequestBody @Valid JaraUsDTO jaraUsDTO, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+    public ResponseEntity<?> withdrawFromJaraUs(@RequestBody @Valid JaraUsDTO jaraUsDTO, @RequestParam("userId") Long userId) {
+        /*HttpSession session = request.getSession(false);
 
         if (session == null) {
             log.warn("사용자 검증 오류");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 검증 오류");
         }
 
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");*/
 
         try {
             Long jaraUsId = jaraUsDTO.getJaraUsId();
-            Long currentUserId = user.getUserId();
-            jaraUsService.withdrawFromJaraUs(jaraUsId, currentUserId);
+            //Long currentUserId = user.getUserId();
+            jaraUsService.withdrawFromJaraUs(jaraUsId, userId);
             return ResponseEntity.ok("자라어스 탈퇴 완료");
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("자라어스를 찾을 수 없음");
@@ -149,20 +149,20 @@ public class JaraUsController {
     @PostMapping("/edit-admin")
     public ResponseEntity<?> editJaraUsByAdmin(
             @RequestBody JaraUsDTO jaraUsDTO,
-            HttpServletRequest request
+            @RequestParam("userId") Long userId
     ) {
-        HttpSession session = request.getSession(false);
+       /* HttpSession session = request.getSession(false);
 
         if (session == null) {
             log.warn("사용자 검증 오류");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 검증 오류");
         }
 
-        User adminUser = (User) session.getAttribute("user");
+        User adminUser = (User) session.getAttribute("user");*/
 
         try {
             Long jaraUsId = jaraUsDTO.getJaraUsId(); // Assuming JaraUsDTO has a getter for jaraUsId
-            jaraUsService.editJaraUsByAdmin(jaraUsId, adminUser.getUserId(), jaraUsDTO);
+            jaraUsService.editJaraUsByAdmin(jaraUsId, userId, jaraUsDTO);
             return ResponseEntity.ok("관리자를 넘겼습니다.");
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("자라어스를 찾을 수 없음.");
@@ -180,19 +180,19 @@ public class JaraUsController {
     @PostMapping("/edit-information")
     public ResponseEntity<?> editJaraUsInformation(
             @RequestBody JaraUsDTO jaraUsDTO,
-            HttpServletRequest request
+            @RequestParam("userId") Long userId
     ) {
-        HttpSession session = request.getSession(false);
+        /*HttpSession session = request.getSession(false);
 
         if (session == null) {
             log.warn("사용자 검증 오류");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 검증 오류");
         }
 
-        User editorUser = (User) session.getAttribute("user");
+        User editorUser = (User) session.getAttribute("user");*/
 
         try {
-            JaraUs editedJaraUs = jaraUsService.editJaraUsInformation(editorUser.getUserId(), jaraUsDTO);
+            JaraUs editedJaraUs = jaraUsService.editJaraUsInformation(userId, jaraUsDTO);
             return ResponseEntity.ok("자라어스 정보 수정 성공");
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("자라어스를 찾을 수 없음");
@@ -201,13 +201,13 @@ public class JaraUsController {
         }
     }
     @GetMapping("/information")
-    public ResponseEntity<?> getJaraUsInformation(@RequestParam Long jaraUsId, HttpServletRequest request) {
+    public ResponseEntity<?> getJaraUsInformation(@RequestParam ("jaraUsId") Long jaraUsId) {
         try {
-            HttpSession session = request.getSession(false);
+            /*HttpSession session = request.getSession(false);
             if (session == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 검증 오류");
             }
-
+            */
             JaraUs jaraUsInfo = jaraUsService.findByjaraUsId(jaraUsId);
             JaraUsDTO jaraUsDTO = jaraUsService.convertToDTO(jaraUsInfo);
             return ResponseEntity.ok(jaraUsDTO);
@@ -217,18 +217,18 @@ public class JaraUsController {
     }
 
     @GetMapping("/my-groups")
-    public ResponseEntity<?> getMyGroups(HttpServletRequest request) {
+    public ResponseEntity<?> getMyGroups(@RequestParam("userId") Long userId) {
 
 
-        HttpSession session = request.getSession(false);
+        /*HttpSession session = request.getSession(false);
         if (session == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 검증 오류");
         }
 
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("user");*/
 
         try {
-            List<JaraUsDTO> myGroups = jaraUsService.getJaraUsListForUser(user.getUserId());
+            List<JaraUsDTO> myGroups = jaraUsService.getJaraUsListForUser(userId);
             return ResponseEntity.ok(myGroups);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 그룹을 찾을 수 없음");
