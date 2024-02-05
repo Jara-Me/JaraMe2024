@@ -27,9 +27,6 @@ public class JoinUsers {
     @Column(name = "signUpDate")
     private LocalDate signUpDate;
 
-    @OneToMany(mappedBy = "jaraUs", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<JoinUsers> joinUsers = new HashSet<>();
-
 
     @Override
     public boolean equals(Object o) {
@@ -79,15 +76,6 @@ public class JoinUsers {
     public void setJaraUs(JaraUs jaraUs) {
         this.jaraUs = jaraUs;
     }
-
-    public Set<JoinUsers> getJoinUsers() {
-        return joinUsers;
-    }
-
-    public void setJoinUsers(Set<JoinUsers> joinUsers) {
-        this.joinUsers = joinUsers;
-    }
-
 }
 
 
