@@ -63,7 +63,7 @@ public class NoticeServiceImpl implements NoticeService {
                 int like = 0;
                 log.info("oneMissionPostId:{}", oneMissionPostId); //ok
 
-                Optional<List<Object[]>> reactionCountDTOs = reactionRepository.findByMissionPost_MissionPostIdAndNotice(oneMissionPostId,0);
+                Optional<List<Object[]>> reactionCountDTOs = reactionRepository.findByMissionPost_MissionPostIdAndNotice(oneMissionPostId,false);
                 log.info("reactionCountDTOs:{}", reactionCountDTOs.get());
 
 
