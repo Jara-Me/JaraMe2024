@@ -33,7 +33,6 @@ import java.util.Set;
 @RestController
 @RequestMapping("/jaraus")
 @RequiredArgsConstructor
-@CrossOrigin(origins="*")
 public class JaraUsController {
 
     @Autowired
