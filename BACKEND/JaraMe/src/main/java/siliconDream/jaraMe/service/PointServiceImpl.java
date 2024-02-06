@@ -127,7 +127,7 @@ public class PointServiceImpl implements PointService {
         pointHistory.setPlusOrMinus(true);
         pointHistory.setTransactionTime(LocalDateTime.now());
         pointHistory.setNotice(false);
-        pointHistory.setTask(String.format("missionComplete {}",jaraUsId));
+        pointHistory.setTask(String.format("missionComplete %s", String.valueOf(jaraUsId)));
         pointHistory.setUser(userRepository.findByUserId(userId));
 
         pointHistoryRepository.save(pointHistory);

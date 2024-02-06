@@ -2,6 +2,7 @@ package siliconDream.jaraMe.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import siliconDream.jaraMe.domain.JaraUs;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/notice")
 public class NoticeController {
@@ -80,24 +82,26 @@ public class NoticeController {
 
         for (JaraUs jaraUs : jaraUses) {
             Long jaraUsId = jaraUs.getJaraUsId();
-
+            log.info("jaraUsId:{}",jaraUsId);
 
             //jaraUsId로 JoinUsers테이블에 필터링해서 참여중인 유저 알아내기
             Optional<List<Long>> userIds = joinUsersService.findUserIdsByJaraUsId(jaraUsId);
 
             for (Long userId : userIds.get()) {
-
+                log.info("joined-userId:{}",userId);
 
                 //미션에 참여한 유저들의 참여율 알아내기
                 int plusPoint = missionPostService.missionParticipationRate(userId, jaraUsId); //JaraUsService가 더 적합할 것 같음.
-
+                log.info("plusPoint:{}",plusPoint);
                 // 1/3 미만 : 미적립
                 // 1/3 이상~ 2/3 미만 : 10
                 // 2/3 이상~ 전체 미만 : 20
                 // 전체 : 50
 
-                //포인트 지급 로직 이용
-                int updatedPoint = pointService.pointPlus(userId, plusPoint, jaraUsId);
+                if (plusPoint!=0) {
+                    //포인트 지급 로직 이용
+                    int updatedPoint = pointService.pointPlus(userId, plusPoint, jaraUsId);
+                }
             }
         }
     }
