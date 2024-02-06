@@ -14,8 +14,15 @@ public class ToDoListController {
     @Autowired
     private ToDoListService toDoListService;
 
-    @PostMapping("/create")
+   /* @PostMapping("/create")
     public ResponseEntity<?> createTesk(@SessionAttribute(name="userId", required=true) Long userId, @RequestParam("teskName") String teskName) {
+        ToDoList toDoList = toDoListService.createTesk(userId, teskName);
+        ToDoListDto response = new ToDoListDto(toDoList); // DTO를 사용하여 응답 객체 생성
+        return ResponseEntity.ok().body(response);
+    } */
+    
+    @PostMapping("/create")
+    public ResponseEntity<?> createTesk(@RequestParam(name = "userId") Long userId, @RequestParam("teskName") String teskName) {
         ToDoList toDoList = toDoListService.createTesk(userId, teskName);
         ToDoListDto response = new ToDoListDto(toDoList); // DTO를 사용하여 응답 객체 생성
         return ResponseEntity.ok().body(response);
