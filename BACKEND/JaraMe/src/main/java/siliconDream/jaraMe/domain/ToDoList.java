@@ -10,13 +10,18 @@ public class ToDoList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long todoListId;
 
+    @Column(name = "today_date")
     private LocalDate todayDate;
+    @Column(name = "tesk_name")
     private String teskName;
+    @Column(name = "tesk_status")
     private boolean teskStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id") //외래키 확인해야됨.
+    @JoinColumn(name = "user")
     private User user;
+
+
 
     public Long getTodoListId() {
         return todoListId;
@@ -49,6 +54,13 @@ public class ToDoList {
 
     public LocalDate getTodayDate() {
         return todayDate;
+    }
+    public String getTeskName() {
+        return teskName;
+    }
+
+    public User getUser() {
+        return user;
     }
 }
 
