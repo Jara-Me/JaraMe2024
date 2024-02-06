@@ -116,7 +116,7 @@ public class PointServiceImpl implements PointService {
     //참여율에 따라 포인트 지급 (pointService? )
     public int pointPlus(Long userId, int changeAmount,Long jaraUsId) {
         int updatedPoint = 0;
-               
+
          // JaraUs 미션 정보 조회
         JaraUs jaraUs = jaraUsRepository.findByjaraUsId(jaraUsId)
                 .orElseThrow(() -> new RuntimeException("JaraUs not found"));

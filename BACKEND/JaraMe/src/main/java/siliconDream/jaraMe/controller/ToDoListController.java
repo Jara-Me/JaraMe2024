@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import siliconDream.jaraMe.domain.ToDoList;
 import siliconDream.jaraMe.dto.ToDoListDto;
 import siliconDream.jaraMe.service.ToDoListService;
-
+@CrossOrigin(originPatterns = "http://localhost:5173")
 @RestController
 @RequestMapping("/todolist")
 public class ToDoListController {

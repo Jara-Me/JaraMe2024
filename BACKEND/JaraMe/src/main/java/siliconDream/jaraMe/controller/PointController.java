@@ -11,7 +11,7 @@ import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.service.PointService;
 
 import java.time.LocalDateTime;
-
+@CrossOrigin(originPatterns = "http://localhost:5173")
 @RestController
 @RequestMapping("/point")
 public class PointController {

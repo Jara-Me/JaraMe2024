@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.MissionCommentDTO;
 import siliconDream.jaraMe.service.CommentService;
-
+@CrossOrigin(originPatterns = "http://localhost:5173")
 @RestController
 @RequestMapping("/comment")
 public class CommentController {

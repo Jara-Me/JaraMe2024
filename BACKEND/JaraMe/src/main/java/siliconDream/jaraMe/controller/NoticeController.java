@@ -17,7 +17,7 @@ import siliconDream.jaraMe.service.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
+@CrossOrigin(originPatterns = "http://localhost:5173")
 @Slf4j
 @RestController
 @RequestMapping("/notice")
