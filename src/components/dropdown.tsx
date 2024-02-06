@@ -28,35 +28,35 @@ const ULTitle = styled.div`
 `;
 
 
-const DropdownMenu = () => {
-    const groups = [
-        "C를 씹어먹자", "거북목탈퇴클럽", "실리콘드림"
-    ];
+const DropdownMenu: React.FC<{ onGroupSelect: (group: string | null) => void }> = ({ onGroupSelect }) => {
+    const groups = ["C를 씹어먹자", "거북목탈퇴클럽", "실리콘드림"];
     const [activeGroup, setActiveGroup] = useState("");
 
     return (
-    <>
-    <LI $isActive={activeGroup === ""} onClick={() => setActiveGroup("")}>전체</LI>
-        {groups.map((item, index) => (
-            <LI
-                key={index}
-                $isActive = {activeGroup === item}
-                onClick = { () => setActiveGroup(item)}
-            >{item}</LI>
-        ))}
-    </>
+        <>
+            <LI $isActive={activeGroup === ""} onClick={() => { setActiveGroup(""); onGroupSelect(null); }}>전체</LI>
+            {groups.map((item, index) => (
+                <LI
+                    key={index}
+                    $isActive={activeGroup === item}
+                    onClick={() => { setActiveGroup(item); onGroupSelect(item); }}
+                >
+                    {item}
+                </LI>
+            ))}
+        </>
     );
 };
 
-function Dropdown() {
+function Dropdown({ onGroupSelect }: { onGroupSelect: (group: string | null) => void }) {
     const [view, setView] = useState(false);
 
     return (
         <UL>
             <ULTitle onClick={() => setView(!view)}>그룹 선택{" "}{view ? '▲' : '▼'}</ULTitle>
-        {view && <DropdownMenu/>}
+            {view && <DropdownMenu onGroupSelect={onGroupSelect} />}
         </UL>
     );
-};
+}
 
 export default Dropdown;
