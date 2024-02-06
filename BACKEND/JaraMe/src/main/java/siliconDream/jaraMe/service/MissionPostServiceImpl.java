@@ -59,6 +59,7 @@ public class MissionPostServiceImpl implements MissionPostService {
     //미션 인증글 작성
     //TODO: 만약 오늘 해당 미션에 대해 인증글을 하나 올렸다면 못올리도록 하기
     //TODO: 작성에 대한 규칙?
+    @Transactional
     public boolean missionPost(MissionPostDTO missionPostDTO, Long userId) {
         //제목이나 내용이 공백인지?
         if (missionPostDTO.getTextTitle().isBlank() || missionPostDTO.getTextContent().isBlank()) {
