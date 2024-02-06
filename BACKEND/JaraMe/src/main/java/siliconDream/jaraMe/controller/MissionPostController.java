@@ -98,9 +98,9 @@ public class MissionPostController {
         // Assuming you want to retrieve all mission posts without specifying a particular JaraUs
         List<MissionPostDTO> missionPosts = missionPostService.getAllMissionPosts(jaraUsId);
 
-        /*missionPosts = missionPosts.stream()
+        missionPosts = missionPosts.stream()
                 .filter(MissionPostDTO::isDisplay)
-                .collect(Collectors.toList());*/
+                .collect(Collectors.toList());
 
         // Check if the mission post is empty and process appropriately, e.g. returning 404
         if (missionPosts.isEmpty()) {
