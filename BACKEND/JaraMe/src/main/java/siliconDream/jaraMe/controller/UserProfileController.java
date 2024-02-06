@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import siliconDream.jaraMe.service.UserProfileService;
 import siliconDream.jaraMe.dto.UserProfileInfoDTO;
-@CrossOrigin(originPatterns = "http://localhost:5173")
+
 @RestController
 public class UserProfileController {
 

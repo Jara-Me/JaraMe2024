@@ -12,7 +12,7 @@ import siliconDream.jaraMe.service.DailyMissionService;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-@CrossOrigin(originPatterns = "http://localhost:5173")
+
 @RestController
 @RequestMapping("/dailyMission")
 public class DailyMissionController {

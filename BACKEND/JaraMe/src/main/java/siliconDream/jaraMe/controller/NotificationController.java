@@ -8,7 +8,7 @@ import siliconDream.jaraMe.dto.NotificationDTO;
 import siliconDream.jaraMe.service.NotificationService;
 
 import java.util.List;
-@CrossOrigin(originPatterns = "http://localhost:5173")
+
 @RestController
 @RequestMapping("/notifications")
 public class NotificationController {

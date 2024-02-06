@@ -28,7 +28,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-@CrossOrigin(originPatterns = "http://localhost:5173")
+
 @Slf4j
 @RestController
 @RequestMapping("/jaraus")

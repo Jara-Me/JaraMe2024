@@ -24,7 +24,7 @@ import siliconDream.jaraMe.service.UserService;
 
 import java.util.stream.Collectors;
 
-@CrossOrigin(originPatterns = "http://localhost:5173")
+
 @Slf4j
 @RestController
 @RequestMapping("user")

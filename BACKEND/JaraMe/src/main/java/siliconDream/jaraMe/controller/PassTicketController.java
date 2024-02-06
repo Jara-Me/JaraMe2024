@@ -14,7 +14,7 @@ import siliconDream.jaraMe.service.PassTicketService;
 import siliconDream.jaraMe.service.UserService;
 
 import java.time.LocalDate;
-@CrossOrigin(originPatterns = "http://localhost:5173")
+
 @Slf4j
 @RestController
 @RequestMapping("/passTicket")

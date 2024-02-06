@@ -19,7 +19,7 @@ import siliconDream.jaraMe.service.MissionPostService;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-@CrossOrigin(originPatterns = "http://localhost:5173")
+
 @Slf4j
 @RestController
 @RequestMapping("/missionPost")

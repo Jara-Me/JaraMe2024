@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.MissionReactionDTO;
 import siliconDream.jaraMe.service.ReactionService;
-@CrossOrigin(originPatterns = "http://localhost:5173")
+
 @RestController
 @RequestMapping("/reaction")
 public class ReactionController {
