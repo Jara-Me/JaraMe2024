@@ -56,12 +56,14 @@ public class NoticeServiceImpl implements NoticeService {
             List<ReactionNoticeDTO> reactionNoticeDTOs = new ArrayList<>();
             //개별 미션 인증글에 달린 리액션통계
             for (Long oneMissionPostId : missionPostIds.get()) {
+
+
                 int smile = 0;
                 int good = 0;
                 int like = 0;
                 log.info("oneMissionPostId:{}", oneMissionPostId); //ok
 
-                Optional<List<Object[]>> reactionCountDTOs = reactionRepository.findByMissionPost_MissionPostId(oneMissionPostId);
+                Optional<List<Object[]>> reactionCountDTOs = reactionRepository.findByMissionPost_MissionPostIdAndNotice(oneMissionPostId,0);
                 log.info("reactionCountDTOs:{}", reactionCountDTOs.get());
 
 

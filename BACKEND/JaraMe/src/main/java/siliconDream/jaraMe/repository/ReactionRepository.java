@@ -27,9 +27,9 @@ public interface ReactionRepository extends JpaRepository<Reaction,Long> {
     @Query("SELECT r.reactionType, COUNT(*) as count " +
             "FROM Reaction r " +
             "LEFT JOIN r.missionPost as rmp " +
-            "WHERE rmp.missionPostId = :missionPostId " +
+            "WHERE rmp.missionPostId = :missionPostId AND rmp.notice = :notice" +
             "GROUP BY r.reactionType")
-    Optional<List<Object[]>> findByMissionPost_MissionPostId(@RequestParam Long missionPostId);
+    Optional<List<Object[]>> findByMissionPost_MissionPostIdAndNotice(@RequestParam Long missionPostId, @RequestParam boolean notice);
 
     @Query("SELECT r " +
             "FROM Reaction r " +
