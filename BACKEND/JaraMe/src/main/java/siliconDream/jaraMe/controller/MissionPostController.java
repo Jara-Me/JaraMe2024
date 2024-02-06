@@ -93,16 +93,11 @@ public class MissionPostController {
 
     }
 
-    @GetMapping("/Allpost")
+    @GetMapping("/All-post")
     public ResponseEntity<List<MissionPostDTO>> getAllMissionPostsForJaraUs(@RequestParam(name = "jaraUsId") Long jaraUsId) {
         // Assuming you want to retrieve all mission posts without specifying a particular JaraUs
         List<MissionPostDTO> missionPosts = missionPostService.getAllMissionPosts(jaraUsId);
 
-        /*missionPosts = missionPosts.stream()
-                .filter(MissionPostDTO::isDisplay)
-                .collect(Collectors.toList());*/
-
-        // Check if the mission post is empty and process appropriately, e.g. returning 404
         if (missionPosts.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -110,7 +105,7 @@ public class MissionPostController {
         return ResponseEntity.ok(missionPosts);
     }
 
-    @GetMapping("/mypost")
+    @GetMapping("/my-post")
     public ResponseEntity<?> getMyMissionPostsForJaraUs(@RequestParam (name = "jaraUsId") Long jaraUsId, @RequestParam(name = "userId") Long userId) {
 
         /*HttpSession session = request.getSession(false);
