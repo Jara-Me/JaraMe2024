@@ -5,13 +5,11 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-import siliconDream.jaraMe.domain.JaraUs;
-import siliconDream.jaraMe.domain.JoinUsers;
-import siliconDream.jaraMe.domain.MissionPost;
-import siliconDream.jaraMe.domain.User;
+import siliconDream.jaraMe.domain.*;
 import siliconDream.jaraMe.dto.CalendarDTO;
+import siliconDream.jaraMe.dto.DailyMissionRecordDTO;
 import siliconDream.jaraMe.dto.NoticeDTO;
-import siliconDream.jaraMe.repository.JaraUsRepository;
+import siliconDream.jaraMe.repository.*;
 import siliconDream.jaraMe.service.*;
 
 import java.time.LocalDate;
@@ -26,12 +24,16 @@ public class NoticeController {
     private final ScheduleService scheduleService;
     private final MissionHistoryService missionHistoryService;
     private final JaraUsRepository jaraUsRepository;
-
+    private UserService userService;
     private JaraUsService jaraUsService;
     private JoinUsersService joinUsersService;
     private MissionPostService missionPostService;
     private PointService pointService;
-
+    private DailyMissionRepository dailyMissionRepository;
+    private DailyMissionService dailyMissionService;
+    private MissionHistoryRepository missionHistoryRepository;
+    private ScheduleRepository scheduleRepository;
+    private JoinUsersRepository joinUsersRepository;
     public NoticeController(NoticeService noticeService,
                             ScheduleService scheduleService,
                             MissionHistoryService missionHistoryService,
@@ -39,7 +41,13 @@ public class NoticeController {
                             JaraUsService jaraUsService,
                             JoinUsersService joinUsersService,
                             MissionPostService missionPostService,
-                            PointService pointService) {
+                            PointService pointService,
+                            UserService userService,
+                            DailyMissionRepository dailyMissionRepository,
+                            DailyMissionService dailyMissionService,
+                            MissionHistoryRepository missionHistoryRepository,
+                            ScheduleRepository scheduleRepository,
+                            JoinUsersRepository joinUsersRepository) {
         this.noticeService = noticeService;
         this.scheduleService = scheduleService;
         this.missionHistoryService = missionHistoryService;
@@ -48,6 +56,12 @@ public class NoticeController {
         this.joinUsersService = joinUsersService;
         this.missionPostService = missionPostService;
         this.pointService = pointService;
+        this.userService = userService;
+        this.dailyMissionRepository = dailyMissionRepository;
+        this.dailyMissionService = dailyMissionService;
+        this.missionHistoryRepository = missionHistoryRepository;
+        this.scheduleRepository = scheduleRepository;
+        this.joinUsersRepository = joinUsersRepository;
     }
 
     //미션완주,리액션통계
@@ -75,6 +89,26 @@ public class NoticeController {
     }
 
 
+
+    //캘린더
+    @GetMapping("calendar")
+    public Optional<CalendarDTO> calendar(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate, @RequestParam Long userId) {
+
+        /*
+        HttpSession session = request.getSession(false);
+
+        Long userId;
+        if (session == null){//todo: 로직 추가하기
+        }
+        User user = (User) session.getAttribute("user");
+        // log.info("log:userId:{}", user.getUserId());
+        userId = user.getUserId();
+        */
+        Optional<CalendarDTO> calendarDTO = noticeService.getCalendar(selectedDate, userId);
+        return calendarDTO;
+    }
+
+    //미션완주 테스트 용도
     @PostMapping("/test")
     public void missionComplete() {
         //어제 미션이 종료된 그룹들을 리스트로 얻은 다음,
@@ -106,21 +140,69 @@ public class NoticeController {
         }
     }
 
-    //캘린더
-    @GetMapping("calendar")
-    public Optional<CalendarDTO> calendar(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate, @RequestParam Long userId) {
+    @PostMapping("/test2")
+    public void transferDailyMission() {
+        log.info("transferDailyMission");
+        //모든 유저
+        List<User> allUsers = userService.getAllUsers();
+        for (User user : allUsers) {
+            //데일리미션테이블에 레코드가 있는 경우 => 미션기록테이블에 복사 후 전체 삭제
+            List<DailyMission> doneDailyMission = dailyMissionRepository.findByUser_UserId(user.getUserId());
+            log.info("doneDateMission:{}", doneDailyMission);
+            //데일리미션테이블에 레코드가 있는 경우
+            if (doneDailyMission.size() != 0) {
+                log.info("doneDailyMission.size:{}", doneDailyMission.size());
+                for (DailyMission one : doneDailyMission) {
+                    log.info("one");
+                    //미션기록테이블에 저장
+                    DailyMissionRecordDTO dailyMissionRecordDTO = new DailyMissionRecordDTO();
 
-        /*
-        HttpSession session = request.getSession(false);
+                    log.info("one.isDailyMissionResult:{}", one.isDailyMissionResult());
 
-        Long userId;
-        if (session == null){//todo: 로직 추가하기
+                    //미션인증을 하지않은 경우
+                    if (!one.isDailyMissionResult()) {
+                        dailyMissionRecordDTO.setMissionDate(one.getScheduleDate());
+                        dailyMissionRecordDTO.setJaraUs(one.getJaraUs());
+                        dailyMissionRecordDTO.setUser(user);
+                        dailyMissionRecordDTO.setMissionResult(one.isDailyMissionResult());
+                    }
+                    else if (one.isDailyMissionResult()) { //미션인증을 한 경우
+                        dailyMissionRecordDTO.setMissionDate(one.getScheduleDate());
+                        dailyMissionRecordDTO.setJaraUs(one.getJaraUs());
+                        dailyMissionRecordDTO.setUser(user);
+                        dailyMissionRecordDTO.setMissionResult(one.isDailyMissionResult());
+                        dailyMissionRecordDTO.setMissionPost(one.getMissionPost());
+                    }
+
+                    log.info("set");
+                    missionHistoryRepository.saveDailyMissionRecord(dailyMissionRecordDTO);
+                    log.info("save");
+
+                    dailyMissionRepository.deleteByUserUserId(user.getUserId());
+
+                    log.info("delete-done");
+
+                }
+            }
+            log.info("userId:{}", user.getUserId());
+            //해당 유저가 참여하고 있는 자라어스 식별자들을 얻은 후,
+            Optional<List<Long>> joinedJaraUsIds = joinUsersRepository.findJaraUs_jaraUsIdsByUser_userId(user.getUserId());
+            log.info("joinedJaraUsIds:{}", joinedJaraUsIds);
+
+            for (Long jaraUsId : joinedJaraUsIds.get()) {
+                log.info("for-");
+                //얻어온 자라어스 식별자들 중 오늘 인증하는 날인 미션이라면 스케줄 레코드를 가져옴
+                Optional<Long> todayScheduledJaraUsId = scheduleRepository.findJaraUs_JaraUsIdByScheduleDateAndJaraUsId(LocalDate.now(), jaraUsId);
+
+                if (todayScheduledJaraUsId.isPresent()) {
+                    log.info("if-todayScheduledJaraUsId. isPresent? :");
+                    //스케줄 레코드와 유저식별자를 통해 오늘의 미션을 업데이트함
+                    dailyMissionService.makeDailyMission(user.getUserId(), jaraUsId);
+                    log.info("done");
+                }
+            }
+
         }
-        User user = (User) session.getAttribute("user");
-        // log.info("log:userId:{}", user.getUserId());
-        userId = user.getUserId();
-        */
-        Optional<CalendarDTO> calendarDTO = noticeService.getCalendar(selectedDate, userId);
-        return calendarDTO;
     }
-}
+
+    }
