@@ -46,7 +46,7 @@ public class DailyMissionUpdateScheduler {
     }
 
     @Transactional
-    @Scheduled(cron = "30 30 9 * * *")
+    @Scheduled(cron = "30 45 9 * * *", zone = "Asia/Seoul")
     public void transferDailyMission() {
         log.info("start  ?");
         //모든 유저
