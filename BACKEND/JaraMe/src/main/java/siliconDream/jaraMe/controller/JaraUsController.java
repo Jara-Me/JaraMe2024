@@ -235,10 +235,16 @@ public class JaraUsController {
         }
     }
 
-        // 검색 기능 추가
+      // 검색 기능 추가
     @GetMapping("/search")
     public ResponseEntity<List<JaraUsDTO>> searchJaraUs(@RequestParam String keyword) {
         List<JaraUsDTO> searchResults = jaraUsService.searchJaraUs(keyword);
         return ResponseEntity.ok(searchResults);
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<List<JaraUsDTO>> getTop3RecentJaraUs() {
+        List<JaraUsDTO> recentJaraUs = jaraUsService.findTop3RecentJaraUs();
+        return ResponseEntity.ok(recentJaraUs);
     }
  }

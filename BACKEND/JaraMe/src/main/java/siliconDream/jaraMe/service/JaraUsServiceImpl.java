@@ -292,4 +292,11 @@ public class JaraUsServiceImpl implements JaraUsService {
 
         return false; // 모든 자라어스의 미션을 완료했다면 false 반환
     }
+    
+     //jaraus 3개 보여주는 API
+    @Override
+    public List<JaraUsDTO> findTop3RecentJaraUs() {
+        List<JaraUs> recentJaraUs = jaraUsRepository.findTop3ByDisplayOrderByJaraUsIdDesc("public");
+        return recentJaraUs.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
 }

@@ -36,4 +36,7 @@ public interface JaraUsRepository extends JpaRepository<JaraUs, Long> {
     String findJaraUsNameByJaraUsName(@Param("jaraUsName") String jaraUsName);
 
     //List<JaraUs> findAllByJoinUsers_UserId(Long userId);
+
+    // 가장 최근에 생성된 자라어스 3개를 조회하는 쿼리 메소드
+    List<JaraUs> findTop3ByDisplayOrderByJaraUsIdDesc(String display);
 }
