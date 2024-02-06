@@ -19,7 +19,7 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    // 사용자가 보지 않은 알림 조회
+    // 특정 사용자의 알림 조회
     @GetMapping("/{userId}")
     public ResponseEntity<List<NotificationDTO>> getUserNotifications(@PathVariable Long userId) {
         List<NotificationDTO> notifications = notificationService.getUserNotifications(userId);
