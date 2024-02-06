@@ -61,10 +61,15 @@ public class MissionPostServiceImpl implements MissionPostService {
     //TODO: 작성에 대한 규칙?
     @Transactional
     public boolean missionPost(MissionPostDTO missionPostDTO, Long userId) {
+        Long dailyMissionId = dailyMissionRepository.findDailyMissionIdByUser_UserIdAndJaraUs_JaraUsId(userId, missionPostDTO.getJaraUsId());
+
+        if (dailyMissionId==null){return false;}
+
         //제목이나 내용이 공백인지?
         if (missionPostDTO.getTextTitle().isBlank() || missionPostDTO.getTextContent().isBlank()) {
             return false;
         }
+
         MissionPost missionPost = new MissionPost();
         missionPost.setAnonymous(missionPostDTO.isAnonymous());
         missionPost.setDisplay(missionPostDTO.isDisplay());
