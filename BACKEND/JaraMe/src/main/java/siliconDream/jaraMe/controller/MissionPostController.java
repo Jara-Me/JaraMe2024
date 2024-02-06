@@ -93,7 +93,7 @@ public class MissionPostController {
 
     }
 
-    @GetMapping("/All-post")
+    @GetMapping("/Allpost")
     public ResponseEntity<List<MissionPostDTO>> getAllMissionPostsForJaraUs(@RequestParam(name = "jaraUsId") Long jaraUsId) {
         // Assuming you want to retrieve all mission posts without specifying a particular JaraUs
         List<MissionPostDTO> missionPosts = missionPostService.getAllMissionPosts(jaraUsId);
@@ -110,7 +110,7 @@ public class MissionPostController {
         return ResponseEntity.ok(missionPosts);
     }
 
-    @GetMapping("/my-post")
+    @GetMapping("/mypost")
     public ResponseEntity<?> getMyMissionPostsForJaraUs(@RequestParam (name = "jaraUsId") Long jaraUsId, @RequestParam(name = "userId") Long userId) {
 
         /*HttpSession session = request.getSession(false);
