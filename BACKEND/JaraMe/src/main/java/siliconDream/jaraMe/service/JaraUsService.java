@@ -40,4 +40,6 @@ public interface JaraUsService {
     List<JaraUsDTO> getJaraUsListForUser(Long userId);
 
     //List<JaraUsDTO> getJaraUsListForUser(Long userId);
+    
+    List<JaraUsDTO> findTop3RecentJaraUs();
 }

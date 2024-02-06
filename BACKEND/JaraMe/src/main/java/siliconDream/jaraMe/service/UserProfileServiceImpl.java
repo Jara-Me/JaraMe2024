@@ -4,16 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import siliconDream.jaraMe.domain.User;
 import siliconDream.jaraMe.dto.UserProfileInfoDTO;
+import siliconDream.jaraMe.repository.UserRepository;
 
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
 
     @Autowired
     private UserServiceImpl userService;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public UserProfileInfoDTO getUserProfileInfo(Long userId) {
-        User user = userService.findUserByUserId(userId); // User 정보 조회
+         User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
         UserProfileInfoDTO userProfileInfoDTO = new UserProfileInfoDTO();
         userProfileInfoDTO.setUserId(user.getUserId());

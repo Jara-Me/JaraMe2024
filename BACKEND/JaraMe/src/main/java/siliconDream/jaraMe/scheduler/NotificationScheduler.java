@@ -27,10 +27,10 @@ public class NotificationScheduler {
     public void generateDailyNotifications() {
         List<User> users = userService.getAllUsers();
         for (User user : users) {
-            boolean hasIncompleteTasks = toDoListService.hasIncompleteTasks(user.getUserId());
+            boolean hasIncompleteTesks = toDoListService.hasIncompleteTesks(user.getUserId());
             boolean hasIncompleteMissions = jaraUsService.hasIncompleteMissions(user.getUserId());
 
-            if (hasIncompleteTasks || hasIncompleteMissions) {
+            if (hasIncompleteTesks || hasIncompleteMissions) {
                 notificationService.createNotification(user.getUserId(), "아직 완료되지 않은 활동이 있습니다.");
             }
         }

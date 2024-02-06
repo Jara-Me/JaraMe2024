@@ -8,6 +8,8 @@ public class UserProfileInfoDTO {
     private int passTicket;
     private int participatingJaraUsCount;
 
+
+
     //Getters and Setters
     public Long getUserId() {
         return userId;
@@ -33,12 +35,12 @@ public class UserProfileInfoDTO {
         this.profileImage = profileImage;
     }
 
-    public int getParticipatingJaraUsCount() {
-        return participatingJaraUsCount;
+    public int getPoints() {
+        return points;
     }
 
-    public void setParticipatingJaraUsCount(int participatingJaraUsCount) {
-        this.participatingJaraUsCount = participatingJaraUsCount;
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     public int getPassTicket() {
@@ -49,11 +51,11 @@ public class UserProfileInfoDTO {
         this.passTicket = passTicket;
     }
 
-    public int getPoints() {
-        return points;
+    public int getParticipatingJaraUsCount() {
+        return participatingJaraUsCount;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    public void setParticipatingJaraUsCount(int participatingJaraUsCount) {
+        this.participatingJaraUsCount = participatingJaraUsCount;
     }
 }

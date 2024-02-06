@@ -339,6 +339,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         missionPostDTO.setPostDateTime(missionPost.getPostDateTime());
         missionPostDTO.setNickname(missionPost.getUser().getNickname());
         missionPostDTO.setProfileImage(missionPost.getUser().getProfileImage());
+        missionPostDTO.setDisplay(missionPost.isDisplay());
 
         return missionPostDTO;
     }
