@@ -104,7 +104,7 @@ public class MissionPostController {
 
         // Check if the mission post is empty and process appropriately, e.g. returning 404
         if (missionPosts.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok(missionPosts);
@@ -125,7 +125,7 @@ public class MissionPostController {
 
         // Check if the list is empty and handle it appropriately, e.g., return 404
         if (myMissionPosts.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok(myMissionPosts);
