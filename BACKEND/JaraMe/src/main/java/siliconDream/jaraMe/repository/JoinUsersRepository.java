@@ -26,4 +26,11 @@ public interface JoinUsersRepository extends JpaRepository<JoinUsers,Long> {
             "LEFT JOIN j.user ju " +
             "WHERE ju.userId = :userId")
     Optional<List<Long>> findJaraUs_jaraUsIdsByUser_userId(Long userId);
+
+    @Query("SELECT j.joinUsersId " +
+            "FROM JoinUsers j " +
+            "LEFT JOIN j.jaraUs as jj " +
+            "LEFT JOIN j.user ju " +
+            "WHERE ju.userId = :userId AND jj.jaraUsId = :jaraUsId")
+    Long findByJaraUs_jaraUsIdsAndUser_userId(Long userId, Long jaraUsId);
 }

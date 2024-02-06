@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class MissionPostServiceImpl implements MissionPostService {
+    private final JoinUsersRepository joinUsersRepository;
     private final PointHistoryRepository pointHistoryRepository;
     private final MissionPostRepository missionPostRepository;
     private final ScheduleRepository scheduleRepository;
@@ -43,7 +44,8 @@ public class MissionPostServiceImpl implements MissionPostService {
                                   JaraUsRepository jaraUsRepository,
                                   CommentRepository commentRepository,
                                   ReactionRepository reactionRepository,
-                                  PointHistoryRepository pointHistoryRepository) {
+                                  PointHistoryRepository pointHistoryRepository,
+                                  JoinUsersRepository joinUsersRepository) {
         this.missionPostRepository = missionPostRepository;
         this.scheduleRepository = scheduleRepository;
         this.dailyMissionRepository = dailyMissionRepository;
@@ -54,20 +56,23 @@ public class MissionPostServiceImpl implements MissionPostService {
         this.commentRepository = commentRepository;
         this.reactionRepository = reactionRepository;
         this.pointHistoryRepository = pointHistoryRepository;
+        this.joinUsersRepository = joinUsersRepository;
     }
 
     //미션 인증글 작성
     //TODO: 만약 오늘 해당 미션에 대해 인증글을 하나 올렸다면 못올리도록 하기
     //TODO: 작성에 대한 규칙?
     @Transactional
-    public boolean missionPost(MissionPostDTO missionPostDTO, Long userId) {
+    public String missionPost(MissionPostDTO missionPostDTO, Long userId) {
         Long dailyMissionId = dailyMissionRepository.findDailyMissionIdByUser_UserIdAndJaraUs_JaraUsId(userId, missionPostDTO.getJaraUsId());
-
-        if (dailyMissionId==null){return false;}
+        Long jaraUsIdForTest = missionPostDTO.getJaraUsId();
+        Long joinUsersId = joinUsersRepository.findByJaraUs_jaraUsIdsAndUser_userId(userId,jaraUsIdForTest);
+        if (joinUsersId==null){return "해당 자라어스에 참여하고있지 않습니다!";}
+        else if (dailyMissionId==null){return "오늘은 미션 인증 예정일이 아닙니다.";}
 
         //제목이나 내용이 공백인지?
         if (missionPostDTO.getTextTitle().isBlank() || missionPostDTO.getTextContent().isBlank()) {
-            return false;
+            return "공백은 입력할 수 없습니다.";
         }
 
         MissionPost missionPost = new MissionPost();
@@ -87,7 +92,7 @@ public class MissionPostServiceImpl implements MissionPostService {
         Long savedMissionPostId = savedMissionPost.getMissionPostId();
 
         dailyMissionUpdate(userId, jaraUsId, savedMissionPostId);
-        return true;
+        return "미션 인증글이 등록되었습니다.";
         /*if (savedMissionPost) {
 
             //TODO: dailyMission테이블에도 missionPostId 저장하기

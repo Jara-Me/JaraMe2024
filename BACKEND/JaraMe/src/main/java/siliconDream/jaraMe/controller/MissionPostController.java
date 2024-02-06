@@ -47,11 +47,11 @@ public class MissionPostController {
         userId = user.getUserId();
         */
 
-            boolean result = missionPostService.missionPost(missionPostDTO, userId);
-            if (result) {
+            String resultMessage = missionPostService.missionPost(missionPostDTO, userId);
+            if (resultMessage.equals("미션 인증글이 등록되었습니다.")) {
                 return ResponseEntity.status(HttpStatus.OK).body("미션 인증글이 등록되었습니다.");
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("미션 인증글 등록에 실패했습니다.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resultMessage);
             }
 
 

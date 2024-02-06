@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface MissionPostService {
     //미션 인증글 작성
-    boolean missionPost(MissionPostDTO missionPostDTO, Long userId);
+    String missionPost(MissionPostDTO missionPostDTO, Long userId);
 
     //미션 인증글 조회
     GetMissionPostDTO getMissionPostDetails(Long missionPostId,Long userId);
